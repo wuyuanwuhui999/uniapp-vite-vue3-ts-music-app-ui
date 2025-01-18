@@ -1,9 +1,9 @@
 import { defineStore } from 'pinia'
-import type {UserDataType} from '../movie/types/index';
-import type {MusicType,MusicRecordType} from '../music/types/index';
+import type {UserDataType} from '../types/index';
+import type {MusicType,MusicRecordType} from '../types/index';
 import { HOST, MUSIC_STORAGE_KEY, MUSIC_LIST_STORAGE_KEY, LOOP_STORAGE_KEY,MUSIC_CLASSIFY_NAME_STORAGE_KEY} from '../common/constant';
 import {LoopModeEnum} from '../common/enum';
-import {insertMusicRecordService} from '../music/service';
+import {insertMusicRecordService} from '../service';
 import { version } from 'vue';
 export const useStore = defineStore("myStore", {
     state:() => {

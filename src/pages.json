@@ -1,7 +1,7 @@
 {
 	"pages": [
 		{
-			"path" : "movie/pages/LaunchPage",
+			"path" : "pages/LaunchPage",
 			"style" : 
 			{
 				"navigationBarTitleText" : "",
@@ -9,32 +9,7 @@
 			}
 		},
 		{
-			"path": "movie/pages/IndexPage",
-			"style": {
-				"navigationBarTitleText": "电影"
-			}
-		},
-		{
-			"path": "movie/pages/MovieDetailPage",
-			"style": {
-				"navigationBarTitleText": "电影详情"
-			}
-		},
-		{
-			"path": "movie/pages/MoviePlayPage",
-			"style": {
-				"navigationBarTitleText": "电影播放"
-			}
-		},
-		{
-			"path" : "movie/pages/MovieUserPage",
-			"style" : 
-			{
-				"navigationBarTitleText" : ""
-			}
-		},
-		{
-			"path" : "movie/pages/MovieLoginPage",
+			"path" : "pages/LoginPage",
 			"style" : 
 			{
 				"navigationBarTitleText" : "",
@@ -42,7 +17,7 @@
 			}
 		},
 		{
-			"path" : "movie/pages/MovieRegisterPage",
+			"path" : "pages/MusicIndexPage",
 			"style" : 
 			{
 				"navigationBarTitleText" : "",
@@ -50,7 +25,7 @@
 			}
 		},
 		{
-			"path" : "movie/pages/MovieSearchPage",
+			"path" : "pages/MusicCirClePublishPage",
 			"style" : 
 			{
 				"navigationBarTitleText" : "",
@@ -58,7 +33,7 @@
 			}
 		},
 		{
-			"path" : "music/pages/MusicIndexPage",
+			"path" : "pages/MusicSearchPage",
 			"style" : 
 			{
 				"navigationBarTitleText" : "",
@@ -66,7 +41,7 @@
 			}
 		},
 		{
-			"path" : "music/pages/MusicCirClePublishPage",
+			"path" : "pages/MusicPlayerPage",
 			"style" : 
 			{
 				"navigationBarTitleText" : "",
@@ -74,7 +49,7 @@
 			}
 		},
 		{
-			"path" : "music/pages/MusicSearchPage",
+			"path" : "pages/MusicSharePage",
 			"style" : 
 			{
 				"navigationBarTitleText" : "",
@@ -82,7 +57,7 @@
 			}
 		},
 		{
-			"path" : "music/pages/MusicPlayerPage",
+			"path" : "pages/MusicFavoriteListPage",
 			"style" : 
 			{
 				"navigationBarTitleText" : "",
@@ -90,7 +65,7 @@
 			}
 		},
 		{
-			"path" : "music/pages/MusicSharePage",
+			"path" : "pages/MusicClassifyListPage",
 			"style" : 
 			{
 				"navigationBarTitleText" : "",
@@ -98,7 +73,7 @@
 			}
 		},
 		{
-			"path" : "music/pages/MusicFavoriteListPage",
+			"path" : "pages/MusicAuthorCategoryPage",
 			"style" : 
 			{
 				"navigationBarTitleText" : "",
@@ -106,7 +81,7 @@
 			}
 		},
 		{
-			"path" : "music/pages/MusicClassifyListPage",
+			"path" : "pages/AuthorMusicListPage",
 			"style" : 
 			{
 				"navigationBarTitleText" : "",
@@ -114,7 +89,7 @@
 			}
 		},
 		{
-			"path" : "music/pages/MusicAuthorCategoryPage",
+			"path" : "pages/MusicCategoryListPage",
 			"style" : 
 			{
 				"navigationBarTitleText" : "",
@@ -122,15 +97,7 @@
 			}
 		},
 		{
-			"path" : "music/pages/AuthorMusicListPage",
-			"style" : 
-			{
-				"navigationBarTitleText" : "",
-				"enablePullDownRefresh" : false
-			}
-		},
-		{
-			"path" : "music/pages/MusicCategoryListPage",
+			"path" : "pages/UserPage",
 			"style" : 
 			{
 				"navigationBarTitleText" : "",
