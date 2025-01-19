@@ -285,3 +285,12 @@ export const registerService = (userData:types.UserDataType):Promise<MyAwesomeDa
 export const getUserByIdService = (userId:string):Promise<MyAwesomeData<number>>=>{
 	return httpRequest.get<number>(`${api.getUserById}?userId=${userId}`)
 };
+
+/**
+ * @description: 找回密码
+ * @date: 2025-01-19 22:59
+ * @author wuwenqiang
+ */
+export const getBackPasswordService = (email:string):Promise<MyAwesomeData<String>>=>{
+    return httpRequest.post<string>(api.getBackPassword,{email})
+  }; 

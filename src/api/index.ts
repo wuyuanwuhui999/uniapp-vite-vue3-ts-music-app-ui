@@ -1,7 +1,7 @@
 export default {
   login: '/service/user/login', //登录
   getUserData: '/service/user/getUserData', // 获取用户信息
-  updateUser: '/service/user-getway/updateUser',//更新用户信息
+  updateUser: '/service/user/updateUser',//更新用户信息
   register: '/service/user/register',//注册
 	getUserById: '/service/user/getUserById',// 校验账号是否存在
   getKeywordMusic: '/service/myMusic/getKeywordMusic',//获取搜索关键词
@@ -32,5 +32,6 @@ export default {
   insertCircle: '/service/circle-getway/insertCircle',// 插入一条朋友圈说说
   getMusicListByFavoriteId:'/service/myMusic-getway/getMusicListByFavoriteId',// 按照收藏夹的id查询音乐列表
   getMusicAuthorCategory: '/service/myMusic/getMusicAuthorCategory',// 获取歌手分类
-  getMusicListByAuthorId: '/service/myMusic/getMusicListByAuthorId'// 根据歌手id获取音乐列表
+  getMusicListByAuthorId: '/service/myMusic/getMusicListByAuthorId',// 根据歌手id获取音乐列表
+  getBackPassword: '/service/user/getBackPassword',// 找回密码
 };

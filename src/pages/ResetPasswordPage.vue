@@ -5,7 +5,7 @@
 
 			<view class="login-input-wrapper">
 				<image src="../../static/icon_user_active.png" class="icon-login"/>
-				<input type="password" v-model="identifyCode" class="login-input" placeholder="请输入验证码"/>
+				<input type="text" v-model="identifyCode" class="login-input" placeholder="请输入验证码"/>
 			</view>
 
 			<view class="login-input-wrapper">
@@ -29,7 +29,7 @@
 
 	const password = ref<string>("")
 	const confirmPassword = ref<string>("");
-	const identifyCode = ref<number>(0);
+	const identifyCode = ref<number>();
 
 
 	const useSumbit = () => {

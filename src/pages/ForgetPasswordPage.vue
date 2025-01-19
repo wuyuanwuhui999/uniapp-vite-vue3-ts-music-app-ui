@@ -18,7 +18,7 @@
 
     import { ref } from 'vue';
     import NavigatorTitleComponent from '../components/NavigatorTitleComponent.vue';
-
+	import { getBackPasswordService } from '../service';
     const email = ref<string>("");
 	let loading:boolean = false;
 
@@ -36,7 +36,17 @@
 		}else{
 			if(loading)return;
 			loading = true;
-            
+            getBackPasswordService(email.value).then((res)=>{
+				uni.showToast({
+					title: res.data,
+					icon: "none"
+				});
+				uni.navigateTo({
+					url: `../pages/ResetPasswordPage`
+				})
+			}).finally(()=>{
+				loading = false;
+			})
 		}
 	}
 </script>
