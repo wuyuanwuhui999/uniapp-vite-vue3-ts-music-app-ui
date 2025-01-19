@@ -1,11 +1,12 @@
 <template>
 	<scroll-view class="page-wrapper" scroll-y show-scrollbar="false">
-		<view class="module-block module-block-row">
+		<view class="module-block module-block-row user-wrapper">
 			<AvaterComponent size="middle"/>
 			<view class="use-info">
 				<text class="username">{{store.userData.username}}</text>
 				<text class="sign">{{store.userData.sign}}</text>
 			</view>
+			<image class="icon-middle" @click="useUserEdit" src="../../static/icon_edit.png"/>
 		</view>
 
 		<view class="module-block">
@@ -121,6 +122,15 @@
 	const useRouter = (item:FavoriteDirectoryType) => {
 		uni.navigateTo({url: `../pages/MusicFavoriteListPage?data=${encodeURIComponent(JSON.stringify(item))}`});
 	}
+
+	/**
+	 * @description: 跳转到用户编辑页面
+	 * @date: 2025-01-19 12:15
+	 * @author wuwenqiang
+	 */
+	const useUserEdit = ()=>{
+		uni.navigateTo({url: `../pages/UserPage`});
+	}
 </script>
 
 <style lang="less">
@@ -139,17 +149,22 @@
 				display: none;
 			}
 		}
-		.use-info{
-			margin-left: @page-padding;
-			display: flex;
-			flex-direction: column;
-			.username{
-				font-weight: bold;
-			}
-			.sign{
-				color: @disable-text-color;
+		.user-wrapper{
+			align-items: center;
+			.use-info{
+				margin-left: @page-padding;
+				display: flex;
+				flex-direction: column;
+				flex: 1;
+				.username{
+					font-weight: bold;
+				}
+				.sign{
+					color: @disable-text-color;
+				}
 			}
 		}
+		
 		.icon-add{
 			font-size: @middle-icon-size;
 			color: @disable-text-color;

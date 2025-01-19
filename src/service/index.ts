@@ -266,3 +266,22 @@ export const deleteMyLikeMusicAuthorService = (authorId:number):Promise<MyAwesom
 export const getMusicListByAuthorIdService = (authorId:number,pageNum:number,pageSize:number):Promise<MyAwesomeData<Array<types.MusicType>>> => {
     return httpRequest.get<Array<types.MusicType>>(`${api.getMusicListByAuthorId}?authorId=${authorId}&pageNum=${pageNum}&pageSize=${pageSize}`);
 }
+
+/**
+ * @description: 注册
+ * @date: 2024-01-19 23:51
+ * @author wuwenqiang
+ */
+export const registerService = (userData:types.UserDataType):Promise<MyAwesomeData<types.UserDataType>>=>{
+	userData.password = md5(userData.password);
+	return httpRequest.put<types.UserDataType>(api.register,userData)
+};
+
+/**
+ * @description: 校验账号和密码是否存在
+ * @date: 2024-01-19 23:51
+ * @author wuwenqiang
+ */
+export const getUserByIdService = (userId:string):Promise<MyAwesomeData<number>>=>{
+	return httpRequest.get<number>(`${api.getUserById}?userId=${userId}`)
+};

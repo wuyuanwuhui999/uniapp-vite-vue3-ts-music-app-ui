@@ -15,6 +15,8 @@
 			<view class="login-btn" @click="useLogin">登录</view>
 
 			<view class="register-btn" @click="useRegister">注册</view>
+
+			<view class="register-btn" @click="useForgetPassword">忘记密码</view>
 		</view>
 	</view>
 </template>
@@ -54,7 +56,6 @@
 				store.setToken(res.token)
 				uni.setStorage({key:'token',data:res.token});
 				httpRequest.setToken(res.token);
-				// uni.navigateTo({url: '../pages/MusicIndexPage'})
 				uni.reLaunch({
 					url: `../pages/MusicIndexPage`
 				})
@@ -73,9 +74,25 @@
 		}
 	}
 
+	/**
+	 * @description: 注册
+	 * @date: 2025-01-19 14:13
+	 * @author wuwenqiang
+	 */
 	const useRegister = () => {
 		uni.navigateTo({
-			url: `../pages/MovieRegisterPage`
+			url: `../pages/RegisterPage`
+		})
+	}
+
+	/**
+	 * @description: 忘记密码
+	 * @date: 2025-01-19 14:13
+	 * @author wuwenqiang
+	 */
+	const useForgetPassword = ()=>{
+		uni.navigateTo({
+			url: `../pages/ForgetPasswordPage`
 		})
 	}
 </script>
