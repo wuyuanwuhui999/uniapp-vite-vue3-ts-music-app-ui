@@ -86,17 +86,18 @@
 	@import '../theme/color.less';
 	@import '../theme/size.less';
 	@import '../theme/style.less';
-
 	.page-wrapper {
 		width: 100%;
 		height: 100%;
-
+		/deep/.uni-scroll-view{
+			height: auto;
+		}
 		/deep/.uni-scroll-view-content {
+			height: auto;
 			&::-webkit-scrollbar {
 				display: none;
 			}
 		}
-
 		.music-list {
 			margin-bottom: @page-padding;
 

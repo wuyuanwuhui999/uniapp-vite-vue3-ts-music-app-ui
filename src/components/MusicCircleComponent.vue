@@ -162,8 +162,14 @@
 		width: 100%;
 		height: 100%;
 
-		/deep/.uni-scroll-view::-webkit-scrollbar {
-			display: none;
+		/deep/.uni-scroll-view{
+			height: auto;
+		}
+		/deep/.uni-scroll-view-content {
+			height: auto;
+			&::-webkit-scrollbar {
+				display: none;
+			}
 		}
 
 		.module-block {
