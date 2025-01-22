@@ -1,78 +1,77 @@
 <template>
 	<view class="page-wrapper">
 		<NavigatorTitleComponent title="注册"/>
-		<view class="module-block module-block-column">
-			<view class="row">
-				<view class="title">
-					<text class="require">*</text>
-					<text>账号</text>
+		<scroll-view scroll-y show-scrollbar="false" class="scroll-view">
+			<view class="module-block module-block-column">
+				<view class="row">
+					<view class="title">
+						<text class="require">*</text>
+						<text>账号</text>
+					</view>
+					<input @blur="userVertify('userId')" class="input" v-model="userData.userId" placeholder="请输入账号名称"/>
 				</view>
-				<input @blur="useCheckUserId" class="input" v-model="userData.userId" placeholder="请输入账号名称"/>
-			</view>
-			<view class="row">
-				<view class="title">
-					<text class="require">*</text>
-					<text>密码</text>
+				<view class="row">
+					<view class="title">
+						<text class="require">*</text>
+						<text>密码</text>
+					</view>
+					<input type="password" class="input" v-model="userData.password" placeholder="请输入密码"/>
 				</view>
-				<input type="password" class="input" v-model="userData.password" placeholder="请输入密码"/>
-			</view>
-			<view class="row">
-				<view class="title">
-					<text class="require">*</text>
-					<text>确认密码</text>
+				<view class="row">
+					<view class="title">
+						<text class="require">*</text>
+						<text>确认密码</text>
+					</view>
+					<input type="password" v-model="confirmPassowrd" class="input" placeholder="请确认密码"/>
 				</view>
-				<input type="password" v-model="confirmPassowrd" class="input" placeholder="请确认密码"/>
-			</view>
-			<view class="row">
-				<view class="title">
-					<text class="require">*</text>
-					<text>昵称</text>
+				<view class="row">
+					<view class="title">
+						<text class="require">*</text>
+						<text>昵称</text>
+					</view>
+					<input class="input" v-model="userData.username" placeholder="请输入昵称"/>
 				</view>
-				<input class="input" v-model="userData.username" placeholder="请输入昵称"/>
-			</view>
-			<view class="row">
-				<view class="title">
-					<text>性别</text>
+				<view class="row">
+					<view class="title">
+						<text>性别</text>
+					</view>
+					<input class="input" disabled @click="useEditSex" v-model="SexMap[userData.sex]" placeholder="请选择性别"/>
 				</view>
-				<input class="input" disabled @click="useEditSex" v-model="SexMap[userData.sex]" placeholder="请选择性别"/>
-			</view>
-			<view class="row">
-				<view class="title">
-					<text>出生日期</text>
+				<view class="row">
+					<view class="title">
+						<text>出生日期</text>
+					</view>
+					<uni-datetime-picker :border="false" class="input" type="date" :clear-icon="false" v-model="userData.birthday"/>
 				</view>
-				<uni-datetime-picker :border="false" class="input" type="date" :clear-icon="false" v-model="userData.birthday"/>
-			</view>
-			<view class="row">
-				<view class="title">
-					<text>电话</text>
+				<view class="row">
+					<view class="title">
+						<text>电话</text>
+					</view>
+					<input class="input" @blur="userVertify('telephone')" v-model="userData.telephone" placeholder="请输入电话号码"/>
 				</view>
-				<input class="input" v-model="userData.telephone" placeholder="请输入电话号码"/>
-			</view>
-			<view class="row">
-				<view class="title">
-					<text>邮箱</text>
+				<view class="row">
+					<view class="title">
+						<text>邮箱</text>
+					</view>
+					<input class="input" @blur="userVertify('email')" v-model="userData.email" placeholder="请输入邮箱"/>
 				</view>
-				<input class="input" v-model="userData.email" placeholder="请输入邮箱"/>
-			</view>
-			<view class="row">
-				<view class="title">
-					<text>区域</text>
+				<view class="row">
+					<view class="title">
+						<text>区域</text>
+					</view>
+					<input class="input" v-model="userData.region" placeholder="请输入区域"/>
 				</view>
-				<input class="input" v-model="userData.region" placeholder="请输入区域"/>
-			</view>
-			<view class="row">
-				<view class="title">
-					<text>个性签名</text>
+				<view class="row">
+					<view class="title">
+						<text>个性签名</text>
+					</view>
+					<input class="input" v-model="userData.sign" placeholder="请输入个性签名"/>
 				</view>
-				<input class="input" v-model="userData.sign" placeholder="请输入个性签名"/>
 			</view>
-		</view>
 
-		<view class="login-btn" @click="useRegister">注册</view>
-
+			<view class="login-btn" @click="useRegister">注册</view>
+		</scroll-view>
 		<OptionsDialog ref="sexOptionsDialog" @onCheck= "useCheckSex" :options="[{value:0,text:'男'},{value:1,text:'女'}]"/>
-
-
 	</view>
 </template>
 
@@ -80,7 +79,7 @@
 	import uniDatetimePicker from '@dcloudio/uni-ui/lib/uni-datetime-picker/uni-datetime-picker.vue';
 	import { ref, reactive } from 'vue';
 	import type { UserDataType } from '../types';
-	import { registerService, getUserByIdService } from '../service';
+	import { registerService, vertifyUserService } from '../service';
 	import OptionsDialog from '../components/OptionsDialog.vue';
 	import { SexMap } from '../common/config';
 	import { useStore } from '../stores/useStore'
@@ -128,11 +127,11 @@
 	 * @description: 校验账号和密码
 	 * @date: 2024-01-20 00:17
 	 */
-	const useCheckUserId = (): Promise<boolean> => {
-		return getUserByIdService(userData.userId).then((res)=>{
+	const useCheckUser = (): Promise<boolean> => {
+		return vertifyUserService(userData).then((res)=>{
 			if(res.data > 0){
 				uni.showToast({
-					title: '账号已存在',
+					title: res.msg,
 					icon: "none"
 				});
 				return false;
@@ -144,12 +143,10 @@
 	/**
 	 * @author: wuwenqiang
 	 * @description: 校验账号和密码
-	 * @date: 2024-01-20 00:17
+	 * @date: 2025-01-22 21:49
 	 */
-	const useVerifyUserId = () => {
-		if(loading)return;
-		loading = true;
-		useCheckUserId().finally(()=>loading = false);
+	const userVertify = (field:string)=>{
+		field && useCheckUser();
 	}
 
 	/**
@@ -186,7 +183,7 @@
 		}else{
 			if(loading)return;
 			loading = true;
-			const verify = await useCheckUserId();
+			const verify = await useCheckUser();
 			if(verify){
 				await registerService({...userData}).then((res)=>{
 					store.setUserData(res.data)
@@ -207,50 +204,58 @@
 </script>
 
 <style lang="less" scoped>
-	@import '../../theme/color.less';
-	@import '../../theme/size.less';
-	@import '../../theme/style.less';
+	@import '../theme/color.less';
+	@import '../theme/size.less';
+	@import '../theme/style.less';
 	.page-wrapper{
 		height: 100vh;
 		display: flex;
 		flex-direction: column;
 		box-sizing: border-box;
-		padding: 0 @page-padding @page-padding;
 		background-color: @page-background-color;
-		.module-block{
-			align-items: center;
-			.row{
-				width: 100%;
-				display: flex;
+		.scroll-view{
+			flex: 1;
+			padding: 0 @page-padding;
+			box-sizing: border-box;
+			.module-block{
 				align-items: center;
-				margin-top: @page-padding;
-				border-bottom: 1rpx solid @page-background-color;
-				.title{
-					width: 25%;
-					.require{
-						color: @warn-color;
+				.row{
+					width: 100%;
+					display: flex;
+					align-items: center;
+					margin-top: @page-padding;
+					border-bottom: 1rpx solid @page-background-color;
+					&:first-child{
+						margin-top:0;
+					}
+					.title{
+						width: 25%;
+						.require{
+							color: @warn-color;
+						}
+					}
+					.input{
+						flex: 1;
+						padding-left: @small-margin;
+						height: @input-height
+					}
+					/deep/.icon-calendar{
+						display: none;
 					}
 				}
-				.input{
-					flex: 1;
-					padding-left: @small-margin;
-					height: @input-height
-				}
-				/deep/.icon-calendar{
-					display: none;
-				}
+			}
+			.login-btn{
+				text-align: center;
+				width: 100%;
+				padding: @page-padding;
+				box-sizing: border-box;
+				border-radius: @big-border-radius;
+				margin:  @page-padding 0;
+				background-color: @warn-color;
+				color: @module-background-color;
+				display: inline-block;
 			}
 		}
-		.login-btn{
-			text-align: center;
-			width: 100%;
-			padding: @page-padding;
-			box-sizing: border-box;
-			border-radius: @big-border-radius;
-			margin-top:  @page-padding;
-			background-color: @warn-color;
-			color: @module-background-color;
-			display: inline-block;
-		}
+		
 	}
 </style>

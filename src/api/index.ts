@@ -3,7 +3,7 @@ export default {
   getUserData: '/service/user/getUserData', // 获取用户信息
   updateUser: '/service/user/updateUser',//更新用户信息
   register: '/service/user/register',//注册
-	getUserById: '/service/user/getUserById',// 校验账号是否存在
+	vertifyUser: '/service/user/vertifyUser',// 校验账号是否存在
   getKeywordMusic: '/service/myMusic/getKeywordMusic',//获取搜索关键词
   getMusicClassify: '/service/myMusic/getMusicClassify',//获取分类歌曲
   getMusicListByClassifyId: '/service/myMusic/getMusicListByClassifyId',//获取推荐音乐列表

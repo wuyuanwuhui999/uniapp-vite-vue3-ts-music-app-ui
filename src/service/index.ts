@@ -282,8 +282,8 @@ export const registerService = (userData:types.UserDataType):Promise<MyAwesomeDa
  * @date: 2024-01-19 23:51
  * @author wuwenqiang
  */
-export const getUserByIdService = (userId:string):Promise<MyAwesomeData<number>>=>{
-	return httpRequest.get<number>(`${api.getUserById}?userId=${userId}`)
+export const vertifyUserService = (userData:types.UserDataType):Promise<MyAwesomeData<number>>=>{
+	return httpRequest.post<number>(api.vertifyUser,userData)
 };
 
 /**
