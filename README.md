@@ -1,6 +1,6 @@
 开发者：吴怨吴悔
 
-=============================界面预览（如果无法预览，请查看项目根目录png文件）==========================
+=============================界面预览（如果无法预览，请查看项目根目录png文件）==========================   
 ![app首页](音乐首页.jpg)
 ![app首页](音乐推荐.jpg)
 ![app首页](音乐朋友圈1.jpg)
@@ -23,7 +23,7 @@
 ![app首页](更改用户信息2.png)
 ![app首页](更改用户信息3.png)
 ![app首页](更改用户信息4.png)
-=============================界面预览（如果无法预览，请查看项目根目录png文件）==========================
+=============================界面预览（如果无法预览，请查看项目根目录png文件）==========================   
 
 使用uni-vue3-vite-ts+pinia+router搭建的音乐混合app
 
@@ -31,47 +31,52 @@
 
 
 
-flutter版本参见：   
-https://github.com/wuyuanwuhui99/flutter-movie-app-ui   
-https://gitee.com/wuyuanwuhui99/flutter-movie-app-ui
+flutter版本参见:   
+github地址：https://github.com/wuyuanwuhui99/flutter-movie-app-ui   
+gitee地址：https://hub.nuaa.cf/wuyuanwuhui99/flutter-movie-app-ui
 
-react native版本参见：   
-https://github.com/wuyuanwuhui99/react-native-app-ui   
+flutter音乐项目参见:   
+github地址：https://github.com/wuyuanwuhui99/flutter-music-app-ui   
+gitee地址：https://hub.nuaa.cf/wuyuanwuhui99/flutter-music-app-ui
 
-在线音乐和电影后端接口项目和sql语句：   
-https://github.com/wuyuanwuhui99/springboot-app-service   
-https://gitee.com/wuyuanwuhui99/springboot-app-service
+react native版本参见:   
+github地址：https://github.com/wuyuanwuhui99/react-native-app-ui   
 
-harmony鸿蒙java版本参见：   
-https://github.com/wuyuanwuhui99/Harmony_movie_app_ui   
-https://gitee.com/wuyuanwuhui99/Harmony_movie_app_ui
+java安卓原生版本参见：  
+通用地址：https://github.com/wuyuanwuhui99/android-java-movie-app-ui   
+gitee地址：https://hub.nuaa.cf/wuyuanwuhui99/android-java-movie-app-ui
 
-harmony鸿蒙arkts版本参见：   
-https://github.com/wuyuanwuhui99/Harmony-arkts-movie-music-app-ui   
-https://gitee.com/wuyuanwuhui99/Harmony-arkts-movie-music-app-ui
+uniapp版本参见：
+github地址：https://github.com/wuyuanwuhui99/uniapp-vite-vue3-ts-movie-app-ui   
+gitee地址：https://gitee/wuyuanwuhui99/uniapp-vite-vue3-ts-movie-app-ui  
 
-java安卓原生版本参见：   
-https://github.com/wuyuanwuhui99/android-java-movie-app-ui   
+uniapp音乐项目参见：
+github地址：https://github.com/wuyuanwuhui99/uniapp-vite-vue3-ts-music-app-ui   
+gitee地址：https://gitee/wuyuanwuhui99/uniapp-vite-vue3-ts-music-app-ui  
 
-kotlin安卓原生版本参见：   
-https://github.com/wuyuanwuhui99/android-kotlin-jetpack-movie-app   
+微信小程序版本参见：  
+通用地址：https://github.com/wuyuanwuhui99/weixin-movie-app-ui、  
+国内镜像地址：https://hub.nuaa.cf/wuyuanwuhui99/weixin-movie-app-ui
 
-微信小程序版本参见：   
-https://github.com/wuyuanwuhui99/weixin-movie-app-ui   
-https://gitee.com/wuyuanwuhui99/weixin-movie-app-ui
+harmony鸿蒙版本参见:   
+github地址：https://github.com/wuyuanwuhui99/Harmony_movie_app_ui   
+gitee地址：https://hub.nuaa.cf/wuyuanwuhui99/Harmony_movie_app_ui
 
-uniapp版本参见：   
-https://github.com/wuyuanwuhui99/uniapp-vite-vue3-ts-movie-app-ui   
-https://gitee.com/wuyuanwuhui99/uniapp-vite-vue3-ts-movie-app-ui
+harmony鸿蒙音乐项目参见:   
+github地址：https://github.com/wuyuanwuhui99/harmony_music_app_ui   
+gitee地址：https://hub.nuaa.cf/wuyuanwuhui99/harmony_music_app_ui
 
-vue2在线音乐项目：   
-https://github.com/wuyuanwuhui99/vue-music-app-ui   
+vue在线音乐项目：  
+通用地址：https://github.com/wuyuanwuhui99/vue-music-app-ui   
+国内镜像地址：https://hub.nuaa.cf/wuyuanwuhui99/vue-music-app-ui
 
-在线音乐后端项目：   
-https://github.com/wuyuanwuhui99/koa2-music-app-service
+在线音乐后端项目：  
+通用地址：https://github.com/wuyuanwuhui99/koa2-music-app-service   
+国内镜像地址：https://hub.nuaa.cf/wuyuanwuhui99/koa2-music-app-service
 
-vue3+ts明日头条项目：   
-https://github.com/wuyuanwuhui99/vue3-ts-toutiao-app-ui  
+vue3+ts明日头条项目：  
+通用地址：https://github.com/wuyuanwuhui99/vue3-ts-toutiao-app-ui  
+国内镜像地址：https://hub.nuaa.cf/wuyuanwuhui99/vue3-ts-toutiao-app-ui   
 
 音乐播放器正在开发中，音乐数据来自于python爬虫程序，爬取酷狗音乐数据，敬请关注
 

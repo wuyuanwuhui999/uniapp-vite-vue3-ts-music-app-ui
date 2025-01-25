@@ -5,7 +5,7 @@
 
 			<view class="login-input-wrapper">
 				<image src="../../static/icon_user_active.png" class="icon-login"/>
-				<input type="text" v-model="identifyCode" class="login-input" placeholder="请输入验证码"/>
+				<input type="text" v-model="code" class="login-input" placeholder="请输入验证码"/>
 			</view>
 
 			<view class="login-input-wrapper">
@@ -26,14 +26,21 @@
 <script setup lang="ts">
 	import { ref } from 'vue';
 	import NavigatorTitleComponent from '../components/NavigatorTitleComponent.vue';
+	import { useRoute,type RouteLocationNormalized } from "vue-router";
+	import { resetPasswordService } from '../service';
+	import { useStore } from '../stores/useStore'
+	import {httpRequest} from '../utils/HttpUtils';
 
 	const password = ref<string>("")
 	const confirmPassword = ref<string>("");
-	const identifyCode = ref<number>();
+	const code = ref<number>();
+
+	const store = useStore()
+	const route:RouteLocationNormalized = useRoute();
 
 
 	const useSumbit = () => {
-		if(!identifyCode.value){
+		if(!code.value){
 			uni.showToast({
 				duration:2000,
 				position:'center',
@@ -45,14 +52,39 @@
 				position:'center',
 				title:'密码不能为空'
 			})
-		}else if(!password.value.trim()){
+		}else if(!confirmPassword.value.trim()){
 			uni.showToast({
 				duration:2000,
 				position:'center',
 				title:'确定密码不能为空'
 			})
+		}else if(password.value != confirmPassword.value){
+			uni.showToast({
+				duration:2000,
+				position:'center',
+				title:'密码和确定密码不一致'
+			})
 		}else{
-			
+			resetPasswordService(decodeURIComponent(route.query.email as string),password.value,code.value).then((res)=>{
+				if(res.data !== null){
+					uni.showToast({
+						duration:2000,
+						position:'center',
+						title:'重置密码成功'
+					});
+					store.setUserData(res.data)
+					store.setToken(res.token)
+					uni.setStorage({key:'token',data:res.token});
+					httpRequest.setToken(res.token);
+					uni.redirectTo({url: '../pages/MusicIndexPage'})
+				}else{
+					uni.showToast({
+						duration:2000,
+						position:'center',
+						title:'重置密码失败'
+					});
+				}
+			})
 		}
 	}
 </script>

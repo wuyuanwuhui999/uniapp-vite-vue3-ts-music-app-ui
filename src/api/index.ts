@@ -1,9 +1,11 @@
 export default {
-  login: '/service/user/login', //登录
-  getUserData: '/service/user/getUserData', // 获取用户信息
-  updateUser: '/service/user/updateUser',//更新用户信息
+  login: '/service/user-getway/login', //登录
+  getUserData: '/service/user-getway/getUserData', // 获取用户信息
+  updateUser: '/service/user-getway/updateUser',//更新用户信息
   register: '/service/user/register',//注册
 	vertifyUser: '/service/user/vertifyUser',// 校验账号是否存在
+  getBackPasswordByEmail: '/service/user/getBackPasswordByEmail',// 找回密码
+  resetPassword: '/service/user/resetPassword',
   getKeywordMusic: '/service/myMusic/getKeywordMusic',//获取搜索关键词
   getMusicClassify: '/service/myMusic/getMusicClassify',//获取分类歌曲
   getMusicListByClassifyId: '/service/myMusic/getMusicListByClassifyId',//获取推荐音乐列表
@@ -33,5 +35,4 @@ export default {
   getMusicListByFavoriteId:'/service/myMusic-getway/getMusicListByFavoriteId',// 按照收藏夹的id查询音乐列表
   getMusicAuthorCategory: '/service/myMusic/getMusicAuthorCategory',// 获取歌手分类
   getMusicListByAuthorId: '/service/myMusic/getMusicListByAuthorId',// 根据歌手id获取音乐列表
-  getBackPassword: '/service/user/getBackPassword',// 找回密码
 };

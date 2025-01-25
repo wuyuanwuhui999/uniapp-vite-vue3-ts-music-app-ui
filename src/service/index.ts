@@ -292,5 +292,10 @@ export const vertifyUserService = (userData:types.UserDataType):Promise<MyAwesom
  * @author wuwenqiang
  */
 export const getBackPasswordService = (email:string):Promise<MyAwesomeData<String>>=>{
-    return httpRequest.post<string>(api.getBackPassword,{email})
-  }; 
+    return httpRequest.post<string>(api.getBackPasswordByEmail,{email})
+}; 
+
+export const resetPasswordService = (email:string,password:string,code:number):Promise<MyAwesomeData<types.UserDataType>>=>{
+    password = md5(password);
+    return httpRequest.post<types.UserDataType>(api.resetPassword,{email,password,code})
+}; 
