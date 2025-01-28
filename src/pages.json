@@ -41,6 +41,14 @@
 			}
 		},
 		{
+			"path" : "pages/UpdatePasswordPage",
+			"style" : 
+			{
+				"navigationBarTitleText" : "",
+				"enablePullDownRefresh" : false
+			}
+		},
+		{
 			"path" : "pages/MusicIndexPage",
 			"style" : 
 			{
