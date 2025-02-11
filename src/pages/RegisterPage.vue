@@ -51,6 +51,7 @@
 				</view>
 				<view class="row">
 					<view class="title">
+						<text class="require">*</text>
 						<text>邮箱</text>
 					</view>
 					<input class="input" @blur="userVertify('email')" v-model="userData.email" placeholder="请输入邮箱"/>
@@ -173,6 +174,11 @@
 		}else if(!userData.username){
 			uni.showToast({
 				title: '请输入昵称',
+				icon: "none"
+			});
+		}else if(!userData.email){
+			uni.showToast({
+				title: '请输入邮箱',
 				icon: "none"
 			});
 		}else if(userData.password !== confirmPassowrd.value){

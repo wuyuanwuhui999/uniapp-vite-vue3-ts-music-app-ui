@@ -30,8 +30,12 @@
 后端接口使用springboot开发，所有音乐数据来自于python爬虫程序，爬取第三方音乐网站数据
 
 
+后端接口项目和sql语句：   
+https://github.com/wuyuanwuhui99/springboot-app-service   
+https://gitee.com/wuyuanwuhui99/springboot-app-service   
 
-flutter版本参见:   
+
+flutter电影项目参见:   
 github地址：https://github.com/wuyuanwuhui99/flutter-movie-app-ui   
 gitee地址：https://hub.nuaa.cf/wuyuanwuhui99/flutter-movie-app-ui
 
@@ -39,14 +43,14 @@ flutter音乐项目参见:
 github地址：https://github.com/wuyuanwuhui99/flutter-music-app-ui   
 gitee地址：https://hub.nuaa.cf/wuyuanwuhui99/flutter-music-app-ui
 
-react native版本参见:   
+react native电影参见:   
 github地址：https://github.com/wuyuanwuhui99/react-native-app-ui   
 
-java安卓原生版本参见：  
+java安卓原生电影参见：  
 通用地址：https://github.com/wuyuanwuhui99/android-java-movie-app-ui   
 gitee地址：https://hub.nuaa.cf/wuyuanwuhui99/android-java-movie-app-ui
 
-uniapp版本参见：
+uniapp电影参见：
 github地址：https://github.com/wuyuanwuhui99/uniapp-vite-vue3-ts-movie-app-ui   
 gitee地址：https://gitee/wuyuanwuhui99/uniapp-vite-vue3-ts-movie-app-ui  
 
@@ -58,7 +62,7 @@ gitee地址：https://gitee/wuyuanwuhui99/uniapp-vite-vue3-ts-music-app-ui
 通用地址：https://github.com/wuyuanwuhui99/weixin-movie-app-ui、  
 国内镜像地址：https://hub.nuaa.cf/wuyuanwuhui99/weixin-movie-app-ui
 
-harmony鸿蒙版本参见:   
+harmony鸿蒙电影参见:   
 github地址：https://github.com/wuyuanwuhui99/Harmony_movie_app_ui   
 gitee地址：https://hub.nuaa.cf/wuyuanwuhui99/Harmony_movie_app_ui
 
