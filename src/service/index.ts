@@ -291,8 +291,8 @@ export const vertifyUserService = (userData:types.UserDataType):Promise<MyAwesom
  * @date: 2025-01-19 22:59
  * @author wuwenqiang
  */
-export const getBackPasswordService = (email:string):Promise<MyAwesomeData<number>>=>{
-    return httpRequest.post<number>(api.getBackPasswordByEmail,{email})
+export const sendEmailVertifyCodeService = (email:string):Promise<MyAwesomeData<number>>=>{
+    return httpRequest.post<number>(api.sendEmailVertifyCode,{email})
 }; 
 
 export const resetPasswordService = (email:string,password:string,code:number):Promise<MyAwesomeData<types.UserDataType>>=>{

@@ -21,7 +21,7 @@
 
     import { ref } from 'vue';
     import NavigatorTitleComponent from '../components/NavigatorTitleComponent.vue';
-	import { getBackPasswordService } from '../service';
+	import { sendEmailVertifyCodeService } from '../service';
     const email = ref<string>("");
 	let loading:boolean = false;
 
@@ -45,7 +45,7 @@
 			if(loading)return;
 			loading = true;
 			uni.showLoading()
-            getBackPasswordService(email.value).then((res)=>{
+            sendEmailVertifyCodeService(email.value).then((res)=>{
 				uni.showToast({
 					title: res.msg,
 					icon: "none"
