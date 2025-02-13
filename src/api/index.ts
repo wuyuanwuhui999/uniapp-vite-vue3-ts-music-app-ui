@@ -7,7 +7,8 @@ export default {
   sendEmailVertifyCode: '/service/user/sendEmailVertifyCode',// 找回密码
   resetPassword: '/service/user/resetPassword',// 重置密码
   updateAvater:'/service/user-getway/updateAvater',//更新头像
-  updatePassword: '/service/user-getway/updatePassword',//更新密码wq
+  updatePassword: '/service/user-getway/updatePassword',//更新密码
+  loginByEmail: '/service/user/loginByEmail',//邮箱登录
   getKeywordMusic: '/service/myMusic/getKeywordMusic',//获取搜索关键词
   getMusicClassify: '/service/myMusic/getMusicClassify',//获取分类歌曲
   getMusicListByClassifyId: '/service/myMusic/getMusicListByClassifyId',//获取推荐音乐列表

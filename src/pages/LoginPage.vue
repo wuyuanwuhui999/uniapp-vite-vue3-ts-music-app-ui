@@ -25,7 +25,7 @@
 			<view class="login-input-wrapper" v-show="tabIndex === 1">
 				<image src="../../static/icon_user_active.png" class="icon-login"/>
 				<input v-model="email" class="login-input" placeholder="请输入邮箱"/>
-				<image src="../../static/icon_send.png" class="icon-login icon-send"/>
+				<image @click="useSendEmailVertifyCode" src="../../static/icon_send.png" class="icon-login icon-send"/>
 			</view>
 
 			<view class="login-input-wrapper" v-show="tabIndex === 1">
@@ -44,10 +44,10 @@
 
 <script setup lang="ts">
 	import { ref } from 'vue';
-	import {loginService} from '../service';
+	import { loginService, loginByEmailService, sendEmailVertifyCodeService} from '../service';
 	import { useStore } from '../stores/useStore';
 	import {httpRequest} from '../utils/HttpUtils';
-
+	import { EMAIL_REG } from '../common/constant';
 	const userId = ref<string>('');
 	const password = ref<string>('123456');
 	const tabIndex = ref<number>(0);
@@ -65,40 +65,111 @@
 	}
 
 	const useLogin = () => {
-		if(!userId.value.trim()){
-			uni.showToast({
-				duration:2000,
-				position:'center',
-				title:'账号不能为空'
-			})
-		}else if(!password.value.trim()){
-			uni.showToast({
-				duration:2000,
-				position:'center',
-				title:'密码不能为空'
+		if(tabIndex.value === 0){
+			if(!userId.value.trim()){
+				uni.showToast({
+					duration:2000,
+					position:'center',
+					title:'账号不能为空'
+				})
+			}else if(!password.value.trim()){
+				uni.showToast({
+					duration:2000,
+					position:'center',
+					title:'密码不能为空'
+				})
+			}else{
+				uni.showLoading();
+				loginService(userId.value,password.value).then((res)=>{
+					uni.setStorage({key:userId.value,data:password.value});
+					store.setUserData(res.data)
+					store.setToken(res.token)
+					uni.setStorage({key:'token',data:res.token});
+					httpRequest.setToken(res.token);
+					uni.reLaunch({
+						url: `../pages/MusicIndexPage`
+					})
+					uni.showToast({
+						duration:2000,
+						position:'center',
+						title:'登录成功'
+					})
+				}).catch(()=>{
+					uni.showToast({
+						duration:2000,
+						position:'center',
+						title:'账号或密码错误'
+					})
+				}).finally(()=>{
+					uni.hideLoading();
+				})
+			}
+		}else{
+			if(!email.value.trim()){
+				uni.showToast({
+					duration:2000,
+					position:'center',
+					title:'邮箱不能为空'
+				})
+			}else if(!EMAIL_REG.test(email.value.trim())){
+				uni.showToast({
+					duration:2000,
+					position:'center',
+					title:'邮箱格式不正确'
+				})	
+			}else if(!password.value.trim()){
+				uni.showToast({
+					duration:2000,
+					position:'center',
+					title:'密码不能为空'
+				})
+			}else{
+				uni.showLoading();
+				loginByEmailService(email.value,code.value).then((res)=>{
+					uni.setStorage({key:userId.value,data:password.value});
+					store.setUserData(res.data)
+					store.setToken(res.token)
+					uni.setStorage({key:'token',data:res.token});
+					httpRequest.setToken(res.token);
+					uni.reLaunch({
+						url: `../pages/MusicIndexPage`
+					})
+					uni.showToast({
+						duration:2000,
+						position:'center',
+						title:'登录成功'
+					})
+				}).catch(()=>{
+					uni.showToast({
+						duration:2000,
+						position:'center',
+						title:'账号或密码错误'
+					})
+				}).finally(()=>{
+					uni.hideLoading();
+				})
+			}
+		}
+	}
+
+	const useSendEmailVertifyCode = () => {
+		if(EMAIL_REG.test(email.value.trim())){
+			uni.showLoading()
+			sendEmailVertifyCodeService(email.value).then((res)=>{
+				uni.showToast({
+					duration:2000,
+					position:'center',
+					title: res.msg
+				});
+			}).finally(()=>{
+				uni.hideLoading();
 			})
 		}else{
-			loginService(userId.value,password.value).then((res)=>{
-				uni.setStorage({key:userId.value,data:password.value});
-				store.setUserData(res.data)
-				store.setToken(res.token)
-				uni.setStorage({key:'token',data:res.token});
-				httpRequest.setToken(res.token);
-				uni.reLaunch({
-					url: `../pages/MusicIndexPage`
-				})
-				uni.showToast({
-					duration:2000,
-					position:'center',
-					title:'登录成功'
-				})
-			}).catch(()=>{
-				uni.showToast({
-					duration:2000,
-					position:'center',
-					title:'账号或密码错误'
-				})
-			})
+			uni.showToast({
+				duration:2000,
+				position:'center',
+				title: "邮箱格式不正确"
+			});
 		}
 	}
 

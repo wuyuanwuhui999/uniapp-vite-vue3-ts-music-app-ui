@@ -33,6 +33,60 @@ export const loginService = (userId:string,password:string):Promise<MyAwesomeDat
 	return httpRequest.post<types.UserDataType>(api.login,{userId,password})
 };
 
+
+/**
+ * @description: 注册
+ * @date: 2024-01-19 23:51
+ * @author wuwenqiang
+ */
+export const registerService = (userData:types.UserDataType):Promise<MyAwesomeData<types.UserDataType>>=>{
+	userData.password = md5(userData.password);
+	return httpRequest.put<types.UserDataType>(api.register,userData)
+};
+
+/**
+ * @description: 校验账号和密码是否存在
+ * @date: 2024-01-19 23:51
+ * @author wuwenqiang
+ */
+export const vertifyUserService = (userData:types.UserDataType):Promise<MyAwesomeData<number>>=>{
+	return httpRequest.post<number>(api.vertifyUser,userData)
+};
+
+/**
+ * @description: 找回密码
+ * @date: 2025-01-19 22:59
+ * @author wuwenqiang
+ */
+export const sendEmailVertifyCodeService = (email:string):Promise<MyAwesomeData<number>>=>{
+    return httpRequest.post<number>(api.sendEmailVertifyCode,{email})
+}; 
+
+export const resetPasswordService = (email:string,password:string,code:number):Promise<MyAwesomeData<types.UserDataType>>=>{
+    password = md5(password);
+    return httpRequest.post<types.UserDataType>(api.resetPassword,{email,password,code})
+}; 
+
+/**
+ * @description: 更新密码
+ * @date: 2025-01-28 14:22
+ * @author wuwenqiang
+ */
+export const updatePasswordService = (oldPassword:string,newPassword:string):Promise<MyAwesomeData<number>>=>{
+    oldPassword = md5(oldPassword);
+    newPassword = md5(newPassword);
+    return httpRequest.put<number>(api.updatePassword,{oldPassword,newPassword})
+}; 
+
+/**
+ * @description: 邮箱验证码登录
+ * @date: 2025-01-28 14:22
+ * @author wuwenqiang
+ */
+export const loginByEmailService = (email:string,code:string):Promise<MyAwesomeData<types.UserDataType>>=>{
+    return httpRequest.post<types.UserDataType>(api.loginByEmail,{email,code})
+}; 
+
 /**
  * @description: 获取推荐的音乐
  * @date: 2024-03-02 22:44
@@ -266,47 +320,3 @@ export const deleteMyLikeMusicAuthorService = (authorId:number):Promise<MyAwesom
 export const getMusicListByAuthorIdService = (authorId:number,pageNum:number,pageSize:number):Promise<MyAwesomeData<Array<types.MusicType>>> => {
     return httpRequest.get<Array<types.MusicType>>(`${api.getMusicListByAuthorId}?authorId=${authorId}&pageNum=${pageNum}&pageSize=${pageSize}`);
 }
-
-/**
- * @description: 注册
- * @date: 2024-01-19 23:51
- * @author wuwenqiang
- */
-export const registerService = (userData:types.UserDataType):Promise<MyAwesomeData<types.UserDataType>>=>{
-	userData.password = md5(userData.password);
-	return httpRequest.put<types.UserDataType>(api.register,userData)
-};
-
-/**
- * @description: 校验账号和密码是否存在
- * @date: 2024-01-19 23:51
- * @author wuwenqiang
- */
-export const vertifyUserService = (userData:types.UserDataType):Promise<MyAwesomeData<number>>=>{
-	return httpRequest.post<number>(api.vertifyUser,userData)
-};
-
-/**
- * @description: 找回密码
- * @date: 2025-01-19 22:59
- * @author wuwenqiang
- */
-export const sendEmailVertifyCodeService = (email:string):Promise<MyAwesomeData<number>>=>{
-    return httpRequest.post<number>(api.sendEmailVertifyCode,{email})
-}; 
-
-export const resetPasswordService = (email:string,password:string,code:number):Promise<MyAwesomeData<types.UserDataType>>=>{
-    password = md5(password);
-    return httpRequest.post<types.UserDataType>(api.resetPassword,{email,password,code})
-}; 
-
-/**
- * @description: 更新密码
- * @date: 2025-01-28 14:22
- * @author wuwenqiang
- */
-export const updatePasswordService = (oldPassword:string,newPassword:string):Promise<MyAwesomeData<number>>=>{
-    oldPassword = md5(oldPassword);
-    newPassword = md5(newPassword);
-    return httpRequest.put<number>(api.updatePassword,{oldPassword,newPassword})
-  }; 

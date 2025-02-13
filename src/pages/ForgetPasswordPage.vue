@@ -22,6 +22,7 @@
     import { ref } from 'vue';
     import NavigatorTitleComponent from '../components/NavigatorTitleComponent.vue';
 	import { sendEmailVertifyCodeService } from '../service';
+	import { EMAIL_REG } from '../common/constant';
     const email = ref<string>("");
 	let loading:boolean = false;
 
@@ -36,7 +37,7 @@
 				title: '请输入邮箱',
 				icon: "none"
 			});
-		}else if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value)){
+		}else if(!EMAIL_REG.test(email.value)){
 			uni.showToast({
 				title: '请输入正确的邮箱地址',
 				icon: "none"
