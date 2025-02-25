@@ -44,7 +44,7 @@
 	import { useRoute } from "vue-router";
 	import type { MusicType } from '../types';
 	import { MUSIC_SEARCH_STORAGE_KEY } from '../common/constant';
-	import TitleComponent from '../movie/components/TitleComponent.vue';
+	import TitleComponent from '../components/TitleComponent.vue';
 	import { searchMusicService } from '../service';
 	import { useStore } from "../stores/useStore";
 	import pauseIcon from '../../static/icon_music_play.png';

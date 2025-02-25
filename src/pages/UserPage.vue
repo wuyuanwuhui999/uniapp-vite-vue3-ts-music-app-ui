@@ -11,29 +11,9 @@
 				<text>{{store.userData.username}}</text>
 				<image class="icon-arrow" src="../../static/icon_arrow.png"/>
 			</view>
-			<view class="row" @click="useEditSex">
-				<text class="text">性别</text>
-				<text>{{SexMap[store.userData.sex] || ''}}</text>
-				<image class="icon-arrow" src="../../static/icon_arrow.png"/>
-			</view>
-			<view class="row" @click="useEditUserData('电话','telephone')">
-				<text class="text">电话</text>
-				<text>{{store.userData.telephone}}</text>
-				<image class="icon-arrow" src="../../static/icon_arrow.png"/>
-			</view>
 			<view class="row" @click="useEditUserData('邮箱','email')">
 				<text class="text">邮箱</text>
 				<text>{{store.userData.email}}</text>
-				<image class="icon-arrow" src="../../static/icon_arrow.png"/>
-			</view>
-			<view class="row">
-				<text class="text">生日</text>
-				<text>{{store.userData.birthday}}</text>
-				<image class="icon-arrow" src="../../static/icon_arrow.png"/>
-			</view>
-			<view class="row" @click="useEditUserData('电话','region')">
-				<text class="text">区域</text>
-				<text>{{store.userData.region}}</text>
 				<image class="icon-arrow" src="../../static/icon_arrow.png"/>
 			</view>
 			<view class="row last-row" @click="useEditUserData('个性签名','sign')">

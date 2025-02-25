@@ -31,7 +31,7 @@
 	import { CircleEnum } from '../common/enum';
 	import { PermissionMap } from '../common/config';
 	import { useStore } from "../stores/useStore";
-	import OptionsDialog from '../movie/components/OptionsDialog.vue';
+	import OptionsDialog from '../components/OptionsDialog.vue';
 	import MusicAvaterComponent from '../components/MusicAvaterComponent.vue';
 
 	const content = ref<string>('');
