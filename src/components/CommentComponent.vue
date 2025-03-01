@@ -256,12 +256,5 @@
             border-radius: @module-border-radius;
         }
     }
-    .no-data{
-        display: flex;
-        height: 0;
-        flex: 1;
-        align-items: center;
-        justify-content: center;
-    }
 }
 </style>

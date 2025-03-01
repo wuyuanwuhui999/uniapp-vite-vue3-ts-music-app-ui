@@ -23,6 +23,7 @@ export const useStore = defineStore("myStore", {
 			playIndex: -1 as number,// 播放的下标
 			total: 0,
 			loop: LoopModeEnum.ORDER,// 默认顺序播放
+			shareMusicItem: {} as MusicType// 分享的音乐
 		}
     },
     actions: {
@@ -161,6 +162,10 @@ export const useStore = defineStore("myStore", {
 		setLoop(loop:LoopModeEnum){
 			uni.setStorage({key:LOOP_STORAGE_KEY,data:loop});
 			this.loop = loop;
+		},
+
+		setShareMusicItem(musicItem:MusicType){
+			this.shareMusicItem = musicItem
 		}
     }
 })

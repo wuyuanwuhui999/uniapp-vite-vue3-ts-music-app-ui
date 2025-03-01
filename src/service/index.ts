@@ -28,9 +28,9 @@ export const updateUserDataService = (userData:types.UserDataType):Promise<MyAwe
  * @date: 2024-01-15 21:32
  * @author wuwenqiang
  */
-export const loginService = (userId:string,password:string):Promise<MyAwesomeData<types.UserDataType>>=>{
+export const loginService = (userAccount:string,password:string):Promise<MyAwesomeData<types.UserDataType>>=>{
 	password = md5(password);
-	return httpRequest.post<types.UserDataType>(api.login,{userId,password})
+	return httpRequest.post<types.UserDataType>(api.login,{userAccount,password})
 };
 
 
