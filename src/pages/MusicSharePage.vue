@@ -6,15 +6,21 @@
 		</view>
 		<view class="page-body">
 			<textarea class="textarea" v-model="content" placeholder="这一刻的想法"></textarea>
-			<view class="module-block module-block-row">
-				<MusicAvaterComponent type="music" :name="musicItem.songName" :avater="musicItem.cover"/>
-				<text>{{ musicItem.authorName }} - {{ musicItem.songName }}</text>
+			<view class="module-block">
+				<view class="check-song" v-if="store.shareMusicItem?.id" @click="useCheckMusic">
+					<MusicAvaterComponent type="music" :name="store.shareMusicItem?.songName" :avater="store.shareMusicItem?.cover"/>
+					<text>{{ store.shareMusicItem?.authorName }} - {{ store.shareMusicItem?.songName }}</text>
+				</view>
+				<view v-else class="check-song" @click="useCheckMusic">
+					<text class="check-tip">请选择一首歌词</text>
+					<image class="icon-small" src="../../static/icon_arrow.png"></image>
+				</view>
 			</view>
 			<view class="module-block module-block-row" @click="usePermission">
-				<image class="icon-permission" src="../../static/icon_permission.png" />
+				<image class="icon-middle" src="../../static/icon_permission.png" />
 				<text class="permission-text">谁可以看</text>
 				<text>{{PermissionMap[permission]}}</text>
-				<image class="icon-arrow" src="../../static/icon_arrow.png" />
+				<image class="icon-small" src="../../static/icon_arrow.png" />
 			</view>
 		</view>
 		<OptionsDialog ref="permissionOptionsDialog" @onCheck="onCheckPermission"
@@ -24,10 +30,8 @@
 
 <script setup lang="ts">
 	import { ref } from 'vue';
-	import { useRoute } from "vue-router";
-	import type { MusicType, CircleType } from '../types';
+	import type { CircleType } from '../types';
 	import { saveCircleService } from '../service';
-	import { HOST } from '../common/constant';
 	import { CircleEnum } from '../common/enum';
 	import { PermissionMap } from '../common/config';
 	import { useStore } from "../stores/useStore";
@@ -39,10 +43,6 @@
 	const permissionOptionsDialog = ref<null | InstanceType<typeof OptionsDialog>>(null);
 
 	const store = useStore();
-	const route = useRoute();
-
-	const musicItem : MusicType = JSON.parse(decodeURIComponent(route.query.musicItem as string)) as MusicType;
-
 
 	/**
 	 * @description: 下载权限
@@ -81,7 +81,7 @@
 		const params : CircleType = {
 			permission: permission.value,
 			type: CircleEnum.MUSIC,
-			relationId: musicItem.id,// 关联音乐audio_id或者电影movie_id
+			relationId: store.shareMusicItem?.id,// 关联音乐audio_id或者电影movie_id
 			content: content.value,// 朋友圈内容
 		}
 		saveCircleService(params).then(() => {
@@ -91,8 +91,19 @@
 				title: '发布成功'
 			})
 			uni.navigateBack();
+			store.setShareMusicItem(null);
 		})
+	}
 
+	/**
+	* @description: 选择音乐
+	* @date: 2025-03-01 14:50
+	* @author wuwenqiang
+	*/
+	const useCheckMusic = ()=>{
+		uni.navigateTo({
+			url: `../pages/MusicCirCleCheckPage`
+		})
 	}
 </script>
 
@@ -135,7 +146,9 @@
 			flex: 1;
 			overflow: hidden;
 			padding: @page-padding;
-
+			.icon-middle{
+				opacity: 0.5;
+			}
 			.textarea {
 				background: @search-input-placehold;
 				width: 100%;
@@ -148,19 +161,21 @@
 				gap: @page-padding;
 				align-items: center;
 
-				.icon-permission {
-					width: @middle-icon-size;
-					height: @middle-icon-size;
-				}
-
 				.permission-text {
 					flex: 1;
 				}
 
-				.icon-arrow {
+				.icon-small {
 					opacity: 0.5;
-					width: @small-icon-size;
-					height: @small-icon-size;
+				}
+				.check-song{
+					display: flex;
+					align-items: center;
+					width: 100%;
+					gap: @page-padding;
+					.check-tip{
+						flex:1;
+					}
 				}
 			}
 		}

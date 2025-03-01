@@ -4,7 +4,6 @@ import type {MusicType,MusicRecordType} from '../types/index';
 import { HOST, MUSIC_STORAGE_KEY, MUSIC_LIST_STORAGE_KEY, LOOP_STORAGE_KEY,MUSIC_CLASSIFY_NAME_STORAGE_KEY} from '../common/constant';
 import {LoopModeEnum} from '../common/enum';
 import {insertMusicRecordService} from '../service';
-import { version } from 'vue';
 export const useStore = defineStore("myStore", {
     state:() => {
         return {
@@ -23,7 +22,7 @@ export const useStore = defineStore("myStore", {
 			playIndex: -1 as number,// 播放的下标
 			total: 0,
 			loop: LoopModeEnum.ORDER,// 默认顺序播放
-			shareMusicItem: {} as MusicType// 分享的音乐
+			shareMusicItem: null// 分享的音乐
 		}
     },
     actions: {
@@ -164,7 +163,7 @@ export const useStore = defineStore("myStore", {
 			this.loop = loop;
 		},
 
-		setShareMusicItem(musicItem:MusicType){
+		setShareMusicItem(musicItem:MusicType | null){
 			this.shareMusicItem = musicItem
 		}
     }

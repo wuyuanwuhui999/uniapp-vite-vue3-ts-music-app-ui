@@ -144,7 +144,7 @@
 
 	const usePublishCircle = () => {
 		uni.navigateTo({
-			url: `../pages/MusicCirClePublishPage`
+			url: `../pages/MusicSharePage`
 		})
 	}
 
