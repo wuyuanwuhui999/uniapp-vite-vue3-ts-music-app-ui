@@ -19,11 +19,13 @@ uni.getSystemInfo({
 setTimeout(()=>{
     if(token){
         getUserDataService(token).then((res)=>{
-            store.setUserData(res.data)
-            store.setToken(res.token)
-            uni.setStorage({key:'token',data:res.token});
-            httpRequest.setToken(res.token);
-            uni.redirectTo({url: '../pages/MusicIndexPage'})
+          store.setUserData(res.data)
+          store.setToken(res.token)
+          uni.setStorage({key:'token',data:res.token});
+          httpRequest.setToken(res.token);
+          uni.redirectTo({url: '../pages/MusicIndexPage'})
+        }).catch((err)=>{
+          uni.redirectTo({url: '../pages/LoginPage'})
         })
     }else{
         uni.redirectTo({url: '../pages/LoginPage'})

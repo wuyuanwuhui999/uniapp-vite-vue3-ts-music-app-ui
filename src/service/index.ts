@@ -11,7 +11,7 @@ import md5 from 'md5';
  */
 export const getUserDataService = (token:string):Promise<MyAwesomeData<types.UserDataType>>=> {
 	httpRequest.setToken(token);
-	return httpRequest.get<types.UserDataType>(api.getUserData);
+	return httpRequest.get<types.UserDataType>(api.getUserData,{},{noShowMsg:true});
 }
 
 /**

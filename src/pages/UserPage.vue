@@ -16,6 +16,11 @@
 				<text>{{store.userData.email}}</text>
 				<image class="icon-arrow" src="../../static/icon_arrow.png"/>
 			</view>
+			<view class="row" @click="useEditSex">
+				<text class="text">性别</text>
+				<text>{{SexMap[store.userData.sex] || ''}}</text>
+				<image class="icon-arrow" src="../../static/icon_arrow.png"/>
+			</view>
 			<view class="row last-row" @click="useEditUserData('个性签名','sign')">
 				<text class="text">个性签名</text>
 				<text>{{store.userData.sign}}</text>

@@ -48,15 +48,15 @@
 	import { useStore } from '../stores/useStore';
 	import {httpRequest} from '../utils/HttpUtils';
 	import { EMAIL_REG } from '../common/constant';
-	const userId = ref<string>('');
+	const userAccount = ref<string>('');
 	const password = ref<string>('123456');
 	const tabIndex = ref<number>(0);
 	const email = ref<string>('');
 	const code = ref<string>('');
 
 	const store = useStore();
-	userId.value = store.userData.userId || '吴时吴刻';
-	uni.getStorage({key:userId.value}).then(res=>{
+	userAccount.value = store.userData.userAccount || '吴时吴刻';
+	uni.getStorage({key:userAccount.value}).then(res=>{
 		password.value = res.data || '123456'
 	});
 
@@ -66,7 +66,7 @@
 
 	const useLogin = () => {
 		if(tabIndex.value === 0){
-			if(!userId.value.trim()){
+			if(!userAccount.value.trim()){
 				uni.showToast({
 					duration:2000,
 					position:'center',
@@ -80,8 +80,8 @@
 				})
 			}else{
 				uni.showLoading();
-				loginService(userId.value,password.value).then((res)=>{
-					uni.setStorage({key:userId.value,data:password.value});
+				loginService(userAccount.value,password.value).then((res)=>{
+					uni.setStorage({key:userAccount.value,data:password.value});
 					store.setUserData(res.data)
 					store.setToken(res.token)
 					uni.setStorage({key:'token',data:res.token});
@@ -126,7 +126,7 @@
 			}else{
 				uni.showLoading();
 				loginByEmailService(email.value,code.value).then((res)=>{
-					uni.setStorage({key:userId.value,data:password.value});
+					uni.setStorage({key:userAccount.value,data:password.value});
 					store.setUserData(res.data)
 					store.setToken(res.token)
 					uni.setStorage({key:'token',data:res.token});

@@ -8,7 +8,7 @@
 						<text class="require">*</text>
 						<text>账号</text>
 					</view>
-					<input @blur="userVertify('userId')" class="input" v-model="userData.userId" placeholder="请输入账号名称"/>
+					<input @blur="userVertify('userAccount')" class="input" v-model="userData.userId" placeholder="请输入账号名称"/>
 				</view>
 				<view class="row">
 					<view class="title">
@@ -30,24 +30,6 @@
 						<text>昵称</text>
 					</view>
 					<input class="input" v-model="userData.username" placeholder="请输入昵称"/>
-				</view>
-				<view class="row">
-					<view class="title">
-						<text>性别</text>
-					</view>
-					<input class="input" disabled @click="useEditSex" v-model="SexMap[userData.sex]" placeholder="请选择性别"/>
-				</view>
-				<view class="row">
-					<view class="title">
-						<text>出生日期</text>
-					</view>
-					<uni-datetime-picker :border="false" class="input" type="date" :clear-icon="false" v-model="userData.birthday"/>
-				</view>
-				<view class="row">
-					<view class="title">
-						<text>电话</text>
-					</view>
-					<input class="input" @blur="userVertify('telephone')" v-model="userData.telephone" placeholder="请输入电话号码"/>
 				</view>
 				<view class="row">
 					<view class="title">
@@ -93,7 +75,7 @@
 	const sexOptionsDialog = ref<null | InstanceType<typeof OptionsDialog>>(null);
 	// 用户信息
 	const userData = reactive<UserDataType>({
-		userId: '',
+		userAccount: '',
 		username: '',
 		telephone: '',
 		email: '',
@@ -156,7 +138,7 @@
 	 * @date: 2024-01-10 22:13
 	 */
 	const useRegister = async() => {
-		if(!userData.userId){
+		if(!userData.userAccount){
 			uni.showToast({
 				title: '请输入账号',
 				icon: "none"
@@ -223,6 +205,12 @@
 			flex: 1;
 			padding: 0 @page-padding;
 			box-sizing: border-box;
+			/deep/.uni-scroll-view-content {
+				height: auto;
+				&::-webkit-scrollbar {
+					display: none;
+				}
+			}
 			.module-block{
 				align-items: center;
 				.row{

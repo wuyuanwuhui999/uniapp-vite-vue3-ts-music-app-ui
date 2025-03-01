@@ -2,7 +2,8 @@
 import type {CircleEnum} from '../common/enum';
 
 export type UserDataType = {
-    userId:     string;
+	id?: string;
+    userAccount:     string;
     createDate?: string;
     updateDate?: string;
     username:   string;
