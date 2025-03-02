@@ -1,24 +1,7 @@
 <template>
 	<view class="favorite-list-wrapper">
-		<template v-if="showCreateFavorite">
-			<view class="favorite-add-row">
-				<text class="require-text">*</text>
-				<text>名称</text>
-				<input v-model="favoriteName" placeholder="请输入收藏夹名称" class="favorite-input" />
-			</view>
-			<view class="favorite-add-row favorite-cover-row">
-				<text class="require-text require-text-hidden">*</text>
-				<text>封面</text>
-				<view class="rectangle">
-					<image class="icon-favorite-add" src="../../static/icon_add.png" />
-				</view>
-			</view>
-			<view class="favorite-btn-row">
-				<button class="favorite-btn favorite-create" :class="isEnableCreate ? '' : 'favorite-btn-disable'"
-					@click="useInsertFavoriteDirectory">创建</button>
-				<button class="favorite-btn favorite-cancle" @click="showCreateFavorite = false">取消</button>
-			</view>
-		</template>
+		<CreateFavoriteDirectoryComponent  v-if="showCreateFavorite" @on-cancle="showCreateFavorite = false" @on-sure="useCreateFavorite"/>
+
 		<template v-else>
 			<view class="favorite-add" @click="showCreateFavorite = true">
 				<view class="rectangle">
@@ -54,12 +37,14 @@
 	import { reactive, defineProps, type PropType, defineEmits, ref, watch } from 'vue';
 	import type { FavoriteDirectoryType, FavoriteMusicType } from '../types';
 	import { getFavoriteDirectoryService, insertMusicFavoriteService, insertFavoriteDirectoryService } from '../service';
+	import CreateFavoriteDirectoryComponent from './CreateFavoriteDirectoryComponent.vue';
+
 	const favoriteDirectoryList = reactive<Array<FavoriteDirectoryType>>([]);
 	const checkboxValue = reactive<Array<number>>([]);
 	const showCreateFavorite = ref<boolean>(false);
 	const isEnableCreate = ref<boolean>(false);
 	const favoriteName = ref<string>('');
-
+	
 	const { musicId, isFavorite } = defineProps({
 		isFavorite: {
 			type: Boolean as PropType<boolean>,
@@ -106,34 +91,20 @@
 		})
 	}
 
-	const useInsertFavoriteDirectory = () => {
-		const favoriteDirectory : FavoriteDirectoryType = { name: favoriteName.value, id: -1 };
-		insertFavoriteDirectoryService(favoriteDirectory).then(res => {
-			if (res.data) {
-				uni.showToast({
-					duration: 2000,
-					position: 'center',
-					title: '创建收藏夹成功'
-				});
-				favoriteDirectoryList.unshift(res.data);
-				favoriteName.value = '';
-				showCreateFavorite.value = false;
-			} else {
-				uni.showToast({
-					duration: 2000,
-					position: 'center',
-					title: '收藏夹已存在'
-				});
-			}
-
-		});
-	}
-
 	watch(() => favoriteName.value,
 		(newVal) => {
 			isEnableCreate.value = Boolean(newVal)
 		}
 	);
+
+	/**
+	 * @description: 创建音乐收藏夹
+	 * @date: 2024-06-29 14:20
+	 * @author wuwenqiang
+	 */
+	const useCreateFavorite = (favoriteDirectory:FavoriteDirectoryType) => {
+		favoriteDirectoryList.unshift(favoriteDirectory);
+	}
 
 	getFavoriteDirectoryService(musicId).then(res => {
 		res.data.forEach(item => {
@@ -176,38 +147,6 @@
 			.icon-favorite-add {
 				width: @middle-icon-size;
 				height: @middle-icon-size;
-			}
-		}
-
-		.favorite-add-row {
-			display: flex;
-			align-items: center;
-
-			&.favorite-cover-row {
-				margin-top: @page-padding;
-
-				.rectangle {
-					width: calc(@middle-icon-size * 4);
-					height: calc(@middle-icon-size * 4);
-					margin-left: @page-padding;
-				}
-			}
-
-			.require-text {
-				color: @warn-color;
-
-				&.require-text-hidden {
-					visibility: hidden;
-				}
-			}
-
-			.favorite-input {
-				flex: 1;
-				width: 0;
-				margin-left: @page-padding;
-				padding: @page-padding;
-				background: @page-background-color;
-				border-radius: @btn-border-radius;
 			}
 		}
 

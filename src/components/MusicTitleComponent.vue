@@ -1,23 +1,32 @@
 <template>
 	<view class="classify-title-wrapper">
-		<image class="icon-classify-arrow" src="../../static/icon_down.png" />
-		<text class="classify-name">{{classifyItem.classifyName}}</text>
+		<image class="icon-classify-arrow" :class="props.isFold ? 'icon-classify-arrow-fold' : ''" @click="useFold" src="../../static/icon_down.png" />
+		<text class="classify-name">{{props.classifyItem.classifyName}}</text>
 		<slot>
-			<text class="classify-more" @click="useMore">更多</text>
+			<text class="classify-more" v-if="props.showMore" @click="useMore">更多</text>
 		</slot>
 	</view>
 </template>
 
 <script setup lang="ts">
 	import { defineProps, defineEmits } from 'vue';
-	const { classifyItem } = defineProps({
+	const props = defineProps({
 		classifyItem: {
 			type: Object,
 			reqiure: true,
 			default: {}
+		},
+		showMore:{
+			reqiure: false,
+			default: true
+		},
+		isFold:{// 是否折叠
+			reqiure: false,
+			default: false
 		}
 	});
-	const emits = defineEmits(['useMore']);
+
+	const emits = defineEmits(['useMore','onFold']);
 
 	/**
 	 * @description: 点击更多
@@ -26,6 +35,15 @@
 	 */
 	const useMore = ()=>{
 		emits('useMore');
+	}
+
+	/**
+	 * @description: 点击折叠图标
+	 * @date: 2024-07-21 14:45
+	 * @author wuwenqiang
+	 */
+	const useFold = ()=>{
+		emits('onFold',!props.isFold)
 	}
 </script>
 
@@ -39,6 +57,9 @@
 			width: @small-icon-size;
 			height: @small-icon-size;
 			opacity: 0.2;
+			&.icon-classify-arrow-fold{
+				transform: rotate(90deg);
+			}
 		}
 
 		.classify-name {
