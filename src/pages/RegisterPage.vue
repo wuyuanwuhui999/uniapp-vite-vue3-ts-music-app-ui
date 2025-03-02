@@ -8,21 +8,21 @@
 						<text class="require">*</text>
 						<text>账号</text>
 					</view>
-					<input @blur="userVertify('userAccount')" class="input" v-model="userData.userId" placeholder="请输入账号名称"/>
+					<input @blur="userVertify('userAccount')" class="input" v-model="userData.userAccount" placeholder="请输入账号名称"/>
 				</view>
 				<view class="row">
 					<view class="title">
 						<text class="require">*</text>
 						<text>密码</text>
 					</view>
-					<input type="password" class="input" v-model="userData.password" placeholder="请输入密码"/>
+					<input type="password" class="input" v-model="userData.password" placeholder="请输入6-18位的密码"/>
 				</view>
 				<view class="row">
 					<view class="title">
 						<text class="require">*</text>
 						<text>确认密码</text>
 					</view>
-					<input type="password" v-model="confirmPassowrd" class="input" placeholder="请确认密码"/>
+					<input type="password" v-model="confirmPassowrd" class="input" placeholder="请输入6-18位的确认密码"/>
 				</view>
 				<view class="row">
 					<view class="title">
@@ -59,12 +59,10 @@
 </template>
 
 <script setup lang="ts">
-	import uniDatetimePicker from '@dcloudio/uni-ui/lib/uni-datetime-picker/uni-datetime-picker.vue';
 	import { ref, reactive } from 'vue';
 	import type { UserDataType } from '../types';
 	import { registerService, vertifyUserService } from '../service';
 	import OptionsDialog from '../components/OptionsDialog.vue';
-	import { SexMap } from '../common/config';
 	import { useStore } from '../stores/useStore'
 	import {httpRequest} from '../utils/HttpUtils';
 	import NavigatorTitleComponent from '../components/NavigatorTitleComponent.vue';
@@ -145,7 +143,7 @@
 			});
 		}else if(!userData.password){
 			uni.showToast({
-				title: '请输入密码',
+				title: '请输入6-18位数字或者字母的密码',
 				icon: "none"
 			});
 		}else if(!confirmPassowrd.value){
@@ -178,7 +176,7 @@
 					store.setToken(res.token)
 					uni.setStorage({key:'token',data:res.token});
 					httpRequest.setToken(res.token);
-					uni.redirectTo({url: '../pages/IndexPage'})
+					uni.redirectTo({url: '../pages/MusicIndexPage'})
 					uni.showToast({
 						duration:2000,
 						position:'center',

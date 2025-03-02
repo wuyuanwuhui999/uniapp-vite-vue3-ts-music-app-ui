@@ -41,7 +41,7 @@ export const loginService = (userAccount:string,password:string):Promise<MyAweso
  */
 export const registerService = (userData:types.UserDataType):Promise<MyAwesomeData<types.UserDataType>>=>{
 	userData.password = md5(userData.password);
-	return httpRequest.put<types.UserDataType>(api.register,userData)
+	return httpRequest.post<types.UserDataType>(api.register,userData)
 };
 
 /**

@@ -14,23 +14,23 @@
 
 			<view class="login-input-wrapper" v-show="tabIndex === 0">
 				<image src="../../static/icon_user_active.png" class="icon-login"/>
-				<input v-model="userId" class="login-input" placeholder="请输入账号"/>
+				<input v-model="userAccount" @blur="userVertify('userAccount')" class="login-input" placeholder="请输入账号"/>
 			</view>
 
 			<view class="login-input-wrapper" v-show="tabIndex === 0">
-				<image src="../../static/icon_user_active.png" class="icon-login"/>
-				<input type="password" v-model="password" class="login-input" placeholder="请输入密码"/>
+				<image src="../../static/icon_password.png" class="icon-login"/>
+				<input type="password" v-model="password" @blur="userVertify('password')" class="login-input" placeholder="请输入密码"/>
 			</view>
 
 			<view class="login-input-wrapper" v-show="tabIndex === 1">
 				<image src="../../static/icon_user_active.png" class="icon-login"/>
-				<input v-model="email" class="login-input" placeholder="请输入邮箱"/>
+				<input v-model="email" class="login-input"  @blur="userVertify('email')" placeholder="请输入邮箱"/>
 				<image @click="useSendEmailVertifyCode" src="../../static/icon_send.png" class="icon-login icon-send"/>
 			</view>
 
 			<view class="login-input-wrapper" v-show="tabIndex === 1">
 				<image src="../../static/icon_user_active.png" class="icon-login"/>
-				<input v-model="code" class="login-input" placeholder="请输入验证码"/>
+				<input v-model="code" class="login-input" @blur="userVertify('code')" placeholder="请输入验证码"/>
 			</view>
 
 			<view class="login-btn" @click="useLogin">登录</view>
@@ -49,19 +49,52 @@
 	import {httpRequest} from '../utils/HttpUtils';
 	import { EMAIL_REG } from '../common/constant';
 	const userAccount = ref<string>('');
-	const password = ref<string>('123456');
+	const password = ref<string>('');
 	const tabIndex = ref<number>(0);
 	const email = ref<string>('');
 	const code = ref<string>('');
 
 	const store = useStore();
-	userAccount.value = store.userData.userAccount || '吴时吴刻';
+	userAccount.value = store.userData.userAccount || "";
 	uni.getStorage({key:userAccount.value}).then(res=>{
-		password.value = res.data || '123456'
+		password.value = res.data || ""
 	});
 
 	const useTab = (index:number)=>{
 		tabIndex.value = index;
+	}
+
+	 /**
+	 * @description: 失去焦点校验输入框
+	 * @date: 2025-03-02 10:54
+	 * @author wuwenqiang
+	 */
+	const userVertify = (field:string)=>{
+		if(field === "userAccount" && userAccount.value.trim() === ""){
+			uni.showToast({
+				duration:2000,
+				position:'center',
+				title:'请输入账号'
+			})
+		}else if(field === "password" && (password.value.trim().length < 6 || password.value.trim().length > 18)){
+			uni.showToast({
+				duration:2000,
+				position:'center',
+				title:'请输入6-18位的密码'
+			})
+		}else if(field === 'email' && !EMAIL_REG.test(email.value.trim())){
+			uni.showToast({
+				duration:2000,
+				position:'center',
+				title:'请输入正确的邮箱格式'
+			})
+		}else if(field === 'code' && code.value.trim().length !== 4){
+			uni.showToast({
+				duration:2000,
+				position:'center',
+				title:'请输入四位数的验证码'
+			})
+		}
 	}
 
 	const useLogin = () => {
@@ -72,11 +105,11 @@
 					position:'center',
 					title:'账号不能为空'
 				})
-			}else if(!password.value.trim()){
+			}else if(password.value.trim().length > 18 || password.value.trim().length < 6){
 				uni.showToast({
 					duration:2000,
 					position:'center',
-					title:'密码不能为空'
+					title:'请输入6-18位的密码'
 				})
 			}else{
 				uni.showLoading();
@@ -105,23 +138,17 @@
 				})
 			}
 		}else{
-			if(!email.value.trim()){
+			if(!EMAIL_REG.test(email.value.trim())){
 				uni.showToast({
 					duration:2000,
 					position:'center',
-					title:'邮箱不能为空'
-				})
-			}else if(!EMAIL_REG.test(email.value.trim())){
-				uni.showToast({
-					duration:2000,
-					position:'center',
-					title:'邮箱格式不正确'
+					title:'请输入正确的邮箱格式'
 				})	
-			}else if(!password.value.trim()){
+			}else if(code.value.trim().length !== 4){
 				uni.showToast({
 					duration:2000,
 					position:'center',
-					title:'密码不能为空'
+					title:'请输入4位数的验证码'
 				})
 			}else{
 				uni.showLoading();
@@ -143,7 +170,7 @@
 					uni.showToast({
 						duration:2000,
 						position:'center',
-						title:'账号或密码错误'
+						title:'邮箱或者验证码错误'
 					})
 				}).finally(()=>{
 					uni.hideLoading();
@@ -168,7 +195,7 @@
 			uni.showToast({
 				duration:2000,
 				position:'center',
-				title: "邮箱格式不正确"
+				title: "请输入正确的邮箱格式"
 			});
 		}
 	}

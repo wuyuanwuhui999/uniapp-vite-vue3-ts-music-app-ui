@@ -57,14 +57,6 @@
 			}
 		},
 		{
-			"path" : "pages/MusicCirClePublishPage",
-			"style" : 
-			{
-				"navigationBarTitleText" : "",
-				"enablePullDownRefresh" : false
-			}
-		},
-		{
 			"path" : "pages/MusicSearchPage",
 			"style" : 
 			{
