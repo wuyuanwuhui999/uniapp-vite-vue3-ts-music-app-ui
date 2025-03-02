@@ -17,9 +17,8 @@
 				<image src="../../static/icon_user_active.png" class="icon-login"/>
 				<input type="password" v-model="newConfirmPassword" class="login-input" placeholder="请输入新确定密码"/>
 			</view>
-
-			<view class="login-btn" @click="useSumbit">提交</view>
 		</view>
+		<view class="login-btn" @click="useSumbit">提交</view>
 	</view>
 </template>
 
@@ -71,6 +70,12 @@
 						title:'修改密码失败'
 					});
 				}
+			}).catch((err)=>{
+				uni.showToast({
+					duration:2000,
+					position:'center',
+					title: err.msg
+				});
 			}).finally(()=>{
 				loading = false;
 				uni.hideLoading();
@@ -85,10 +90,10 @@
 	@import '../theme/style.less';
 	.page-wrapper{
 		.module-block{
-			height: 100%;
 			align-items: center;
+			margin: @page-padding @page-padding 0;
+			gap:@page-padding;
 			.login-input-wrapper{
-				margin-top: @page-padding;
 				display: flex;
 				align-items: center;
 				width: 100%;
@@ -106,18 +111,6 @@
 				}
 			}
 
-			.login-btn{
-				text-align: center;
-				width: 100%;
-				padding: @page-padding;
-				box-sizing: border-box;
-				border-radius: @big-border-radius;
-				margin-top:  @page-padding;
-				background-color: @warn-color;
-				color: @module-background-color;
-				display: inline-block;
-			}
-
 			.register-btn{
 				text-align: center;
 				width: 100%;
@@ -129,6 +122,16 @@
 				display: inline-block;
 				background-color: transparent;
 			}
+		}
+		.login-btn{
+			text-align: center;
+			margin: @page-padding;
+			padding: @page-padding;
+			box-sizing: border-box;
+			border-radius: @big-border-radius;
+			background-color: @warn-color;
+			color: @module-background-color;
+			display: inline-block;
 		}
 	}
 </style>

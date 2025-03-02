@@ -75,7 +75,7 @@ export const resetPasswordService = (email:string,password:string,code:number):P
 export const updatePasswordService = (oldPassword:string,newPassword:string):Promise<MyAwesomeData<number>>=>{
     oldPassword = md5(oldPassword);
     newPassword = md5(newPassword);
-    return httpRequest.put<number>(api.updatePassword,{oldPassword,newPassword})
+    return httpRequest.put<number>(api.updatePassword,{oldPassword,newPassword},{noShowMsg:true})
 }; 
 
 /**

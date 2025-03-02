@@ -133,7 +133,7 @@ class HttpRequest {
 					} else {
 						//非200及401状态码-数据处理
 						const errMsg = this.handerErrorStatus(code, requestConfig)
-						reject({ code, msg: errMsg || res.errMsg, data:res.data })
+						reject({ code, msg: respond.msg || errMsg || res.errMsg, data:res.data })
 					}
 				},
 				fail: err => {
