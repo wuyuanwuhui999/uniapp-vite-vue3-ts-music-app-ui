@@ -36,7 +36,7 @@
 	import { HOST } from '../common/constant';
 	import { reactive, defineProps, type PropType, defineEmits, ref, watch } from 'vue';
 	import type { FavoriteDirectoryType, FavoriteMusicType } from '../types';
-	import { getFavoriteDirectoryService, insertMusicFavoriteService, insertFavoriteDirectoryService } from '../service';
+	import { getFavoriteDirectoryService, insertFavoriteDirectoryService, insertFavoriteDirectoryService } from '../service';
 	import CreateFavoriteDirectoryComponent from './CreateFavoriteDirectoryComponent.vue';
 
 	const favoriteDirectoryList = reactive<Array<FavoriteDirectoryType>>([]);
@@ -79,7 +79,7 @@
 		const favoriteList : Array<FavoriteMusicType> = checkboxValue.map(item => {
 			return { favoriteId: item } as FavoriteMusicType
 		});
-		insertMusicFavoriteService(musicId, favoriteList).then(res => {
+		insertFavoriteDirectoryService(musicId, favoriteList).then(res => {
 			if (res.data > 0) {
 				uni.showToast({
 					duration: 2000,

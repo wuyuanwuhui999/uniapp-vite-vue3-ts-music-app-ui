@@ -26,7 +26,7 @@
 	import { ref, reactive } from 'vue';
 	import { useRoute } from "vue-router";
 	import type { MusicAuthorCategoryType,MusicAuthorType } from '../types';
-	import { getMusicAuthorCategoryService,getMusicAuthorListByCategoryIdService,insertMyLikeMusicAuthorService,deleteMyLikeMusicAuthorService } from '../service';
+	import { getMusicAuthorCategoryService,getMusicAuthorListByCategoryIdService,insertFavoriteAuthorService,deleteMyLikeMusicAuthorService } from '../service';
     import {PAGE_SIZE} from '../common/constant';
 	import NavigatorTitleComponent from '../components/NavigatorTitleComponent.vue';
     import isLikeIcon from '../../static/icon_like.png';
@@ -83,7 +83,7 @@
                 }
             });
         }else{
-            insertMyLikeMusicAuthorService(item.authorId).then((res)=>{
+            insertFavoriteAuthorService(item.authorId).then((res)=>{
                 if(res.data > 0){
                     uni.showToast({
                         duration:2000,

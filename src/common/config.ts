@@ -12,3 +12,4 @@ export const PermissionMap:CommonType = {
     0: '私密',
     1: '公开'
 }
+
