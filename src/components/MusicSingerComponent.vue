@@ -1,7 +1,7 @@
 <template>
 	<view class="module-block">
-		<MusicTitleComponent :classifyItem="classifyItem" @useMore="useMore"/>
-		<view class="author-list">
+		<MusicTitleComponent :classifyItem="classifyItem" @useMore="useMore" :isFold="isFold" @on-fold="useFold"/>
+		<view class="author-list" v-show="!isFold">
 			<view class="author-item" :key="item.id" v-for="item in authorList" @click="useAuthorMusicList(item)">
 				<MusicAvaterComponent type="author" size="big" :name="item.authorName" :avater="item.avatar"/>
 				<text class="author-name">{{item.authorName}}</text>
@@ -11,11 +11,13 @@
 </template>
 
 <script setup lang="ts">
-	import { reactive, defineProps } from "vue";
+	import { reactive, ref, defineProps } from "vue";
 	import { getMusicAuthorListByCategoryIdService } from '../service';
 	import type { MusicAuthorType } from "../types";
 	import MusicTitleComponent from './MusicTitleComponent.vue';
 	import MusicAvaterComponent from './MusicAvaterComponent.vue';
+
+	const isFold = ref<boolean>(false);
 
 	const authorList = reactive<Array<MusicAuthorType>>([]);
 	const { classifyItem } = defineProps({
@@ -25,6 +27,15 @@
 			default: {}
 		}
 	});
+
+	/**
+	 * @description: 展开或者折叠
+	 * @date: 2025-03-04 20:27
+	 * @author wuwenqiang
+	 */
+	 const useFold = (fold:boolean)=>{
+		isFold.value = fold;
+	}
 
 	/**
 	 * @description: 获取前四个歌手列表

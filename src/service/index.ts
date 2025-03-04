@@ -196,6 +196,16 @@ export const deleteMusicLikeService = (musicId:number):Promise<MyAwesomeData<num
 }
 
 /**
+ * @description: 查询喜欢的歌曲
+ * @date: 2024-05-12 12:21
+ * @author wuwenqiang
+ */
+export const getMusicLikeService = (pageNum:number,pageSize:number):Promise<MyAwesomeData<Array<types.MusicType>>> => {
+    return httpRequest.get<Array<types.MusicType>>(`${api.getMusicLike}?pageNum=${pageNum}&pageSize=${pageSize}`);
+}
+
+
+/**
  * @description: 获取一级评论
  * @date: 2024-05-12 12:21
  * @author wuwenqiang
@@ -241,14 +251,22 @@ export const getFavoriteDirectoryService = (musicId:number):Promise<MyAwesomeDat
 }
 
 /**
- * @description: 添加音乐收藏
+ * @description: 插入音乐收藏
  * @date: 2024-06-29 11:26
  * @author wuwenqiang
  */
-export const insertFavoriteDirectoryService = (musicId:number,favoriteList:Array<types.FavoriteMusicType>):Promise<MyAwesomeData<number>> => {
-    return httpRequest.post<number>(api.insertFavoriteDirectory+ musicId,favoriteList);
+export const insertMusicFavoriteService = (musicId:number,favoriteList:Array<types.FavoriteMusicType>):Promise<MyAwesomeData<number>> => {
+    return httpRequest.post<number>(api.insertMusicFavorite + musicId,favoriteList);
 }
 
+/**
+ * @description: 创建音乐收藏夹
+ * @date: 2024-06-29 11:26
+ * @author wuwenqiang
+ */
+export const insertFavoriteDirectoryService = (favoriteDirectory:types.FavoriteDirectoryType):Promise<MyAwesomeData<number>> => {
+    return httpRequest.post<number>(api.insertFavoriteDirectory,favoriteDirectory);
+}
 
 /**
  * @description: 删除音乐收藏

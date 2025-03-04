@@ -22,6 +22,7 @@ export default {
   insertMusicRecord: '/service/myMusic-getway/insertMusicRecord',// 记录播放日志
   insertMusicLike: '/service/myMusic-getway/insertMusicLike/',// 插入收藏
   deleteMusicLike: '/service/myMusic-getway/deleteMusicLike/',// 删除收藏
+  getMusicLike: '/service/myMusic-getway/getMusicLike',// 查询我喜欢的歌曲
   searchMusic: '/service/myMusic/searchMusic',// 音乐搜索
   getSingerCategory:'/service/myMusic/getSingerCategory',// 获取歌手分类
   saveLike:'/service/social-getway/saveLike',// 添加点赞
@@ -32,7 +33,8 @@ export default {
   isMusicFavorite:'/service/myMusic-getway/isMusicFavorite/', // 查询音乐是否收藏
   getFavoriteDirectory:'/service/myMusic-getway/getFavoriteDirectory',// 查询收藏夹
   deleteFavoriteDirectory: '/service/myMusic-getway/deleteFavoriteDirectory/',// 删除收藏夹
-  insertFavoriteDirectory:'/service/myMusic-getway/insertFavoriteDirectory/',// 查询收藏夹
+  insertFavoriteDirectory:'/service/myMusic-getway/insertFavoriteDirectory',// 创建收藏夹
+  insertMusicFavorite:'/service/myMusic-getway/insertMusicFavorite/',// 插入收藏夹
   insertCircle: '/service/circle-getway/insertCircle',// 插入一条朋友圈说说
   getMusicListByFavoriteId:'/service/myMusic-getway/getMusicListByFavoriteId',// 按照收藏夹的id查询音乐列表
   getMusicAuthorCategory: '/service/myMusic/getMusicAuthorCategory',// 获取歌手分类

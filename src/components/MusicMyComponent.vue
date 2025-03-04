@@ -11,26 +11,34 @@
 		</view>
 
 		<view class="module-block">
-			<MusicTitleComponent @on-fold="useFoldMusicMenu" :is-fold="isFoldMusicMenu" :classifyItem="{classifyName:'我的歌单',category:''}">
-				<text class="icon-add" @click="useAddDirectory">+</text>
+			<MusicTitleComponent @on-fold="useFoldMusicMenu" :is-fold="isFoldMusicMenu" :classifyItem="{classifyName:'我的收藏夹',category:''}">
+				<view class="operate-wrappper">
+					<text class="icon-add" @click="useAddDirectory">+</text>
+					<image src="../../static/icon_refresh.png" @click="useFavoriteDirectory(true)" class="icon-small"/>
+					<text class="more" v-if="favoriteDirectoryList.length > 5">更多</text>
+				</view>
+				
 			</MusicTitleComponent>
 			<view v-show="!isFoldMusicMenu">
 				<uni-swipe-action v-if="favoriteDirectoryList.length !== 0">
-					<uni-swipe-action-item v-for="item,index in favoriteDirectoryList" :key="item.id">
-						<view  class="singer-list" @click="useRouter(item)">
-							<image v-if="item.cover" class="music-cover" :src="getMusicCover(item.cover)"  />
-							<text class="music-cover" v-else>{{item.name.slice(0,1)}}</text>
-							<view class="songname-wrapper">
-								<text>{{item.name}}</text>
-								<text class="total">{{item.total}}首</text>
+					<template v-for="item,index in favoriteDirectoryList" :key="item.id">
+						<uni-swipe-action-item>
+							<view  class="singer-list" @click="useRouter(item)">
+								<image v-if="item.cover" class="music-cover" :src="getMusicCover(item.cover)"  />
+								<text class="music-cover" v-else>{{item.name.slice(0,1)}}</text>
+								<view class="songname-wrapper">
+									<text>{{item.name}}</text>
+									<text class="total">{{item.total}}首</text>
+								</view>
+								<image v-if="item.total" class="icon-operate" src="../../static/icon_music_play.png"/>
+								<image class="icon-operate" src="../../static/icon_music_menu.png"/>
 							</view>
-							<image class="icon-operate" src="../../static/icon_music_play.png"/>
-							<image class="icon-operate" src="../../static/icon_music_menu.png"/>
-						</view>
-						<template v-slot:right>
-							<view class="delete-button" @click="useDeleteFavoriteDirectory(index)"><text class="delete-button-text">删除</text></view>
-						</template>
-					</uni-swipe-action-item>
+							<template v-slot:right>
+								<view class="delete-button" @click="useDeleteFavoriteDirectory(index)"><text class="delete-button-text">删除</text></view>
+							</template>
+						</uni-swipe-action-item>
+						<view class="line" v-if="index < favoriteDirectoryList.length -1"></view>
+					</template>
 				</uni-swipe-action>
 
 				<MusicNoData text="暂无数据，点击刷新" @click="useFavoriteDirectory(true)" v-else/>
@@ -38,45 +46,88 @@
 		</view>
 
 		<view class="module-block">
-			<MusicTitleComponent @on-fold="useFoldSingList" :is-fold="isFoldSingerList" :classifyItem="{classifyName:'我关注的歌手',category:''}" :showMore="favoriteAuthorList.length > 5">
-				<image src="../../static/icon_refresh.png" @click="useMyLikeMusicAuthor(true)" class="icon-small"/>
+			<MusicTitleComponent @on-fold="useFoldFavoriteMusic" :is-fold="isFoldFavoriteMusic" :classifyItem="{classifyName:'我喜欢的歌曲',category:''}">
+				<view class="operate-wrappper">
+					<image src="../../static/icon_refresh.png" @click="useFavoriteMusicList(true)" class="icon-small"/>
+					<text class="more" v-if="totalFavoriteMusic > 5">更多</text>
+				</view>
+			</MusicTitleComponent>
+			<view v-show="!isFoldFavoriteMusic">
+				<uni-swipe-action v-if="favoriteMusicList.length !== 0">
+					<template v-for="item,index in favoriteMusicList" :key="item.id">
+						<uni-swipe-action-item >
+							<view class="singer-list">
+								<MusicAvaterComponent type="author" :name="item.songName" :avater="item.cover"/>
+								<view class="songname-wrapper">
+									<text>{{item.authorName}}</text>
+								</view>
+								<image class="icon-operate" src="../../static/icon_music_play.png"/>
+								<image class="icon-operate" src="../../static/icon_music_menu.png"/>
+							</view>
+							
+							<template v-slot:right>
+								<view class="delete-button" @click="useDeleteFavoriteMusic(index)"><text class="delete-button-text">删除</text></view>
+							</template>
+						</uni-swipe-action-item>
+						<view class="line" v-if="index < favoriteMusicList.length -1"></view>
+					</template>
+				</uni-swipe-action>
+				<MusicNoData text="暂无数据，点击刷新" @click="useFavoriteMusicList(true)" v-else/>
+			</view>
+		</view>
+
+		<view class="module-block">
+			<MusicTitleComponent @on-fold="useFoldSingList" :is-fold="isFoldSingerList" :classifyItem="{classifyName:'我关注的歌手',category:''}">
+				<view class="operate-wrappper">
+					<image src="../../static/icon_refresh.png" @click="useMyLikeMusicAuthor(true)" class="icon-small"/>
+					<text class="more" v-if="totalFavoriteAuthor > 5">更多</text>
+				</view>
 			</MusicTitleComponent>
 			<view v-show="!isFoldSingerList">
 				<uni-swipe-action v-if="favoriteAuthorList.length !== 0">
-					<uni-swipe-action-item v-for="item,index in favoriteAuthorList" :key="item.id">
-						<view class="singer-list">
-							<MusicAvaterComponent type="author" :name="item.authorName" :avater="item.avatar"/>
-							<view class="songname-wrapper">
-								<text>{{item.authorName}}</text>
-								<text class="total">{{item.total}}首</text>
+					<template v-for="item,index in favoriteAuthorList" :key="item.id">
+						<uni-swipe-action-item >
+							<view class="singer-list">
+								<MusicAvaterComponent type="author" :name="item.authorName" :avater="item.avatar"/>
+								<view class="songname-wrapper">
+									<text>{{item.authorName}}</text>
+									<text class="total">{{item.total}}首</text>
+								</view>
+								<image class="icon-operate" src="../../static/icon_music_play.png"/>
+								<image class="icon-operate" src="../../static/icon_music_menu.png"/>
 							</view>
-							<image class="icon-operate" src="../../static/icon_music_play.png"/>
-							<image class="icon-operate" src="../../static/icon_music_menu.png"/>
-						</view>
-						
-						<template v-slot:right>
-							<view class="delete-button" @click="useDeleteAuthor(index)"><text class="delete-button-text">删除</text></view>
-						</template>
-					</uni-swipe-action-item>
+							
+							<template v-slot:right>
+								<view class="delete-button" @click="useDeleteAuthor(index)"><text class="delete-button-text">删除</text></view>
+							</template>
+						</uni-swipe-action-item>
+						<view class="line" v-if="index < favoriteAuthorList.length -1"></view>
+					</template>
 				</uni-swipe-action>
 				<MusicNoData text="暂无数据，点击刷新" @click="useMyLikeMusicAuthor(true)" v-else/>
 			</view>
 		</view>
 
 		<view class="module-block module-block-last">
-			<MusicTitleComponent @on-fold="useFoldPlayRecord" :is-fold="isFoldPlayRecord" :classifyItem="{classifyName:'我听过的歌曲',category:''}" :showMore="recordMusicList.length > 5">
-				<image src="../../static/icon_refresh.png" @click="useMusicRecord(true)" class="icon-small"/>
+			<MusicTitleComponent @on-fold="useFoldPlayRecord" :is-fold="isFoldPlayRecord" :classifyItem="{classifyName:'我听过的歌曲',category:''}">
+				<view class="operate-wrappper">
+					<image src="../../static/icon_refresh.png" @click="useMusicRecord(true)" class="icon-small"/>
+					<text class="more" v-if="totalRecord > 5">更多</text>
+				</view>
 			</MusicTitleComponent>
 			<view v-show="!isFoldPlayRecord">
-				<view v-if="recordMusicList.length !== 0" v-for="item in recordMusicList" class="singer-list" :key="item.id">
-					<MusicAvaterComponent type="music" :name="item.songName" :avater="item.cover"/>
-					<view class="songname-wrapper">
-						<text>{{item.songName}}</text>
-						<text class="total">{{formatTime(item.createTime)}}</text>
+				<template v-if="recordMusicList.length !== 0" v-for="item,index in recordMusicList" :key="item.id">
+					<view class="singer-list">
+						<MusicAvaterComponent type="music" :name="item.songName" :avater="item.cover"/>
+						<view class="songname-wrapper">
+							<text>{{item.songName}}</text>
+							<text class="total">{{formatTime(item.createTime)}}</text>
+						</view>
+						<image class="icon-operate" src="../../static/icon_music_play.png"/>
+						<image class="icon-operate" src="../../static/icon_music_menu.png"/>
 					</view>
-					<image class="icon-operate" src="../../static/icon_music_play.png"/>
-					<image class="icon-operate" src="../../static/icon_music_menu.png"/>
-				</view>
+					<view class="line" v-if="index < recordMusicList.length -1"></view>
+				</template>
 				<MusicNoData @click="useMusicRecord(true)" text="暂无数据，点击刷新" v-else/>
 			</view>
 		</view>
@@ -86,7 +137,7 @@
 			</template>
 			<template #content>
 				<view class="favorite-wrapper">
-					<CreateFavoriteDirectoryComponent @on-cancle="showFavoriteDialog = false" @on-sure="useCreateFavorite"/>
+					<CreateFavoriteDirectoryComponent @on-cancle="showFavoriteDialog = false" @on-sure="useInsertFavoriteDirectory"/>
 				</view>
 			</template>
 		</DialogComponent>
@@ -112,7 +163,7 @@
 	import AvaterComponent from "../components/AvaterComponent.vue";
 	import { useStore } from "../stores/useStore";
 	import MusicTitleComponent from "./MusicTitleComponent.vue";
-	import { getFavoriteAuthorService, getMusicRecordService, getFavoriteDirectoryService, deleteFavoriteDirectoryService, deleteFavoriteAuthorService} from "../service";
+	import { getFavoriteAuthorService, getMusicRecordService, getFavoriteDirectoryService, deleteFavoriteDirectoryService, deleteFavoriteAuthorService, getMusicLikeService, deleteMusicLikeService} from "../service";
 	import { reactive, ref} from 'vue';
 	import {formatTime,getMusicCover} from '../utils/util';
 	import MusicAvaterComponent from './MusicAvaterComponent.vue';
@@ -132,8 +183,11 @@
 	const isFoldSingerList = ref<boolean>(false);// 是否展开我关注的歌手
 	const isFoldPlayRecord = ref<boolean>(false);// 是否展开我的播放记录
 	const popup = ref<null | InstanceType<typeof uniPopup>>(null);
-	
-
+	const totalRecord = ref<number>(0);// 总记录条数
+	const isFoldFavoriteMusic = ref<boolean>(false);// 是否折叠我喜欢的歌曲
+	const favoriteMusicList = reactive<Array<MusicType>>([]);// 我喜欢的歌曲
+	const totalFavoriteAuthor = ref<number>(0);// 喜欢的歌手总条数
+	const totalFavoriteMusic = ref<number>(0);// 我喜欢的歌曲总数
 	const dialogText = ref<string>("");
 	let deletefavoriteDirectoryIndex = ref<number>(-1);
 	let deleteFavoriteAuthorIndex = ref<number>(-1);
@@ -163,6 +217,7 @@
 		favoriteAuthorList.length = 0;
 		getFavoriteAuthorService(1,5).then((res)=>{
 			favoriteAuthorList.push(...res.data);
+			totalFavoriteAuthor.value = res.total;
 		}).finally(()=>{
 			if(showLoading)uni.hideLoading()
 		});
@@ -178,6 +233,7 @@
 		recordMusicList.length = 0
 		getMusicRecordService(1,5).then((res)=>{
 			recordMusicList.push(...res.data);
+			totalRecord.value = res.total;
 		}).finally(()=>{
 			if(showLoading)uni.hideLoading()
 		});
@@ -187,6 +243,7 @@
 		useFavoriteDirectory();
 		useMyLikeMusicAuthor();
 		useMusicRecord();
+		useFavoriteMusicList();
 	}
 
 	/**
@@ -216,7 +273,7 @@
 	 * @date: 2025-03-02 19:38
 	 * @author wuwenqiang
 	 */
-	const useCreateFavorite = (favoriteDirectory:FavoriteDirectoryType) => {
+	const useInsertFavoriteDirectory = (favoriteDirectory:FavoriteDirectoryType) => {
 		favoriteDirectoryList.unshift(favoriteDirectory);
 	}
 
@@ -236,7 +293,6 @@
 	 */
 	 const useFoldSingList = (isFold:boolean)=>{
 		isFoldSingerList.value = isFold;
-		console.log(isFoldSingerList.value)
 	}
 
 	/**
@@ -311,6 +367,44 @@
 		}
 	}
 
+	/**
+	 * @description: 我喜欢的歌曲
+	 * @date: 2025-03-04 21:47
+	 * @author wuwenqiang
+	 */
+	const useFavoriteMusicList = (showLoading:boolean = false)=>{
+		if(showLoading)uni.showLoading();
+		favoriteMusicList.length = 0;
+		getMusicLikeService(1,5).then((res) => {
+			favoriteMusicList.push(...res.data);
+			totalFavoriteMusic.value = res.total;
+		}).finally(()=>uni.hideLoading())
+	}
+
+	/**
+	 * @description: 删除我喜欢的歌曲
+	 * @date: 2025-03-04 21:47
+	 * @author wuwenqiang
+	 */
+	 const useDeleteFavoriteMusic = (musicId:number)=>{
+		deleteMusicLikeService(musicId).then((res)=>{
+			uni.showToast({
+				duration:2000,
+				position:'center',
+				title: res.data > 0 ? '删除成功' : '删除失败'
+			})
+		})
+	}
+
+	/**
+	 * @description: 展开折叠我喜欢的歌曲
+	 * @date: 2025-03-04 21:47
+	 * @author wuwenqiang
+	 */
+	const useFoldFavoriteMusic = (isFold:boolean)=>{
+		isFoldFavoriteMusic.value = isFold;
+	}
+
 	init();
 
 </script>
@@ -382,6 +476,7 @@
 			display: flex;
 			width: 100%;
 			justify-content: center;
+			align-items: center;
 		}
 		.favorite-wrapper{
 			padding: @page-padding;
@@ -460,5 +555,20 @@
 				}
 			}
 		}
+		.line{
+			height: 1rpx;
+			margin-top: @page-padding;;
+			background-color: @page-background-color;
+		}
+		.operate-wrappper{
+			display: flex;
+			gap:@page-padding;
+			align-items: center;
+			.more{
+				color:@disable-text-color;
+				text-decoration: underline;
+			}
+		}
+		
 	}
 </style>

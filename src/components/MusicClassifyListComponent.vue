@@ -4,7 +4,7 @@
 			<MusicAvaterComponent type="music" :name="item.songName" :avater="item.cover"/>
 			<text class="music-name">{{ item.authorName }} - {{ item.songName }}</text>
 			<image class="icon-small" :src="store.musicItem?.id == item.id && store.isPlaying && store.classifyName === classifyName? playingIcon : pauseIcon"/>
-			<image class="icon-small" @click.stop="useLike(item)" :src="store.musicItem?.isLike ? likeActiveIcon : likeIcon"/>
+			<image class="icon-small" @click.stop="useLike(item)" :src="item.isLike ? likeActiveIcon : likeIcon"/>
 			<image class="icon-small" src="../../static/icon_music_menu.png"/>
 		</view>
 	</view>

@@ -1,19 +1,21 @@
 <template>
 	<view class="module-block">
-		<MusicTitleComponent @useMore="useMore" :classifyItem="classifyItem" />
-		<MusicClassifyListComponent class="component-gap" @onPlayMusic="usePlayMusic" :musicList = 'classifyMusicList' :classifyName = 'classifyItem.classifyName'/>
+		<MusicTitleComponent @useMore="useMore" :classifyItem="classifyItem" :isFold="isFold" @on-fold="useFold"/>
+		<MusicClassifyListComponent class="component-gap" v-show="!isFold" @onPlayMusic="usePlayMusic" :musicList = 'classifyMusicList' :classifyName = 'classifyItem.classifyName'/>
 	</view>
 </template>
 
 <script setup lang="ts">
-	import { defineProps, reactive, type PropType } from 'vue';
+	import { defineProps, reactive, ref, type PropType } from 'vue';
 	import type { MusicClassifyType, MusicType } from "../types";
 	import { getMusicListByClassifyIdService } from '../service';
 	import MusicTitleComponent from './MusicTitleComponent.vue';
 	import MusicClassifyListComponent from './MusicClassifyListComponent.vue';
 	import { useStore } from "../stores/useStore";
 	import {MAX_FAVORITE_NUMBER} from '../common/constant';
+
 	const classifyMusicList = reactive<Array<MusicType>>([]);
+	const isFold = ref<boolean>(false)
 
 	const store = useStore();
 
@@ -24,6 +26,15 @@
 			default: {}
 		}
 	});
+
+	/**
+	 * @description: 展开或者折叠
+	 * @date: 2025-03-04 20:27
+	 * @author wuwenqiang
+	 */
+	const useFold = (fold:boolean)=>{
+		isFold.value = fold;
+	}
 
 	/**
 	 * @description: 播放音乐

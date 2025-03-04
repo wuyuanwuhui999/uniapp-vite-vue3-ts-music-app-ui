@@ -12,8 +12,8 @@
 					<text class="music-author">{{item.authorName}}</text>
 				</view>
 				<image class="icon-operatation" @click="usePlayMusicList(item)" :src="store.isPlaying && store.musicItem?.id === item.id ? pauseIcon : playingIcon" />
-				<image class="icon-operatation" v-if="item.isLike" src="../../static/icon_like_active.png" />
-				<image class="icon-operatation" v-else src="../../static/icon_like.png" />
+				<image class="icon-operatation" v-if="item.isLike" @click="useLike(item)" src="../../static/icon_like_active.png" />
+				<image class="icon-operatation" v-else @click="useLike(item)" src="../../static/icon_like.png" />
 				<image class="icon-operatation" src="../../static/icon_music_menu.png" />
 			</view>
 
@@ -23,7 +23,7 @@
 </template>
 
 <script setup lang="ts">
-	import { getMusicListByClassifyIdService } from '../service';
+	import { getMusicListByClassifyIdService, deleteMusicLikeService, insertMusicLikeService} from '../service';
 	import { ref, reactive } from 'vue';
 	import type { MusicType } from '../types';
 	import { useStore } from "../stores/useStore";
@@ -39,6 +39,7 @@
 	const pageNum = ref<number>(1);
 	const total = ref<number>(0);
 	const musicList = reactive<Array<MusicType>>([]);
+	let loading:boolean = false
 
 
 	/**
@@ -79,6 +80,40 @@
 		uni.navigateTo({url: `../pages/MusicPlayerPage`});
 	}
 
+	/**
+	 * @description: 添加或者取消点赞
+	 * @date: 2024-05-12 11:45
+	 * @author wuwenqiang
+	 */
+	 const useLike = (musicItem:MusicType) => {
+		if (loading) return;
+		loading = true;
+		if (musicItem.isLike) {
+			deleteMusicLikeService(musicItem.id).then((res) => {
+				if (res.data > 0) {
+					musicItem.isLike = 0;
+					uni.showToast({
+						duration: 2000,
+						position: 'center',
+						title: '取消点赞成功'
+					})
+				}
+
+			}).finally(() => loading = false)
+		} else {
+			insertMusicLikeService(musicItem.id).then(res => {
+				if (res.data > 0) {
+					musicItem.isLike = 1;
+					uni.showToast({
+						duration: 2000,
+						position: 'center',
+						title: '点赞成功'
+					})
+				}
+			}).finally(() => loading = false)
+		}
+	}
+
 	useMusicList()
 </script>
 
@@ -105,7 +140,7 @@
 				display: flex;
 				align-items: center;
 				margin-top: @page-padding;
-
+				gap: @page-padding;
 				.music-rank {
 					width: @small-icon-size;
 					height: @small-icon-size;
