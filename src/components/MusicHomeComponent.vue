@@ -4,19 +4,19 @@
 			<MusicSearchComponent />
 			<view class="category-wrapper module-block">
 				<view class="category-item" @click="useAuthorListPage">
-					<image class="category-img" src="../../static/icon_music_singer.png" />
+					<image class="category-img" :src="icon_music_singer" />
 					<text class="category-name">歌手</text>
 				</view>
 				<view class="category-item" @click="useMusicCategoryListPage">
-					<image class="category-img" src="../../static/icon_music_classify.png" />
+					<image class="category-img" :src="icon_music_classify" />
 					<text class="category-name">分类歌曲</text>
 				</view>
 				<view class="category-item">
-					<image class="category-img" src="../../static/icon_music_classics.png" />
+					<image class="category-img" :src="icon_music_classics" />
 					<text class="category-name">经典老歌</text>
 				</view>
 				<view class="category-item">
-					<image class="category-img" src="../../static/icon_music_rank.png" />
+					<image class="category-img" :src="icon_music_rank" />
 					<text class="category-name">热门榜单</text>
 				</view>
 			</view>
@@ -39,6 +39,10 @@
 	import type { MusicClassifyType } from "../types";
 	import MusicSingerComponent from './MusicSingerComponent.vue';
 	import MusicClassifyComponent from './MusicClassifyComponent.vue';
+	import icon_music_singer from '../../static/icon_music_singer.png';
+	import icon_music_classify from "../../static/icon_music_classify.png";
+	import icon_music_classics from "../../static/icon_music_classics.png";
+	import icon_music_rank from "../../static/icon_music_rank.png"
 
 	const pageNum = ref<number>(3);// 初始化加载3个模块，其他模块按需加载
 	const allClassifies = reactive<Array<MusicClassifyType>>([]);// 所有分类模块

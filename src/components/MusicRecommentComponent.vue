@@ -1,10 +1,10 @@
 <template>
-	<scroll-view class="page-wrapper" @scrolltolower="onScrolltolower" scroll-y show-scrollbar="false">
+	<scroll-view class="page-wrapper" refresher-enabled="true"	:refresher-triggered="triggered" @scrolltolower="onScrolltolower" scroll-y show-scrollbar="false">
 		<view class="music-list">
 			<view class="music-item module-block" :key="item.id" v-for="item,index in musicList">
-				<image v-if="index === 0" src="../../static/icon_no1.png" class="music-rank" />
-				<image v-if="index === 1" src="../../static/icon_no2.png" class="music-rank" />
-				<image v-if="index === 2" src="../../static/icon_no3.png" class="music-rank" />
+				<image v-if="index === 0" :src="icon_no1" class="music-rank" />
+				<image v-if="index === 1" :src="icon_no2" class="music-rank" />
+				<image v-if="index === 2" :src="icon_no3" class="music-rank" />
 				<text v-if="index > 2" class="music-rank">{{index + 1}}</text>
 				<MusicAvaterComponent type="music" :name="item.songName" :avater="item.cover"/>
 				<view class="music-info">
@@ -12,9 +12,8 @@
 					<text class="music-author">{{item.authorName}}</text>
 				</view>
 				<image class="icon-operatation" @click="usePlayMusicList(item)" :src="store.isPlaying && store.musicItem?.id === item.id ? pauseIcon : playingIcon" />
-				<image class="icon-operatation" v-if="item.isLike" @click="useLike(item)" src="../../static/icon_like_active.png" />
-				<image class="icon-operatation" v-else @click="useLike(item)" src="../../static/icon_like.png" />
-				<image class="icon-operatation" src="../../static/icon_music_menu.png" />
+				<image class="icon-operatation" @click="useLike(item)" :src="item.isLike ? icon_like_active : icon_like" />
+				<image class="icon-operatation" :src="icon_music_menu" />
 			</view>
 
 			<view class="bottom"><text>{{total > pageSize * pageNum  ? "正在加载更多..." :"已经到底了" }}</text></view>
@@ -31,7 +30,14 @@
 	import playingIcon from '../../static/icon_music_play.png';
 	import pauseIcon from '../../static/icon_music_playing_grey.png';
 	import MusicAvaterComponent from './MusicAvaterComponent.vue';
+	import icon_no1 from "../../static/icon_no1.png";
+	import icon_no2 from "../../static/icon_no1.png";
+	import icon_no3 from "../../static/icon_no1.png";
+	import icon_like_active from "../../static/icon_like_active.png";
+	import icon_like from "../../static/icon_like.png";
+	import icon_music_menu from "../../static/icon_music_menu.png";
 
+	const triggered = ref<boolean>(false);
 	const store = useStore()
 	const pageSize = ref<number>(20);
 	let loadding : boolean = false;

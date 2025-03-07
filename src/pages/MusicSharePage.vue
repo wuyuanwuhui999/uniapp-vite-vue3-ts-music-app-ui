@@ -13,14 +13,14 @@
 				</view>
 				<view v-else class="check-song" @click="useCheckMusic">
 					<text class="check-tip">请选择一首歌词</text>
-					<image class="icon-small" src="../../static/icon_arrow.png"></image>
+					<image class="icon-small" :src="icon_arrow"></image>
 				</view>
 			</view>
 			<view class="module-block module-block-row" @click="usePermission">
-				<image class="icon-middle" src="../../static/icon_permission.png" />
+				<image class="icon-middle" :src="icon_permission" />
 				<text class="permission-text">谁可以看</text>
 				<text>{{PermissionMap[permission]}}</text>
-				<image class="icon-small" src="../../static/icon_arrow.png" />
+				<image class="icon-small" :src="icon_arrow" />
 			</view>
 		</view>
 		<OptionsDialog ref="permissionOptionsDialog" @onCheck="onCheckPermission"
@@ -37,6 +37,9 @@
 	import { useStore } from "../stores/useStore";
 	import OptionsDialog from '../components/OptionsDialog.vue';
 	import MusicAvaterComponent from '../components/MusicAvaterComponent.vue';
+	import icon_arrow from '../../static/icon_arrow.png';
+	import icon_permission from '../../static/icon_permission.png';
+	
 
 	const content = ref<string>('');
 	const permission = ref<number>(1);

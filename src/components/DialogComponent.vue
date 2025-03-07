@@ -4,7 +4,7 @@
         <view class="dialog-body-wrapper">
             <view class="dialog-header">
                 <slot name="header"/>
-                <image class="icon-close" @click="onClose" src="../../static/icon_close.png"/>
+                <image class="icon-close" @click="onClose" :src="icon_close"/>
             </view>
             <slot name="content"></slot>
         </view>
@@ -13,6 +13,7 @@
 </template>
 
 <script setup lang="ts">
+    import icon_close from "../../static/icon_close.png"
     import { defineEmits} from 'vue';
     const emits = defineEmits(['onClose']);
 

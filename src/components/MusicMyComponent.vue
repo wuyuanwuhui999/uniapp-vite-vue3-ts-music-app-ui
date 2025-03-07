@@ -7,14 +7,14 @@
 				<text class="username">{{store.userData.username}}</text>
 				<text class="sign">{{store.userData.sign}}</text>
 			</view>
-			<image class="icon-middle" @click="useUserEdit" src="../../static/icon_edit.png"/>
+			<image class="icon-middle" @click="useUserEdit" :src="icon_edit"/>
 		</view>
 
 		<view class="module-block">
 			<MusicTitleComponent @on-fold="useFoldMusicMenu" :is-fold="isFoldMusicMenu" :classifyItem="{classifyName:'我的收藏夹',category:''}">
 				<view class="operate-wrappper">
 					<text class="icon-add" @click="useAddDirectory">+</text>
-					<image src="../../static/icon_refresh.png" @click="useFavoriteDirectory(true)" class="icon-small"/>
+					<image :src="icon_refresh" @click="useFavoriteDirectory(true)" class="icon-small"/>
 					<text class="more" v-if="favoriteDirectoryList.length > 5">更多</text>
 				</view>
 				
@@ -30,8 +30,8 @@
 									<text>{{item.name}}</text>
 									<text class="total">{{item.total}}首</text>
 								</view>
-								<image v-if="item.total" class="icon-operate" src="../../static/icon_music_play.png"/>
-								<image class="icon-operate" src="../../static/icon_music_menu.png"/>
+								<image v-if="item.total" class="icon-operate" :src="icon_music_play"/>
+								<image class="icon-operate" :src="icon_music_menu"/>
 							</view>
 							<template v-slot:right>
 								<view class="delete-button" @click="useDeleteFavoriteDirectory(index)"><text class="delete-button-text">删除</text></view>
@@ -48,7 +48,7 @@
 		<view class="module-block">
 			<MusicTitleComponent @on-fold="useFoldFavoriteMusic" :is-fold="isFoldFavoriteMusic" :classifyItem="{classifyName:'我喜欢的歌曲',category:''}">
 				<view class="operate-wrappper">
-					<image src="../../static/icon_refresh.png" @click="useFavoriteMusicList(true)" class="icon-small"/>
+					<image :src="icon_refresh" @click="useFavoriteMusicList(true)" class="icon-small"/>
 					<text class="more" v-if="totalFavoriteMusic > 5">更多</text>
 				</view>
 			</MusicTitleComponent>
@@ -61,8 +61,8 @@
 								<view class="songname-wrapper">
 									<text>{{item.authorName}}</text>
 								</view>
-								<image class="icon-operate" src="../../static/icon_music_play.png"/>
-								<image class="icon-operate" src="../../static/icon_music_menu.png"/>
+								<image class="icon-operate" :src="icon_music_play"/>
+								<image class="icon-operate" :src="icon_music_menu"/>
 							</view>
 							
 							<template v-slot:right>
@@ -79,7 +79,7 @@
 		<view class="module-block">
 			<MusicTitleComponent @on-fold="useFoldSingList" :is-fold="isFoldSingerList" :classifyItem="{classifyName:'我关注的歌手',category:''}">
 				<view class="operate-wrappper">
-					<image src="../../static/icon_refresh.png" @click="useMyLikeMusicAuthor(true)" class="icon-small"/>
+					<image :src="icon_refresh" @click="useMyLikeMusicAuthor(true)" class="icon-small"/>
 					<text class="more" v-if="totalFavoriteAuthor > 5">更多</text>
 				</view>
 			</MusicTitleComponent>
@@ -93,8 +93,8 @@
 									<text>{{item.authorName}}</text>
 									<text class="total">{{item.total}}首</text>
 								</view>
-								<image class="icon-operate" src="../../static/icon_music_play.png"/>
-								<image class="icon-operate" src="../../static/icon_music_menu.png"/>
+								<image class="icon-operate" :src="icon_music_play"/>
+								<image class="icon-operate" :src="icon_music_menu"/>
 							</view>
 							
 							<template v-slot:right>
@@ -111,7 +111,7 @@
 		<view class="module-block module-block-last">
 			<MusicTitleComponent @on-fold="useFoldPlayRecord" :is-fold="isFoldPlayRecord" :classifyItem="{classifyName:'我听过的歌曲',category:''}">
 				<view class="operate-wrappper">
-					<image src="../../static/icon_refresh.png" @click="useMusicRecord(true)" class="icon-small"/>
+					<image :src="icon_refresh" @click="useMusicRecord(true)" class="icon-small"/>
 					<text class="more" v-if="totalRecord > 5">更多</text>
 				</view>
 			</MusicTitleComponent>
@@ -123,8 +123,8 @@
 							<text>{{item.songName}}</text>
 							<text class="total">{{formatTime(item.createTime)}}</text>
 						</view>
-						<image class="icon-operate" src="../../static/icon_music_play.png"/>
-						<image class="icon-operate" src="../../static/icon_music_menu.png"/>
+						<image class="icon-operate" :src="icon_music_play"/>
+						<image class="icon-operate" :src="icon_music_menu"/>
 					</view>
 					<view class="line" v-if="index < recordMusicList.length -1"></view>
 				</template>
@@ -173,6 +173,10 @@
 	import uniSwipeAction from '@dcloudio/uni-ui/lib/uni-swipe-action/uni-swipe-action.vue';
 	import uniSwipeActionItem from '@dcloudio/uni-ui/lib/uni-swipe-action-item/uni-swipe-action-item.vue';
 	import uniPopup from '@dcloudio/uni-ui/lib/uni-popup/uni-popup.vue';
+	import icon_edit from "../../static/icon_edit.png";
+	import icon_refresh from '../../static/icon_refresh.png';
+	import icon_music_play from '../../static/icon_music_play.png';
+	import icon_music_menu from '../../static/icon_music_menu.png'
 
 	const store = useStore();
 	const favoriteDirectoryList = reactive<Array<FavoriteDirectoryType>>([]);

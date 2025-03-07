@@ -5,7 +5,7 @@
 			<view class="module-block">
 				<view class="search-wrapper">
 					<input v-model="inputValue" class="search-input" placeholder="请输入歌曲或者歌手名称">
-					<image @click="useSearch" class="icon-middle" src="../../static/icon_search.png"></image>
+					<image @click="useSearch" class="icon-middle" :src="icon_search"></image>
 				</view>
 			</view>
 
@@ -42,6 +42,7 @@
 	import type { MusicType } from '../types';
 	import MusicAvaterComponent from '../components/MusicAvaterComponent.vue';
 	import { useStore } from "../stores/useStore";
+	import icon_search from "../../static/icon_search.png"
 
 	const inputValue = ref<string>("");
 	const pageNum = ref<number>(1);

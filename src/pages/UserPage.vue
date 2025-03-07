@@ -4,27 +4,27 @@
 			<view class="row">
 				<text class="text">头像</text>
 				<image class="big-avater" :src="store.userData.avater ? HOST + store.userData.avater:defaulAvater"/>
-				<image class="icon-arrow" src="../../static/icon_arrow.png"/>
+				<image class="icon-arrow" :src="icon_arrow"/>
 			</view>
 			<view class="row" @click="useEditUserData('昵称','username')">
 				<text class="text">昵称</text>
 				<text>{{store.userData.username}}</text>
-				<image class="icon-arrow" src="../../static/icon_arrow.png"/>
+				<image class="icon-arrow" :src="icon_arrow"/>
 			</view>
 			<view class="row" @click="useEditUserData('邮箱','email')">
 				<text class="text">邮箱</text>
 				<text>{{store.userData.email}}</text>
-				<image class="icon-arrow" src="../../static/icon_arrow.png"/>
+				<image class="icon-arrow" :src="icon_arrow"/>
 			</view>
 			<view class="row" @click="useEditSex">
 				<text class="text">性别</text>
 				<text>{{SexMap[store.userData.sex] || ''}}</text>
-				<image class="icon-arrow" src="../../static/icon_arrow.png"/>
+				<image class="icon-arrow" :src="icon_arrow"/>
 			</view>
 			<view class="row last-row" @click="useEditUserData('个性签名','sign')">
 				<text class="text">个性签名</text>
 				<text>{{store.userData.sign}}</text>
-				<image class="icon-arrow" src="../../static/icon_arrow.png"/>
+				<image class="icon-arrow" :src="icon_arrow"/>
 			</view>
 		</view>
 		<button class="btn-logout" @click="useLogout">退出登录</button>
@@ -58,6 +58,7 @@
 	import {updateUserDataService} from '../service';
 	import defaulAvater from '../../static/default_avater.png';
 	import { SexMap } from '../common/config';
+	import icon_arrow from "../../static/icon_arrow.png"
 
 	const title = ref<string>('');
 	const field = ref<string>('');

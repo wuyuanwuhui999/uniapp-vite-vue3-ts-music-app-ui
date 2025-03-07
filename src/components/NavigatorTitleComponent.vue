@@ -1,6 +1,6 @@
 <template>
 	<view class="page-header">
-        <image class="icon-back" @click="useBack" src="../../static/icon_back.png"/>
+        <image class="icon-back" @click="useBack" :src="icon_back"/>
         <text class="my-favorite">{{ title }}</text>
         <view class="icon-back"/>
     </view>
@@ -8,6 +8,7 @@
 
 <script setup lang="ts">
     import { defineProps } from 'vue';
+	import icon_back from '../../static/icon_back.png'
     const { title } = defineProps({
 		title: {
 			type: String,

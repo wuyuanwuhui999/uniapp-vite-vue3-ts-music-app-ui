@@ -4,17 +4,17 @@
 		<view class="module-block module-block-column">
 
 			<view class="login-input-wrapper">
-				<image src="../../static/icon_user_active.png" class="icon-login"/>
+				<image :src="icon_password" class="icon-login"/>
 				<input type="password" v-model="oldPassword" class="login-input" placeholder="请输入旧密码"/>
 			</view>
 
 			<view class="login-input-wrapper">
-				<image src="../../static/icon_user_active.png" class="icon-login"/>
+				<image :src="icon_password" class="icon-login"/>
 				<input type="password" v-model="newPassword" class="login-input" placeholder="请输入新密码"/>
 			</view>
 
 			<view class="login-input-wrapper">
-				<image src="../../static/icon_user_active.png" class="icon-login"/>
+				<image :src="icon_password" class="icon-login"/>
 				<input type="password" v-model="newConfirmPassword" class="login-input" placeholder="请输入新确定密码"/>
 			</view>
 		</view>
@@ -26,6 +26,7 @@
 	import { ref } from 'vue';
 	import NavigatorTitleComponent from '../components/NavigatorTitleComponent.vue';
 	import { updatePasswordService } from '../service';
+	import icon_password from "../../static/icon_password.png";
 
 	const newPassword = ref<string>("")
 	const newConfirmPassword = ref<string>("");

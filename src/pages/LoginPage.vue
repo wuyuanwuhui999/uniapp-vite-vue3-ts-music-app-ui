@@ -1,7 +1,7 @@
 <template>
 	<view class="page-wrapper">
 		<view class="module-block module-block-column">
-			<image src="../../static/icon_logo.png" class="icon-logo"/>
+			<image :src="icon_logo" class="icon-logo"/>
 
 			<view class="tab-container">
 				<view class="tab-item">
@@ -13,23 +13,23 @@
 			</view>
 
 			<view class="login-input-wrapper" v-show="tabIndex === 0">
-				<image src="../../static/icon_user_active.png" class="icon-login"/>
+				<image :src="icon_user_active" class="icon-login"/>
 				<input v-model="userAccount" @blur="userVertify('userAccount')" class="login-input" placeholder="请输入账号"/>
 			</view>
 
 			<view class="login-input-wrapper" v-show="tabIndex === 0">
-				<image src="../../static/icon_password.png" class="icon-login"/>
+				<image :src="icon_password" class="icon-login"/>
 				<input type="password" v-model="password" @blur="userVertify('password')" class="login-input" placeholder="请输入密码"/>
 			</view>
 
 			<view class="login-input-wrapper" v-show="tabIndex === 1">
-				<image src="../../static/icon_user_active.png" class="icon-login"/>
+				<image :src="icon_user_active" class="icon-login"/>
 				<input v-model="email" class="login-input"  @blur="userVertify('email')" placeholder="请输入邮箱"/>
-				<image @click="useSendEmailVertifyCode" src="../../static/icon_send.png" class="icon-login icon-send"/>
+				<image @click="useSendEmailVertifyCode" :src="icon_send" class="icon-login icon-send"/>
 			</view>
 
 			<view class="login-input-wrapper" v-show="tabIndex === 1">
-				<image src="../../static/icon_user_active.png" class="icon-login"/>
+				<image :src="icon_user_active" class="icon-login"/>
 				<input v-model="code" class="login-input" @blur="userVertify('code')" placeholder="请输入验证码"/>
 			</view>
 
@@ -48,6 +48,11 @@
 	import { useStore } from '../stores/useStore';
 	import {httpRequest} from '../utils/HttpUtils';
 	import { EMAIL_REG } from '../common/constant';
+	import icon_logo from '../../static/icon_logo.png';
+	import icon_user_active from '../../static/icon_user_active.png';
+	import icon_password from '../../static/icon_password.png';
+	import icon_send from '../../static/icon_send.png';
+	
 	const userAccount = ref<string>('');
 	const password = ref<string>('');
 	const tabIndex = ref<number>(0);

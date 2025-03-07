@@ -1,9 +1,9 @@
 <template>
-	<scroll-view class="page-wrapper" @click="useHideMenu" scroll-y @scrolltolower="onScrolltolower"
+	<scroll-view class="page-wrapper" refresher-enabled="true"	:refresher-triggered="triggered" @click="useHideMenu" scroll-y @scrolltolower="onScrolltolower"
 		show-scrollbar="false">
 		<view class="module-block module-block-row" :key="item.id" v-for="item,index in circleList">
 			<image class="user-avater" v-if="item.useravater" :src="HOST + item.useravater" />
-			<image class="user-avater" v-else src="../../static/default_avater.png" />
+			<image class="user-avater" v-else :src="default_avater" />
 			<view class="content-wrapper">
 				<text class="user-name">{{item.username}}</text>
 				<text class="content">{{item.content}}</text>
@@ -12,20 +12,20 @@
 					<view class="music-info">
 						<text class="music-name">{{item.musicSongName}} - {{item.musicAuthorName}}</text>
 					</view>
-					<image class="icon-music-play" src="../../static/icon_music_play.png" />
+					<image class="icon-music-play" :src="icon_music_play" />
 				</view>
 				<view class="operate-wrapper">
 					<text class="create-time">{{formatTime(item.createTime)}}</text>
 					<view class="popup-wrapper">
-						<image class="icon-menu" src="../../static/icon_music_menu.png"
+						<image class="icon-menu" :src="icon_music_menu"
 							@click.stop="useMenu(index)" />
 						<view class="popup-menu" v-if="circleIndex === index">
 							<view class="popup-menu-item" @click.stop="useLike(item)">
-								<image class="icon-popup-menu" src="../../static/icon_like_white.png" />
+								<image class="icon-popup-menu" :src="icon_like_white" />
 								<text>{{(item.circleLikes||[]).find((dItem)=>dItem.userId === store.userData.userId) ? '取消赞' : '赞'}}</text>
 							</view>
 							<view class="popup-menu-item" @click="useComment(index)">
-								<image class="icon-popup-menu" src="../../static/icon_comment_white.png" />
+								<image class="icon-popup-menu" :src="icon_music_like" />
 								<text>评论</text>
 							</view>
 						</view>
@@ -61,6 +61,13 @@
 	import CommentComponent from './CommentComponent.vue';
 	import { CommentEnum,CircleEnum } from '../common/enum';
 	import MusicAvaterComponent from '../components/MusicAvaterComponent.vue';
+	import default_avater from "../../static/default_avater.png";
+	import icon_music_play from "../../static/icon_music_play.png";
+	import icon_music_menu from "../../static/icon_music_menu.png";
+	import icon_like_white from "../../static/icon_like_white.png";
+	import icon_music_like from '../../static/icon_music_like.png'
+
+	const triggered = ref<boolean>(false);
 	const circleIndex = ref<number>(-1);// 朋友圈动态的id
 	const circleList = reactive<Array<CircleType>>([]);
 	const pageNum = ref<number>(1);

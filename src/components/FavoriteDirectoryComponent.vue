@@ -5,7 +5,7 @@
 		<template v-else>
 			<view class="favorite-add" @click="showCreateFavorite = true">
 				<view class="rectangle">
-					<image class="icon-favorite-add" src="../../static/icon_add.png" />
+					<image class="icon-favorite-add" :src="icon_add" />
 				</view>
 				<text>新建收藏夹</text>
 			</view>
@@ -38,6 +38,7 @@
 	import type { FavoriteDirectoryType, FavoriteMusicType } from '../types';
 	import { getFavoriteDirectoryService, insertMusicFavoriteService } from '../service';
 	import CreateFavoriteDirectoryComponent from './CreateFavoriteDirectoryComponent.vue';
+	import icon_add from "../../static/icon_add.png"
 
 	const favoriteDirectoryList = reactive<Array<FavoriteDirectoryType>>([]);
 	const checkboxValue = reactive<Array<number>>([]);

@@ -4,17 +4,17 @@
 		<view class="module-block module-block-column">
 
 			<view class="login-input-wrapper">
-				<image src="../../static/icon_user_active.png" class="icon-login"/>
+				<image :src="icon_user_active" class="icon-login"/>
 				<input type="text" v-model="code" class="login-input" placeholder="请输入验证码"/>
 			</view>
 
 			<view class="login-input-wrapper">
-				<image src="../../static/icon_user_active.png" class="icon-login"/>
+				<image :src="icon_password" class="icon-login"/>
 				<input type="password" v-model="password" class="login-input" placeholder="请输入密码"/>
 			</view>
 
 			<view class="login-input-wrapper">
-				<image src="../../static/icon_user_active.png" class="icon-login"/>
+				<image :src="icon_password" class="icon-login"/>
 				<input type="password" v-model="confirmPassword" class="login-input" placeholder="请输入确定密码"/>
 			</view>
 
@@ -30,6 +30,8 @@
 	import { resetPasswordService } from '../service';
 	import { useStore } from '../stores/useStore'
 	import {httpRequest} from '../utils/HttpUtils';
+	import icon_user_active from "../../static/icon_user_active.png";
+	import icon_password from "../../static/icon_password.png"
 
 	const password = ref<string>("")
 	const confirmPassword = ref<string>("");

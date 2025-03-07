@@ -11,9 +11,9 @@
                     <MusicAvaterComponent type="author" :name="item.authorName" :avater="item.avatar"/>
                     <text>{{ item.authorName }}</text>
                     <text class="total">{{ item.total }}首</text>
-                    <image class="icon-play" src="../../static/icon_music_play.png"/>
+                    <image class="icon-play" :src="icon_music_play"/>
                     <image class="icon-play" @click.stop="useLike(item)" :src="item.isLike > 0 ? isLikeActiveIcon : isLikeIcon"/>
-                    <image class="icon-play" src="../../static/icon_music_menu.png" />
+                    <image class="icon-play" :src="icon_music_menu" />
                 </view>
 			</view>
 
@@ -26,12 +26,14 @@
 	import { ref, reactive } from 'vue';
 	import { useRoute } from "vue-router";
 	import type { MusicAuthorCategoryType,MusicAuthorType } from '../types';
-	import { getMusicAuthorCategoryService,getMusicAuthorListByCategoryIdService,insertFavoriteAuthorService,deleteMyLikeMusicAuthorService } from '../service';
+	import { getMusicAuthorCategoryService,getMusicAuthorListByCategoryIdService,insertFavoriteAuthorService,deleteFavoriteAuthorService } from '../service';
     import {PAGE_SIZE} from '../common/constant';
 	import NavigatorTitleComponent from '../components/NavigatorTitleComponent.vue';
     import isLikeIcon from '../../static/icon_like.png';
 	import isLikeActiveIcon from '../../static/icon_like_active.png';
     import MusicAvaterComponent from '../components/MusicAvaterComponent.vue';
+    import icon_music_play from "../../static/icon_music_play.png";
+    import icon_music_menu from "../../static/icon_music_menu.png";
 
 	const route = useRoute();
     const total = ref<number>(0);// 总数
@@ -72,7 +74,7 @@
 	 */
     const useLike = (item:MusicAuthorType)=>{
         if(item.isLike){
-            deleteMyLikeMusicAuthorService(item.authorId).then((res)=>{
+            deleteFavoriteAuthorService(item.authorId).then((res)=>{
                 if(res.data > 0){
                     uni.showToast({
                         duration:2000,

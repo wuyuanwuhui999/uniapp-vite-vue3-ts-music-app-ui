@@ -3,7 +3,7 @@
 		<view class="module-block module-block-row">
 			<view class="search-input-wrapper">
 				<input class="search-input" v-model="keyword" :placeholder="placeholder" />
-				<image @click="useClear" v-if="keyword" class="icon-clear" src="../../static/icon_clear.png" />
+				<image @click="useClear" v-if="keyword" class="icon-clear" :src="icon_clear" />
 			</view>
 			<text class="search-btn" @click="useSearch">搜索</text>
 		</view>
@@ -20,7 +20,7 @@
 					</view>
 					<image @click="usePlayMusic(item)" class="icon-play" :src=" store.isPlaying && store.musicItem.id === item.id ? playingIcon : pauseIcon" />
 					<image class="icon-play" :src="item.isLike ? isLikeActiveIcon : isLikeIcon" />
-					<image class="icon-play" src="../../static/icon_music_menu.png" />
+					<image class="icon-play" :src="icon_music_menu" />
 				</view>
 			</scroll-view>
 		</template>
@@ -53,7 +53,10 @@
 	import isLikeActiveIcon from '../../static/icon_like_active.png';
 	import { getMusicCover } from '../utils/util';
 	import MusicAvaterComponent from '../components/MusicAvaterComponent.vue';
-
+	import icon_music_menu from '../../static/icon_music_menu.png';
+	import icon_clear from '../../static/icon_clear.png';
+	
+	
 	const store = useStore();
 	const route = useRoute();
 

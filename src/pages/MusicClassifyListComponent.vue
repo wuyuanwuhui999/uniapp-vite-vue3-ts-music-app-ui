@@ -5,7 +5,7 @@
 			<text class="music-name">{{ item.authorName }} - {{ item.songName }}</text>
 			<image class="icon-small" :src="store.musicItem?.id == item.id && store.isPlaying && store.classifyName === classifyName? playingIcon : pauseIcon"/>
 			<image class="icon-small" @click.stop="useLike(item)" :src="store.musicItem?.isLike ? likeActiveIcon : likeIcon"/>
-			<image class="icon-small" src="../../static/icon_music_menu.png"/>
+			<image class="icon-small" :src="icon_music_menu"/>
 		</view>
 	</view>
 </template>
@@ -20,6 +20,7 @@
 	import pauseIcon from '../../static/icon_music_play.png';
 	import playingIcon from '../../static/icon_music_playing_grey.png';
 	import MusicAvaterComponent from '../components/MusicAvaterComponent.vue';
+	import icon_music_menu from "../../static/icon_music_menu.png";
 
 	let loading:boolean = false;
 	const {musicList,classifyName} = defineProps({

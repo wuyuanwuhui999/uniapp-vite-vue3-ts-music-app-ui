@@ -8,7 +8,7 @@
                 </view>
                 <view class="expand-more" @click="useExpand">
                     <text class="expand-text">{{ expand ? '收起': '展开更多' }}</text>
-                    <image class="icon-small" :class="expand ? 'icon-expand' : ''"  src="../../static/icon_arrow.png"></image>
+                    <image class="icon-small" :class="expand ? 'icon-expand' : ''"  :src="icon_arrow"></image>
                 </view>
 			</view>
             <view class="module-block">
@@ -27,6 +27,7 @@
 	import NavigatorTitleComponent from '../components/NavigatorTitleComponent.vue';
     import { useStore } from "../stores/useStore";
     import MusicClassifyListComponent from '../components/MusicClassifyListComponent.vue';
+    import icon_arrow from "../../static/icon_arrow.png"
 
     const allClassifies = reactive<Array<MusicClassifyType>>([]);// 所有分类模块
     const currentClassify =  reactive<Array<MusicClassifyType>>([]);// 所有分类模块

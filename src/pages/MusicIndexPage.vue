@@ -8,29 +8,25 @@
 		</view>
 		<view class="tab-bar">
 			<view class="tab-item" @click="useTab(0)">
-				<image class="tab-icon" v-if="activeIndex === 0" src="../../static/icon_home_active.png" />
-				<image class="tab-icon" v-else src="../../static/icon_home.png" />
+				<image class="tab-icon" :src="activeIndex === 0 ? icon_home_active : icon_home" />
 				<text class="tab-text" :class='{"tab-text-active" : activeIndex === 0}'>首页</text>
 			</view>
 			<view class="tab-item" @click="useTab(1)">
-				<image class="tab-icon" v-if="activeIndex === 1" src="../../static/icon_recomment_active.png" />
-				<image class="tab-icon" v-else src="../../static/icon_recomment.png" />
+				<image class="tab-icon" :src="activeIndex === 1 ? icon_recomment_active : icon_recomment" />
 				<text class="tab-text" :class='{"tab-text-active" : activeIndex === 1}'>推荐</text>
 			</view>
 			<view class="mini-player-empty"></view>
 			<view class="mini-player-wrapper" @click="useNavigateTo"
 				:style="{transform:'translateX(-50%) rotate(' + angle + 'deg)'}">
 				<image class="music-img-cover" v-if="store.musicItem?.id" :src="getMusicCover(store.musicItem?.cover)" />
-				<image v-else class="music-img-default" src="../../static/icon_music.png" alt="" />
+				<image v-else class="music-img-default" :src="icon_music" alt="" />
 			</view>
 			<view class="tab-item" @click="useTab(2)">
-				<image class="tab-icon" v-if="activeIndex === 2" src="../../static/icon_music_circle_active.png" />
-				<image class="tab-icon" v-else src="../../static/icon_music_circle.png" />
+				<image class="tab-icon" :src="activeIndex === 2 ? icon_music_circle_active : icon_music_circle" />
 				<text class="tab-text" :class='{"tab-text-active" : activeIndex === 2}'>音乐圈</text>
 			</view>
 			<view class="tab-item" @click="useTab(3)" data-index="3">
-				<image class="tab-icon" v-if="activeIndex === 3" src="../../static/icon_user_active.png" />
-				<image class="tab-icon" v-else src="../../static/icon_user.png" />
+				<image class="tab-icon" :src="activeIndex === 3 ? icon_user_active : icon_user" />
 				<text class="tab-text" :class='{"tab-text-active" : activeIndex === 3}'>我的</text>
 			</view>
 		</view>
@@ -47,7 +43,16 @@
 	import { MUSIC_STORAGE_KEY, MUSIC_LIST_STORAGE_KEY, LOOP_STORAGE_KEY} from '../common/constant';
 	import { LoopModeEnum } from '../common/enum';
 	import type { MusicType } from '../types';
-	import {getMusicCover} from '../utils/util'
+	import {getMusicCover} from '../utils/util';
+	import icon_home_active from '../../static/icon_home_active.png';
+	import icon_home from '../../static/icon_home.png';
+	import icon_recomment_active from '../../static/icon_recomment_active.png';
+	import icon_recomment from '../../static/icon_recomment.png';
+	import icon_music_circle_active from '../../static/icon_music_circle_active.png';
+	import icon_music_circle from '../../static/icon_music_circle.png';
+	import icon_user_active from '../../static/icon_user_active.png';
+	import icon_user from '../../static/icon_user.png';
+	import icon_music from '../../static/icon_music.png';
 
 	const angle = ref<number>(0);// 旋转的角度
 	const store = useStore();

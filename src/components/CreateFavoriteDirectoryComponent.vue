@@ -8,7 +8,7 @@
 		<text class="require-text require-text-hidden">*</text>
 		<text>封面</text>
 		<view class="rectangle">
-			<image class="icon-favorite-add" src="../../static/icon_add.png" />
+			<image class="icon-favorite-add" :src="icon_add" />
 		</view>
 	</view>
 	<view class="favorite-btn-row">
@@ -22,6 +22,8 @@
 	import { defineEmits, ref, watch } from 'vue';
 	import type { FavoriteDirectoryType } from '../types';
 	import { insertFavoriteDirectoryService } from '../service';
+	import icon_add from "../../static/icon_add.png"
+
 	const isEnableCreate = ref<boolean>(false);
 	const favoriteName = ref<string>('');
 

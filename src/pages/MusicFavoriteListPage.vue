@@ -9,7 +9,7 @@
 					<text>{{ favoriteDirectory.name }}</text>
 					<text class="favorite-total">{{ favoriteDirectory.total }}首</text>
 				</view>
-				<image class="icon-middle" src="../../static/icon_edit.png"/>
+				<image class="icon-middle" :src="icon_edit"/>
 			</view>
 
 			<MusicClassifyListComponent @on-play-music="usePlayMusic" :music-list="musicList" :classify-name="classifyName"/>
@@ -27,6 +27,7 @@
 	import MusicClassifyListComponent from '../components/MusicClassifyListComponent.vue';
 	import NavigatorTitleComponent from '../components/NavigatorTitleComponent.vue';
 	import MusicAvaterComponent from '../components/MusicAvaterComponent.vue';
+	import icon_edit from '../../static/icon_edit.png';
 
 	const store = useStore();
 	const route = useRoute();

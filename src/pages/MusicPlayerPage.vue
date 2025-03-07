@@ -21,8 +21,8 @@
 			<view class="play-operate-wrapper">
 				<image class="icon-middle" @click.stop="useLike"
 					:src="store.musicItem.isLike ? likeActiveIcon : likeIcon" />
-				<image class="icon-middle" @click="useShare" src="../../static/icon_share_music.png" />
-				<image @click.stop="useComment" class="icon-middle" src="../../static/icon_music_comments.png" />
+				<image class="icon-middle" @click="useShare" :src="icon_share_music" />
+				<image @click.stop="useComment" class="icon-middle" :src="icon_music_comments" />
 				<image class="icon-middle" @click="showFavoriteDialog = true"
 					:src="isFavorite ? favoriteActiveIcon: favoriteIcon" />
 			</view>
@@ -37,27 +37,25 @@
 					<image @click.stop="useShowMenu" class="icon-loop" :src="loopMap[store.loop]" />
 					<view class="loop-menu" v-show="showLoopMenu">
 						<view class="loop-item" @click="useToggleLoopMenu(LoopModeEnum.ORDER)">
-							<image class="icon-loop" src="../../static/icon_music_order.png" />
+							<image class="icon-loop" :src="icon_music_order" />
 							<text class="loop-name">顺序播放</text>
 						</view>
 						<view class="loop-item" @click="useToggleLoopMenu(LoopModeEnum.REPEAT)">
-							<image class="icon-loop" src="../../static/icon_music_loop.png" />
+							<image class="icon-loop" :src="icon_music_loop" />
 							<text class="loop-name">单曲循环</text>
 						</view>
 						<view class="loop-item" @click="useToggleLoopMenu(LoopModeEnum.RANDOM)">
-							<image class="icon-loop" src="../../static/icon_music_random.png" />
+							<image class="icon-loop" :src="icon_music_random" />
 							<text class="loop-name">随机播放</text>
 						</view>
 					</view>
 				</view>
-				<image class="play-menu-item" @click.stop="onTabMusic(TabEnum.PREV)"
-					src="../../static/icon_music_prev.png" />
+				<image class="play-menu-item" @click.stop="onTabMusic(TabEnum.PREV)" :src="icon_music_prev" />
 				<view @click.stop="store.usePlay(!store.isPlaying)" class="play-circle">
 					<image class="play-menu-item" :src="store.isPlaying ? playingIcon : pauseIcon" />
 				</view>
-				<image class="play-menu-item" @click.stop="onTabMusic(TabEnum.NEXT)"
-					src="../../static/icon_music_next.png" />
-				<image class="play-menu-item" src="../../static/icon_music_play_menu.png" />
+				<image class="play-menu-item" @click.stop="onTabMusic(TabEnum.NEXT)" :src="icon_music_next" />
+				<image class="play-menu-item" :src="icon_music_play_menu" />
 			</view>
 		</view>
 		<DialogComponent @onClose="showCommentDialog = false" v-if="showCommentDialog">
@@ -95,12 +93,19 @@
 	import favoriteActiveIcon from '../../static/icon_full_star.png';
 	import type { CommentType, MusicType } from '../types';
 	import { insertMusicLikeService, deleteMusicLikeService, getTopCommentListService, getCommentCountService, isMusicFavoriteService } from '../service';
-	import orderImg from '../../static/icon_music_order.png';
-	import repeatImg from '../../static/icon_music_loop.png';
-	import randomImg from '../../static/icon_music_random.png';
+	import icon_music_order from '../../static/icon_music_order.png';
+	import icon_music_loop from '../../static/icon_music_loop.png';
+	import icon_music_random from '../../static/icon_music_random.png';
 	import DialogComponent from '../components/DialogComponent.vue';
 	import CommentComponent from '../components/CommentComponent.vue';
 	import FavoriteDirectoryComponent from '../components/FavoriteDirectoryComponent.vue';
+	import icon_share_music from "../../static/icon_share_music.png";
+	import icon_music_comments from "../../static/icon_music_comments.png";
+	import icon_music_prev from "../../static/icon_music_prev.png";
+	import icon_music_next from "../../static/icon_music_next.png";
+	import icon_music_play_menu from "../../static/icon_music_play_menu.png";
+	
+	
 
 	const angle = ref<number>(0);// 旋转的角度
 	const percent = ref<number>(0);// 播放进度
@@ -123,9 +128,9 @@
 
 	// 循环模式
 	const loopMap = {
-		[LoopModeEnum.ORDER]: orderImg,
-		[LoopModeEnum.REPEAT]: repeatImg,
-		[LoopModeEnum.RANDOM]: randomImg,
+		[LoopModeEnum.ORDER]: icon_music_order,
+		[LoopModeEnum.REPEAT]: icon_music_loop,
+		[LoopModeEnum.RANDOM]: icon_music_random,
 	};
 
 	/**

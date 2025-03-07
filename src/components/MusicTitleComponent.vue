@@ -1,6 +1,6 @@
 <template>
 	<view class="classify-title-wrapper">
-		<image class="icon-classify-arrow" :class="props.isFold ? 'icon-classify-arrow-fold' : ''" @click="useFold" src="../../static/icon_down.png" />
+		<image class="icon-classify-arrow" :class="props.isFold ? 'icon-classify-arrow-fold' : ''" @click="useFold" :src="icon_down" />
 		<text class="classify-name">{{props.classifyItem.classifyName}}</text>
 		<slot>
 			<text class="classify-more" v-if="props.showMore" @click="useMore">更多</text>
@@ -10,6 +10,7 @@
 
 <script setup lang="ts">
 	import { defineProps, defineEmits } from 'vue';
+	import icon_down from "../../static/icon_down.png";
 	const props = defineProps({
 		classifyItem: {
 			type: Object,

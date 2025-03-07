@@ -1,5 +1,5 @@
 {
-    "name" : "笔趣阁",
+    "name" : "在线音乐",
     "appid" : "__UNI__0D01F9F",
     "description" : "",
     "versionName" : "1.0.0",
@@ -22,6 +22,7 @@
         "distribute" : {
             "android" : {
                 "permissions" : [
+                    "READ_EXTERNAL_STORAGE", "WRITE_EXTERNAL_STORAGE",
                     "<uses-feature android:name=\"android.hardware.camera\"/>",
                     "<uses-feature android:name=\"android.hardware.camera.autofocus\"/>",
                     "<uses-permission android:name=\"android.permission.ACCESS_NETWORK_STATE\"/>",

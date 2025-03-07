@@ -1,13 +1,13 @@
 <template>
 	<image class="music-cover" :class="'music-cover' + size" v-if="avater" :src="getMusicCover(avater)" />
-	<image class="music-cover" :class="'music-cover' + size" v-else-if="type === 'music'" src="../../static/default_cover.jpg"/>
+	<image class="music-cover" :class="'music-cover' + size" v-else-if="type === 'music'" :src="default_cover"/>
 	<text class="music-cover" v-else :class="'music-cover' + size">{{ name[0] }}</text>
 </template>
 
 <script setup lang="ts">
 	import { getMusicCover } from '../utils/util';
 	import { defineProps } from 'vue';
-
+	import default_cover from "../../static/default_cover.jpg"
 	const {type,avater,name,size} = defineProps({
 		type:{
 			type:String,
