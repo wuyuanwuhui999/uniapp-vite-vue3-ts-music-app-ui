@@ -211,7 +211,8 @@
 	 * @author wuwenqiang
 	 */
 	const useChange = (event : Event) => {
-		store.audio.currentTime = (store.audio.duration * 60 / 100)
+		store.audio.seek( (store.audio.duration * 60 / 100));  // 关键：调用音频跳转方法
+		store.audio.currentTime =  (store.audio.duration * 60 / 100)
 	}
 
 	/**

@@ -11,8 +11,9 @@
 </template>
 
 <script setup lang="ts">
+	import { onLoad } from '@dcloudio/uni-app'; 
 	import { ref, reactive,type Ref } from 'vue';
-	import { useRoute,type RouteLocationNormalized } from "vue-router";
+	import { useRoute } from "vue-router";
 	import type { MusicType,MusicAuthorType } from '../types';
 	import { getMusicListByAuthorIdService } from '../service';
     import {PAGE_SIZE,MAX_FAVORITE_NUMBER} from '../common/constant';
@@ -20,12 +21,16 @@
     import MusicClassifyListComponent from '../components/MusicClassifyListComponent.vue';
 	import { useStore } from "../stores/useStore";
 	const store = useStore();
-	const route:RouteLocationNormalized = useRoute();
+	const route = useRoute();
     const total:Ref<number> = ref<number>(0);// 总数
 	const pageNum:Ref<number> = ref<number>(1);
 	const musicList:Array<MusicType> = reactive<Array<MusicType>>([]);
     let loading:boolean = false;
-    const musicAuthor = JSON.parse(decodeURIComponent(route.query.data as string)) as MusicAuthorType;
+	let musicAuthor:MusicAuthorType;
+	onLoad((option)=>{
+		musicAuthor = JSON.parse(decodeURIComponent(option!.data)) as MusicAuthorType
+		useMusicListByAuthorId()
+	})
 
      /**
 	 * @description: 根据分类获取歌手列表
@@ -69,7 +74,7 @@
 		uni.navigateTo({ url: `../pages/MusicPlayerPage` });
     }
 
-    useMusicListByAuthorId()
+    
 </script>
 
 <style lang="less" scoped>
