@@ -1,5 +1,5 @@
 <template>
-	<scroll-view class="page-wrapper" refresher-enabled="true"	:refresher-triggered="triggered" @click="useHideMenu" scroll-y @scrolltolower="onScrolltolower"
+	<scroll-view class="page-wrapper" @refresherrefresh="useRefresh" refresher-enabled="true"	:refresher-triggered="triggered" @click="useHideMenu" scroll-y @scrolltolower="onScrolltolower"
 		show-scrollbar="false">
 		<view class="module-block module-block-row" :key="item.id" v-for="item,index in circleList">
 			<image class="user-avater" v-if="item.useravater" :src="HOST + item.useravater" />
@@ -79,14 +79,35 @@
 	let loading : boolean = false;
 
 	/**
+	 * @description: 下拉刷新
+	 * @date: 2025-03-8 12:38
+	 * @author wuwenqiang
+	 */
+	const useRefresh = ()=>{
+		pageNum.value = 1;
+		triggered.value = true
+		useCircleListByType();
+	}
+
+	/**
 	 * @description: 获取朋友圈动态数据
 	 * @date: 2024-03-12 22:09
 	 * @author wuwenqiang
 	 */
-	getCircleListByTypeService(CircleEnum.MUSIC, pageNum.value, pageSize).then((res) => {
-		circleList.push(...res.data);
-		total.value = res.total;
-	})
+	const useCircleListByType = (isRefresh:boolean=false)=>{
+		if(isRefresh)uni.showLoading()
+		return getCircleListByTypeService(CircleEnum.MUSIC, pageNum.value, pageSize).then((res) => {
+			if(isRefresh)circleList.length = 0;
+			circleList.push(...res.data);
+			total.value = res.total;
+		}).finally(()=>{
+			triggered.value = false;
+			if(isRefresh)uni.hideLoading();
+		})
+	}
+
+	
+	
 
 	/**
 	 * @description: 显示弹窗的气泡
@@ -105,11 +126,11 @@
 	const useLike = (circleItem : CircleType) => {
 		if (loading) return;
 		loading = true;
-		const index : number = circleItem.circleLikes.findIndex((dItem) => dItem.userId === store.userData.userId);
+		const index : number = circleItem.circleLikes!.findIndex((dItem) => dItem.userId === store.userData.id);
 		if (index !== -1) {// 取消点赞
-			deleteLikeService(circleItem.id, CommentEnum.MUSIC_CIRCLE).then((res) => {
+			deleteLikeService(circleItem.id!, CommentEnum.MUSIC_CIRCLE).then((res) => {
 				if (res.data > 0) {
-					circleItem.circleLikes.splice(index, 1)
+					circleItem.circleLikes!.splice(index, 1)
 				}
 			}).finally(() => {
 				loading = false;
@@ -118,11 +139,11 @@
 		} else {// 新增点赞
 			const likeItem : LikeType = {
 				type: CommentEnum.MUSIC_CIRCLE,
-				relationId: circleItem.id
+				relationId: circleItem.id!
 			}
 			saveLikeService(likeItem).then((res) => {
 				if (res.data) {
-					circleItem.circleLikes.push(res.data)
+					circleItem.circleLikes!.push(res.data)
 				}
 			}).finally(() => {
 				loading = false;
@@ -158,6 +179,8 @@
 	const useComment = (index:number) => {
 		commentRefs.value[index].useShowInput()
 	}
+
+	useCircleListByType();
 </script>
 
 <style lang="less">
@@ -168,12 +191,7 @@
 	.page-wrapper {
 		width: 100%;
 		height: 100%;
-
-		/deep/.uni-scroll-view{
-			height: auto;
-		}
 		/deep/.uni-scroll-view-content {
-			height: auto;
 			&::-webkit-scrollbar {
 				display: none;
 			}

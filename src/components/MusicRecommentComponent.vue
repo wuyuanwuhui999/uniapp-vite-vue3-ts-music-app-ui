@@ -1,5 +1,5 @@
 <template>
-	<scroll-view class="page-wrapper" refresher-enabled="true"	:refresher-triggered="triggered" @scrolltolower="onScrolltolower" scroll-y show-scrollbar="false">
+	<scroll-view class="page-wrapper" :lower-threshold="50" @refresherrefresh="useRefresh" refresher-enabled="true"	:refresher-triggered="triggered" @scrolltolower="onScrolltolower" scroll-y show-scrollbar="false">
 		<view class="music-list">
 			<view class="music-item module-block" :key="item.id" v-for="item,index in musicList">
 				<image v-if="index === 0" :src="icon_no1" class="music-rank" />
@@ -47,18 +47,32 @@
 	const musicList = reactive<Array<MusicType>>([]);
 	let loading:boolean = false
 
+	/**
+	 * @description: 下拉刷新
+	 * @date: 2025-03-08 12:31
+	 * @author wuwenqiang
+	 */
+	const useRefresh = ()=>{
+		pageNum.value = 1;
+		triggered.value = true
+		useMusicList(true)
+	}
 
 	/**
 	 * @description: 获取推荐列表，1为列表的id
 	 * @date: 2024-03-03 18:23
 	 * @author wuwenqiang
 	 */
-	const useMusicList = () => {
+	const useMusicList = (isRefresh:boolean = false) => {
 		loadding = true;
-		getMusicListByClassifyIdService(1, pageNum.value, pageSize.value).then((res) => {
+		uni.showLoading();
+		return getMusicListByClassifyIdService(1, pageNum.value, pageSize.value).then((res) => {
 			if (total.value === 0) total.value = res.total;
+			if(isRefresh) musicList.length = 0
 			musicList.push(...res.data);
 		}).finally(() => {
+			triggered.value = false;
+			uni.hideLoading();
 			loadding = false;
 		});
 	}
@@ -69,6 +83,7 @@
 	 * @author wuwenqiang
 	 */
 	const onScrolltolower = () => {
+		console.log(111)
 		if (loadding) return;
 		if (total.value > pageSize .value * pageNum.value) {
 			pageNum.value++;
@@ -130,11 +145,7 @@
 	.page-wrapper {
 		width: 100%;
 		height: 100%;
-		/deep/.uni-scroll-view{
-			height: auto;
-		}
 		/deep/.uni-scroll-view-content {
-			height: auto;
 			&::-webkit-scrollbar {
 				display: none;
 			}

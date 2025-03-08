@@ -69,7 +69,7 @@
 		}
 		
 		.classify-more{
-			color: @sub-title-color;
+			color: @disable-text-color;
 			text-decoration: underline;
 		}
 	}

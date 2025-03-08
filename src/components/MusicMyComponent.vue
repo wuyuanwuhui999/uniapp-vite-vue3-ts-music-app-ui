@@ -59,7 +59,7 @@
 							<view class="singer-list">
 								<MusicAvaterComponent type="author" :name="item.songName" :avater="item.cover"/>
 								<view class="songname-wrapper">
-									<text>{{item.authorName}}</text>
+									<text>{{item.authorName}} - {{item.songName}}</text>
 								</view>
 								<image class="icon-operate" :src="icon_music_play"/>
 								<image class="icon-operate" :src="icon_music_menu"/>
@@ -193,8 +193,9 @@
 	const totalFavoriteAuthor = ref<number>(0);// 喜欢的歌手总条数
 	const totalFavoriteMusic = ref<number>(0);// 我喜欢的歌曲总数
 	const dialogText = ref<string>("");
-	let deletefavoriteDirectoryIndex = ref<number>(-1);
-	let deleteFavoriteAuthorIndex = ref<number>(-1);
+	const deletefavoriteDirectoryIndex = ref<number>(-1);
+	const deleteFavoriteAuthorIndex = ref<number>(-1);
+	const deleteFavoriteMusicIndex = ref<number>(-1);// 删除我喜欢的音乐
 
 	/**
 	 * @description: 获取用户歌单
@@ -357,7 +358,7 @@
 				favoriteDirectoryList.splice(deletefavoriteDirectoryIndex.value,1);
 				deletefavoriteDirectoryIndex.value = -1;
 			}).finally(()=>uni.hideLoading())
-		}else{
+		}else if(deleteFavoriteAuthorIndex.value !== -1){
 			deleteFavoriteAuthorService(favoriteAuthorList[deleteFavoriteAuthorIndex.value].authorId).then((res)=>{
 				uni.showToast({
 					duration:2000,
@@ -366,8 +367,23 @@
 				})
 				popup.value?.close()
 				favoriteAuthorList.splice(deleteFavoriteAuthorIndex.value,1);
+			}).finally(()=>{
+				uni.hideLoading();
 				deleteFavoriteAuthorIndex.value = -1;
-			}).finally(()=>uni.hideLoading())
+			})
+		}else {
+			deleteMusicLikeService(favoriteMusicList[deleteFavoriteMusicIndex.value].id).then((res)=>{
+				uni.showToast({
+					duration:2000,
+					position:'center',
+					title: res.data > 0 ? '删除成功' : '删除失败'
+				})
+				popup.value?.close();
+				favoriteMusicList.splice(deleteFavoriteMusicIndex.value,1);
+			}).finally(()=>{
+				uni.hideLoading();
+				deleteFavoriteMusicIndex.value = -1;
+			})
 		}
 	}
 
@@ -390,14 +406,10 @@
 	 * @date: 2025-03-04 21:47
 	 * @author wuwenqiang
 	 */
-	 const useDeleteFavoriteMusic = (musicId:number)=>{
-		deleteMusicLikeService(musicId).then((res)=>{
-			uni.showToast({
-				duration:2000,
-				position:'center',
-				title: res.data > 0 ? '删除成功' : '删除失败'
-			})
-		})
+	 const useDeleteFavoriteMusic = (index:number)=>{
+		deleteFavoriteMusicIndex.value = index;
+		dialogText.value = `是否删除歌曲：${favoriteMusicList[index].songName}`;
+		popup.value?.open('top');
 	}
 
 	/**
@@ -413,18 +425,14 @@
 
 </script>
 
-<style lang="less">
+<style lang="less" scoped>
 	@import '../theme/color.less';
 	@import '../theme/size.less';
 	@import '../theme/style.less';
 	.page-wrapper {
 		width: 100%;
 		height: 100%;
-		/deep/.uni-scroll-view{
-			height: auto;
-		}
 		/deep/.uni-scroll-view-content {
-			height: auto;
 			&::-webkit-scrollbar {
 				display: none;
 			}

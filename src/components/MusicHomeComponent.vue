@@ -27,7 +27,7 @@
 					:key="'classifyId' + item.id" v-else :classifyItem="item" />
 			</template>
 
-			<view class="bottom"><text>{{pageNum === allClassifies.length ? "已经到底了" : "正在加载更多..."}}</text></view>
+			<view class="bottom"><text>{{pageNum === allClassifies.length - 1 ? "已经到底了" : "正在加载更多..."}}</text></view>
 		</view>
 	</scroll-view>
 </template>
@@ -86,11 +86,7 @@
 	.page-wrapper {
 		width: 100%;
 		height: 100%;
-		/deep/.uni-scroll-view{
-			height: auto;
-		}
 		/deep/.uni-scroll-view-content {
-			height: auto;
 			&::-webkit-scrollbar {
 				display: none;
 			}

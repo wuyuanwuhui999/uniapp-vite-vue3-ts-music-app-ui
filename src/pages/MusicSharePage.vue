@@ -29,7 +29,7 @@
 </template>
 
 <script setup lang="ts">
-	import { ref } from 'vue';
+	import { ref, onUnmounted } from 'vue';
 	import type { CircleType } from '../types';
 	import { saveCircleService } from '../service';
 	import { CircleEnum } from '../common/enum';
@@ -108,6 +108,10 @@
 			url: `../pages/MusicCirCleCheckPage`
 		})
 	}
+
+	onUnmounted(()=>{
+		store.setShareMusicItem(null)
+	})
 </script>
 
 <style lang="less" scoped>

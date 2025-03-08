@@ -8,7 +8,8 @@
 
 <script setup lang="ts">
     import { defineProps } from 'vue';
-	import icon_back from '../../static/icon_back.png'
+	import icon_back from '../../static/icon_back.png';
+	
     const { title } = defineProps({
 		title: {
 			type: String,

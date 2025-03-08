@@ -316,7 +316,6 @@
 	 */
 	const useIsMusicFavorite = () => {
 		isFavorite.value = false;
-		console.log(111,store.musicItem);
 		isMusicFavoriteService(store.musicItem.id).then(res => isFavorite.value = res.data > 0);
 	}
 
@@ -336,8 +335,9 @@
 	 * @author wuwenqiang
 	 */
 	const useShare = () => {
+		store.setShareMusicItem(store.musicItem)
 		uni.navigateTo({
-			url: `../pages/MusicSharePage?musicItem=${encodeURIComponent(JSON.stringify(store.musicItem))}`
+			url: `../pages/MusicSharePage`
 		});
 	}
 
