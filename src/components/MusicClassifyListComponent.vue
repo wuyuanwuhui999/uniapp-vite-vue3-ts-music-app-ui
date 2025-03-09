@@ -4,7 +4,7 @@
 			<MusicAvaterComponent type="music" :name="item.songName" :avater="item.cover"/>
 			<text class="music-name">{{ item.authorName }} - {{ item.songName }}</text>
 			<image class="icon-small" :src="store.musicItem?.id == item.id && store.isPlaying && store.classifyName === classifyName? playingIcon : pauseIcon"/>
-			<image class="icon-small" @click.stop="useLike(item)" :src="item.isLike ? likeActiveIcon : likeIcon"/>
+			<image class="icon-small" v-if="showLike" @click.stop="useLike(item)" :src="item.isLike ? likeActiveIcon : likeIcon"/>
 			<image class="icon-small" :src="icon_music_menu"/>
 		</view>
 	</view>
@@ -23,7 +23,7 @@
 	import icon_music_menu from '../../static/icon_music_menu.png';
 
 	let loading:boolean = false;
-	const {musicList,classifyName} = defineProps({
+	const {musicList,classifyName,showLike} = defineProps({
 		musicList:{
 			type:Array<MusicType>,
 			default:[]
@@ -31,6 +31,10 @@
 		classifyName:{
 			type:String,
 			default:''
+		},
+		showLike:{
+			type:Boolean,
+			default:true
 		}
 	})
 	const emits = defineEmits(['onPlayMusic']);

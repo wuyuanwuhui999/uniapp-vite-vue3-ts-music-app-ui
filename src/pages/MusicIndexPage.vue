@@ -135,7 +135,9 @@
 
 	.page-wrapper {
 		position: relative;
-
+		scroll-view ::-webkit-scrollbar {
+			display: none;
+		}
 		.page-container {
 			flex: 1;
 			height: 0;

@@ -49,7 +49,7 @@
 			<MusicTitleComponent @on-fold="useFoldFavoriteMusic" :is-fold="isFoldFavoriteMusic" :classifyItem="{classifyName:'我喜欢的歌曲',category:''}">
 				<view class="operate-wrappper">
 					<image :src="icon_refresh" @click="useFavoriteMusicList(true)" class="icon-small"/>
-					<text class="more" v-if="totalFavoriteMusic > 5">更多</text>
+					<text class="more" v-if="totalFavoriteMusic > 5" @click="useFavoriteMusicMore">更多</text>
 				</view>
 			</MusicTitleComponent>
 			<view v-show="!isFoldFavoriteMusic">
@@ -112,7 +112,7 @@
 			<MusicTitleComponent @on-fold="useFoldPlayRecord" :is-fold="isFoldPlayRecord" :classifyItem="{classifyName:'我听过的歌曲',category:''}">
 				<view class="operate-wrappper">
 					<image :src="icon_refresh" @click="useMusicRecord(true)" class="icon-small"/>
-					<text class="more" v-if="totalRecord > 5">更多</text>
+					<text class="more" v-if="totalRecord > 5" @click="useRecordMusicMore">更多</text>
 				</view>
 			</MusicTitleComponent>
 			<view v-show="!isFoldPlayRecord">
@@ -419,6 +419,15 @@
 	 */
 	const useFoldFavoriteMusic = (isFold:boolean)=>{
 		isFoldFavoriteMusic.value = isFold;
+	}
+
+	const useFavoriteMusicMore = ()=>{
+		uni.navigateTo({url: `../pages/FavoriteMusicPage`});
+
+	}
+
+	const useRecordMusicMore = ()=>{
+		uni.navigateTo({url: `../pages/RecordMusicPage`});
 	}
 
 	init();

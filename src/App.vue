@@ -14,4 +14,7 @@ onHide(() => {
 	uni-page-body{
 		height: 100%;
 	}
+  scroll-view ::-webkit-scrollbar {
+    display: none;
+  }
 </style>

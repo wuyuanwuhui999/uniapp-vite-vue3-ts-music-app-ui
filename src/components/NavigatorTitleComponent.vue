@@ -40,6 +40,7 @@
 			.icon-back{
 				width: @small-icon-size;
 				height: @small-icon-size;
+				opacity: 0.2;
 			}
 		}
 </style>
