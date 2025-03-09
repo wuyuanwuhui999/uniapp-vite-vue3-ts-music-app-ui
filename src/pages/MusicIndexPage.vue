@@ -15,11 +15,10 @@
 				<image class="tab-icon" :src="activeIndex === 1 ? icon_recomment_active : icon_recomment" />
 				<text class="tab-text" :class='{"tab-text-active" : activeIndex === 1}'>推荐</text>
 			</view>
-			<view class="mini-player-empty"></view>
-			<view class="mini-player-wrapper" @click="useNavigateTo"
+			<view class="mini-player-empty" v-if="store.musicItem?.id"></view>
+			<view class="mini-player-wrapper" v-if="store.musicItem?.id" @click="useNavigateTo"
 				:style="{transform:'translateX(-50%) rotate(' + angle + 'deg)'}">
-				<image class="music-img-cover" v-if="store.musicItem?.id" :src="getMusicCover(store.musicItem?.cover)" />
-				<image v-else class="music-img-default" :src="icon_music" alt="" />
+				<image class="music-img-cover" :src="getMusicCover(store.musicItem?.cover)" />
 			</view>
 			<view class="tab-item" @click="useTab(2)">
 				<image class="tab-icon" :src="activeIndex === 2 ? icon_music_circle_active : icon_music_circle" />
@@ -135,9 +134,6 @@
 
 	.page-wrapper {
 		position: relative;
-		scroll-view ::-webkit-scrollbar {
-			display: none;
-		}
 		.page-container {
 			flex: 1;
 			height: 0;

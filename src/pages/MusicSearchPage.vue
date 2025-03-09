@@ -13,7 +13,7 @@
 			<template v-if="searching">
 				<scroll-view v-if="!loading" scroll-y class="scroll-list" show-scrollbar="false" @scrolltolower="onScrolltolower">
 					<view class="module-block module-block-last" >
-						<view v-for="item in searchMusicList" :key="item.id" class="scroll-view-item">
+						<!-- <view v-for="item in searchMusicList" :key="item.id" class="scroll-view-item">
 							<MusicAvaterComponent type="music" class="song-cover" :name="item.songName" :avater="item.cover"/>
 							<view class="name-wrapper">
 								<text class="song-name">{{ item.songName }}</text>
@@ -22,9 +22,10 @@
 							<image @click="usePlayMusic(item)" class="icon-play" :src=" store.isPlaying && store.musicItem.id === item.id ? playingIcon : pauseIcon" />
 							<image class="icon-play" :src="item.isLike ? isLikeActiveIcon : isLikeIcon" />
 							<image class="icon-play" :src="icon_music_menu" />
-						</view>
+						</view> -->
+						<MusicClassifyListComponent class="component-gap" @onPlayMusic="usePlayMusic" :musicList = 'searchMusicList' :classifyName = '"搜索"'/>
 					</view>
-					<text class="footer">{{ total > pageNum * PAGE_SIZE ? '正在加载更多' : '已经到底了'}}</text>
+					<text class="footer">{{ total >= pageNum * PAGE_SIZE ? '正在加载更多' : '已经到底了'}}</text>
 				</scroll-view>
 			</template>
 			<template v-else>
@@ -35,7 +36,7 @@
 							<text @click="useLabelSearch(item)" class="record-item" v-for="item,index in searchRecordList"
 								:key="item+index">{{item}}</text>
 						</template>
-						<text class="no-data">暂无搜索记录</text>
+						<text v-else class="no-data">暂无搜索记录</text>
 					</view>
 				</view>
 			</template>
@@ -60,6 +61,7 @@
 	import icon_music_menu from '../../static/icon_music_menu.png';
 	import icon_clear from '../../static/icon_clear.png';
 	import { onLoad } from '@dcloudio/uni-app'; 
+	import MusicClassifyListComponent from '../components/MusicClassifyListComponent.vue';
 
 	const store = useStore();
 
@@ -88,10 +90,9 @@
 	 * @date: 2024-01-30 22:24
 	 * @author wuwenqiang
 	 */
-	const usePlayMusic = (musicModel:MusicType)=>{
-		if(store.musicItem?.id === musicModel.id){
-			store.setMusic(musicModel);
-		}
+	const usePlayMusic = (musicModel:MusicType,index:number)=>{
+		store.setClassifyMusic(searchMusicList, musicModel, index, "搜索");
+		store.setMusic(musicModel);
 		uni.navigateTo({url: `../pages/MusicPlayerPage`});
 	}
 
@@ -106,6 +107,7 @@
 			keyword.value = placeholder.value;
 		}
 		if (loading.value) return;
+		uni.showLoading();
 		searching.value = loading.value = true;
 		const index = searchRecordList.findIndex(item => item === keyword.value);
 		if (index !== -1) {
@@ -117,6 +119,7 @@
 			searchMusicList.splice(0, searchMusicList.length, ...res.data);
 			total.value = res.total;
 		}).finally(() => {
+			uni.hideLoading();
 			loading.value = false
 		})
 	}

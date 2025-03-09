@@ -17,7 +17,7 @@
                 </view>
 			</view>
 
-            <text class="footer">{{ total > pageNum * PAGE_SIZE ? '正在加载更多' : '已经到底了'}}</text>
+            <text class="footer">{{ total >= pageNum * PAGE_SIZE ? '正在加载更多' : '已经到底了'}}</text>
 		</scroll-view>
 	</view>
 </template>
@@ -35,7 +35,6 @@
     import icon_music_play from "../../static/icon_music_play.png";
     import icon_music_menu from "../../static/icon_music_menu.png";
 
-	const route = useRoute();
     const total = ref<number>(0);// 总数
 	const pageNum = ref<number>(1);
     const musicAuthorCategoryList = reactive<Array<MusicAuthorCategoryType>>([]);

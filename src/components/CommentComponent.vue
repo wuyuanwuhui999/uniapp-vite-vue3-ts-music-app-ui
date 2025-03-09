@@ -222,7 +222,9 @@
             }
         }
     }
-
+    .no-data{
+        flex: 1;
+    }
     .input-wrapper {
         width: 100%;
         position: fixed;

@@ -14,7 +14,7 @@
 
 			<view class="login-input-wrapper" v-show="tabIndex === 0">
 				<image :src="icon_user_active" class="icon-login"/>
-				<input v-model="userAccount" @blur="userVertify('userAccount')" class="login-input" placeholder="请输入账号"/>
+				<input v-model="userAccount" @blur="userVertify('userAccount')" class="login-input" placeholder="请输入账号或者邮箱"/>
 			</view>
 
 			<view class="login-input-wrapper" v-show="tabIndex === 0">
@@ -48,7 +48,7 @@
 	import { useStore } from '../stores/useStore';
 	import {httpRequest} from '../utils/HttpUtils';
 	import { EMAIL_REG } from '../common/constant';
-	import icon_logo from '../../static/icon_logo.png';
+	import icon_logo from '../../static/logo.png';
 	import icon_user_active from '../../static/icon_user_active.png';
 	import icon_password from '../../static/icon_password.png';
 	import icon_send from '../../static/icon_send.png';

@@ -3,7 +3,7 @@
 		<view>
 			<MusicSearchComponent />
 			<view class="category-wrapper module-block">
-				<view class="category-item" @click="useAuthorListPage">
+				<view class="category-item" @click="useMusicAuthorCategoryPage">
 					<image class="category-img" :src="icon_music_singer" />
 					<text class="category-name">歌手</text>
 				</view>
@@ -23,7 +23,7 @@
 			<template v-for="item,index in allClassifies.slice(0,pageNum)">
 				<MusicSingerComponent :key="'singerId' + item.id" :classifyItem="item"
 					v-if="item.classifyName === '推荐歌手'" />
-				<MusicClassifyComponent :class="index === allClassifies.length - 1 ? 'module-block-last': ''"
+				<MusicClassifyComponent :showLoading="pageNum > 3" :class="index === allClassifies.length - 1 ? 'module-block-last': ''"
 					:key="'classifyId' + item.id" v-else :classifyItem="item" />
 			</template>
 
@@ -48,8 +48,8 @@
 	const allClassifies = reactive<Array<MusicClassifyType>>([]);// 所有分类模块
 	
 	// 跳转到歌手列表
-	const useAuthorListPage = ()=>{
-		uni.navigateTo({url: `../pages/AuthorMusicListPage`});
+	const useMusicAuthorCategoryPage = ()=>{
+		uni.navigateTo({url: `../pages/MusicAuthorCategoryPage`});
 	}
 
 	// 跳转到歌手列表
@@ -72,7 +72,7 @@
 	 * @author wuwenqiang
 	 */
 	const onScrolltolower = () => {
-		if (pageNum.value < allClassifies.length) {
+		if (pageNum.value < allClassifies.length - 1) {
 			pageNum.value++;
 		}
 	}

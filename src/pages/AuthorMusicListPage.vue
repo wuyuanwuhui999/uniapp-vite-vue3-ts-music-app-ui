@@ -5,7 +5,7 @@
             <view class="module-block">
                 <MusicClassifyListComponent :music-list="musicList" :classify-name="musicAuthor.authorName" @on-play-music="usePlayMusic"/>
             </view>
-            <text class="footer">{{ total > pageNum * PAGE_SIZE ? '正在加载更多' : '已经到底了'}}</text>
+            <text class="footer">{{ total >= pageNum * PAGE_SIZE ? '正在加载更多' : '已经到底了'}}</text>
 		</scroll-view>
 	</view>
 </template>

@@ -14,7 +14,7 @@
             <view class="module-block">
                 <MusicClassifyListComponent class="component-gap" @onPlayMusic="usePlayMusic" :musicList = 'musicList' :classifyName = 'activeCategory.classifyName'/>
             </view>
-            <text class="footer">{{ total > pageNum * PAGE_SIZE ? '正在加载更多' : '已经到底了'}}</text>
+            <text class="footer">{{ total >= pageNum * PAGE_SIZE ? '正在加载更多' : '已经到底了'}}</text>
 		</scroll-view>
 	</view>
 </template>

@@ -19,11 +19,16 @@
 
 	const store = useStore();
 
-	const { classifyItem } = defineProps({
+	const { classifyItem,showLoading } = defineProps({
 		classifyItem: {
 			type: Object as PropType<MusicClassifyType>,
 			reqiure: true,
 			default: {}
+		},
+		showLoading:{
+			type: Boolean,
+			reqiure: false,
+			default: false
 		}
 	});
 
@@ -62,8 +67,11 @@
 		uni.navigateTo({url: `../pages/MusicClassifyListPage?data=${encodeURIComponent(JSON.stringify(classifyItem))}`});
 	}
 
+	if(showLoading)uni.showLoading()
 	getMusicListByClassifyIdService(classifyItem.id, 1, 3).then((res) => {
 		classifyMusicList.push(...res.data);
+	}).finally(()=>{
+		if(showLoading)uni.hideLoading()
 	});
 
 

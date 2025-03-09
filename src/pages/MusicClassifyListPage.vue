@@ -6,28 +6,32 @@
 				<MusicClassifyListComponent @on-play-music="usePlayMusic" :music-list="musicList"
 				:classify-name="musicClassify.classifyName" />
 			</view>
-			<text class="footer">{{ total > pageNum * PAGE_SIZE ? '正在加载更多' : '已经到底了'}}</text>
+			<text class="footer">{{ total >= pageNum * PAGE_SIZE ? '正在加载更多' : '已经到底了'}}</text>
 		</scroll-view>
 	</view>
 </template>
 
 <script setup lang="ts">
 	import { ref, reactive,type Ref } from 'vue';
-	import { useRoute,type RouteLocationNormalized } from "vue-router";
 	import type { MusicType, MusicClassifyType } from '../types';
 	import { getMusicListByClassifyIdService } from '../service';
 	import { MAX_FAVORITE_NUMBER, PAGE_SIZE } from '../common/constant';
 	import { useStore } from "../stores/useStore";
 	import MusicClassifyListComponent from '../components/MusicClassifyListComponent.vue';
 	import NavigatorTitleComponent from '../components/NavigatorTitleComponent.vue';
+	import { onLoad } from '@dcloudio/uni-app'; 
 
 	const store = useStore();
-	const route:RouteLocationNormalized = useRoute();
 	let loadding : boolean = false;
 	const total:Ref<number> = ref<number>(0);
 	const pageNum:Ref<number> = ref<number>(1);
-	const musicClassify : MusicClassifyType = JSON.parse(decodeURIComponent(route.query.data as string)) as MusicClassifyType; // 获取URL上的查询参数并反序列化
+	const musicClassify = ref<MusicClassifyType> ({} as MusicClassifyType); // 获取URL上的查询参数并反序列化
 	const musicList:Array<MusicType> = reactive<Array<MusicType>>([]);
+
+	onLoad((option)=>{
+		musicClassify.value =  JSON.parse(decodeURIComponent(option!.data as string)) as MusicClassifyType;
+		useMusicList();
+	})
 
 	/**
 	 * @description: 加载音乐列表
@@ -35,7 +39,7 @@
 	 * @author wuwenqiang
 	 */
 	const useMusicList = () => {
-		getMusicListByClassifyIdService(musicClassify.id, pageNum.value, PAGE_SIZE).then((res) => {
+		return getMusicListByClassifyIdService(musicClassify.value.id, pageNum.value, PAGE_SIZE).then((res) => {
 			total.value = res.total;
 			musicList.push(...res.data);
 		}).finally(() => loadding = false);
@@ -52,9 +56,9 @@
 	}
 
 	const usePlayMusic = async (item : MusicType, index : number) => {
-		if (store.classifyName != musicClassify.classifyName) {
-			await getMusicListByClassifyIdService(musicClassify.id, 1, MAX_FAVORITE_NUMBER).then((value) => {
-				store.setClassifyMusic(value.data, item, index, musicClassify.classifyName);
+		if (store.classifyName != musicClassify.value.classifyName) {
+			await getMusicListByClassifyIdService(musicClassify.value.id, 1, MAX_FAVORITE_NUMBER).then((value) => {
+				store.setClassifyMusic(value.data, item, index, musicClassify.value.classifyName);
 			});
 		} else {
 			store.setMusic(item, true);
@@ -69,13 +73,12 @@
 	 */
 	const onScrolltolower = () => {
 		if (loadding) return;
+		uni.showLoading()
 		if (total.value > PAGE_SIZE * pageNum.value) {
 			pageNum.value++;
-			useMusicList();
+			useMusicList().finally(()=>uni.hideLoading());
 		}
 	}
-
-	useMusicList();
 </script>
 
 <style lang="less" scoped>

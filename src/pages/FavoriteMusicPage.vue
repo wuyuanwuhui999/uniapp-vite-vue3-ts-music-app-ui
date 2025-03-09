@@ -23,7 +23,7 @@
 					</template>
 				</uni-swipe-action>
             </view>
-            <text class="footer">{{ total > pageNum * PAGE_SIZE ? '正在加载更多' : '已经到底了'}}</text>
+            <text class="footer">{{ total >= pageNum * PAGE_SIZE ? '正在加载更多' : '已经到底了'}}</text>
 		</scroll-view>
 		<uni-popup ref="popup" class="popup-wrapper"  type="dialog">
 			<view class="dialog-wrapper">
@@ -77,7 +77,7 @@
 	 */
 	const useFavoriteMusicList = ()=>{
 		uni.showLoading();
-		getMusicLikeService(1,5).then((res) => {
+		getMusicLikeService(1,PAGE_SIZE).then((res) => {
 			favoriteMusicList.push(...res.data);
 			total.value = res.total;
 		}).finally(()=>uni.hideLoading())

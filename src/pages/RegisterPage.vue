@@ -8,35 +8,35 @@
 						<text class="require">*</text>
 						<text>账号</text>
 					</view>
-					<input @blur="userVertify('userAccount')" class="input" v-model="userData.userAccount" placeholder="请输入账号名称"/>
+					<input @blur="vertify('userAccount')" class="input" v-model="userData.userAccount" placeholder="请输入账号名称"/>
 				</view>
 				<view class="row">
 					<view class="title">
 						<text class="require">*</text>
 						<text>密码</text>
 					</view>
-					<input type="password" class="input" v-model="userData.password" placeholder="请输入6-18位的密码"/>
+					<input type="password" class="input" @blur="vertify('password')" v-model="userData.password" placeholder="请输入6-18位的密码"/>
 				</view>
 				<view class="row">
 					<view class="title">
 						<text class="require">*</text>
 						<text>确认密码</text>
 					</view>
-					<input type="password" v-model="confirmPassowrd" class="input" placeholder="请输入6-18位的确认密码"/>
+					<input type="password" @blur="vertify('confirmPassowrd')" v-model="confirmPassowrd" class="input" placeholder="请输入6-18位的确认密码"/>
 				</view>
 				<view class="row">
 					<view class="title">
 						<text class="require">*</text>
 						<text>昵称</text>
 					</view>
-					<input class="input" v-model="userData.username" placeholder="请输入昵称"/>
+					<input class="input" v-model="userData.username" @blur="vertify('username')" placeholder="请输入昵称"/>
 				</view>
 				<view class="row">
 					<view class="title">
 						<text class="require">*</text>
 						<text>邮箱</text>
 					</view>
-					<input class="input" @blur="userVertify('email')" v-model="userData.email" placeholder="请输入邮箱"/>
+					<input class="input" @blur="vertify('email')" v-model="userData.email" placeholder="请输入邮箱"/>
 				</view>
 				<view class="row">
 					<view class="title">
@@ -63,7 +63,8 @@
 	import type { UserDataType } from '../types';
 	import { registerService, vertifyUserService } from '../service';
 	import OptionsDialog from '../components/OptionsDialog.vue';
-	import { useStore } from '../stores/useStore'
+	import { EMAIL_REG } from "../common/constant";
+ 	import { useStore } from '../stores/useStore'
 	import {httpRequest} from '../utils/HttpUtils';
 	import NavigatorTitleComponent from '../components/NavigatorTitleComponent.vue';
 
@@ -84,6 +85,7 @@
 		region: ''
 	});
 	const confirmPassowrd = ref<string>('');// 企鹅人密码
+
 
 	/**
 	 * @author: wuwenqiang
@@ -126,8 +128,50 @@
 	 * @description: 校验账号和密码
 	 * @date: 2025-01-22 21:49
 	 */
-	const userVertify = (field:string)=>{
-		field && useCheckUser();
+	const vertify = (field:string)=>{
+		if(field == "userAccount" && userData.userAccount.trim() === ""){
+			uni.showToast({
+				title: '账号不能为空',
+				icon: "none"
+			});
+		}else if(field == "userAccount" && userData.userAccount.trim() !== ""){
+			useCheckUser();
+		}else if(field === "password" && userData.password.trim() === "" ){
+			uni.showToast({
+				title: '请输入密码',
+				icon: "none"
+			});
+		}else if(field === "password" && userData.password.trim().length < 6){
+			uni.showToast({
+				title: '密码长度不能小于6位数',
+				icon: "none"
+			});
+		}else if(field === "comfirmPassword" && confirmPassowrd.value.trim() === "" ){
+			uni.showToast({
+				title: '确认密码不能为空',
+				icon: "none"
+			});
+		}else if(field === "comfirmPassword" && confirmPassowrd.value.trim() !== userData.password.trim() ){
+			uni.showToast({
+				title: '密码和确认密码不一致',
+				icon: "none"
+			});		
+		}else if(field === "username" && userData.username.trim() === "" ){
+			uni.showToast({
+				title: '用户名不能为空',
+				icon: "none"
+			});
+		}else if(field === "email" && userData.email.trim() === "" ){
+			uni.showToast({
+				title: '邮箱不能为空',
+				icon: "none"
+			});
+		}else if(field === "email" && !EMAIL_REG.test(userData.email.trim())){
+			uni.showToast({
+				title: '邮箱格式错误',
+				icon: "none"
+			});
+		}
 	}
 
 	/**

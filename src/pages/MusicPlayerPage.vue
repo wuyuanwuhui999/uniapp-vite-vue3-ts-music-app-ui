@@ -1,5 +1,6 @@
 <template>
 	<view class="play-wrapper" @click="showLoopMenu = false">
+		<image class="icon-small icon-back" @click="useBack" :src="icon_back"/>
 		<view class="song-bg" :style="`background-image: url(${store.musicItem.cover ? getMusicCover(store.musicItem.cover) : defaultCover})`"></view>
 		<view class="play-controller-wrapper">
 			<text class="song-name">{{store.musicItem.songName}}</text>
@@ -104,7 +105,7 @@
 	import icon_music_prev from "../../static/icon_music_prev.png";
 	import icon_music_next from "../../static/icon_music_next.png";
 	import icon_music_play_menu from "../../static/icon_music_play_menu.png";
-	
+	import icon_back from '../../static/icon_back.png';
 	
 
 	const angle = ref<number>(0);// 旋转的角度
@@ -139,6 +140,7 @@
 	 * @author wuwenqiang
 	 */
 	const useRotate = () => {
+		console.log(111)
 		currentTime.value = formatSecond(store.audio.currentTime);
 		percent.value = (store.audio.currentTime / store.audio.duration) * 100
 		angle.value += 5
@@ -342,6 +344,15 @@
 		});
 	}
 
+	/**
+	 * @description: 返回
+	 * @date: 2025-03-09 22:08
+	 * @author wuwenqiang
+	 */
+	const useBack = ()=>{
+		uni.navigateBack();
+	}
+
 	store.audio.onTimeUpdate(useRotate);
 
 	watch(() => store.musicItem,
@@ -386,7 +397,13 @@
 		width: 100%;
 		height: 100%;
 		position: relative;
-
+		.icon-back{
+			position: absolute;
+			left: @page-padding;
+			top: calc(@page-padding * 2);
+			opacity: 0.5;
+			z-index: 2;
+		}
 		.song-bg {
 			width: 100%;
 			height: 100%;
