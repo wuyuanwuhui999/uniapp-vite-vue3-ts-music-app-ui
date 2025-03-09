@@ -13,7 +13,6 @@
 <script setup lang="ts">
 	import { onLoad } from '@dcloudio/uni-app'; 
 	import { ref, reactive,type Ref } from 'vue';
-	import { useRoute } from "vue-router";
 	import type { MusicType,MusicAuthorType } from '../types';
 	import { getMusicListByAuthorIdService } from '../service';
     import {PAGE_SIZE,MAX_FAVORITE_NUMBER} from '../common/constant';
@@ -21,7 +20,6 @@
     import MusicClassifyListComponent from '../components/MusicClassifyListComponent.vue';
 	import { useStore } from "../stores/useStore";
 	const store = useStore();
-	const route = useRoute();
     const total:Ref<number> = ref<number>(0);// 总数
 	const pageNum:Ref<number> = ref<number>(1);
 	const musicList:Array<MusicType> = reactive<Array<MusicType>>([]);

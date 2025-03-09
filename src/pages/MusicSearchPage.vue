@@ -46,7 +46,6 @@
 
 <script setup lang="ts">
 	import { reactive, ref } from 'vue';
-	import { useRoute } from "vue-router";
 	import type { MusicType } from '../types';
 	import { MUSIC_SEARCH_STORAGE_KEY, PAGE_SIZE } from '../common/constant';
 	import NavigatorTitleComponent from '../components/NavigatorTitleComponent.vue';
@@ -60,13 +59,12 @@
 	import MusicAvaterComponent from '../components/MusicAvaterComponent.vue';
 	import icon_music_menu from '../../static/icon_music_menu.png';
 	import icon_clear from '../../static/icon_clear.png';
-	
+	import { onLoad } from '@dcloudio/uni-app'; 
+
 	const store = useStore();
-	const route = useRoute();
 
 	const searchRecordList = reactive<Array<string>>([]);
-	const placeholder : string = decodeURIComponent(route.query.keyword as string);
-
+	const placeholder = ref<string>("");
 	const searchMusicList = reactive<Array<MusicType>>([]);
 	const searching = ref<boolean>(false);
 	const loading = ref<boolean>(false);
@@ -74,6 +72,10 @@
 	const pageNum = ref<number>(1);
 	const pageSize = ref<number>(20);
 	const total = ref<number>(0);
+
+	onLoad((option)=>{
+		placeholder.value = decodeURIComponent(option!.keyword) as string
+	})
 
 	uni.getStorage({ key: MUSIC_SEARCH_STORAGE_KEY }).then(res => {
 		if (res) {
@@ -99,8 +101,9 @@
 	 * @author wuwenqiang
 	 */
 	const useSearch = () => {
+		pageNum.value = 1;
 		if (!keyword.value) {
-			keyword.value = placeholder;
+			keyword.value = placeholder.value;
 		}
 		if (loading.value) return;
 		searching.value = loading.value = true;
