@@ -1,6 +1,6 @@
 <template>
 	<view class="page-wrapper" scroll-y show-scrollbar="false">
-		<NavigatorTitleComponent title="我喜欢的歌曲"/>
+		<NavigatorTitleComponent title="搜索"/>
 		<view class="page-body">
 			<view class="module-block module-block-row">
 				<view class="search-input-wrapper">

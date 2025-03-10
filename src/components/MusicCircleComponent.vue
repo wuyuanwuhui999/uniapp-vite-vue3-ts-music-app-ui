@@ -22,10 +22,10 @@
 						<view class="popup-menu" v-if="circleIndex === index">
 							<view class="popup-menu-item" @click.stop="useLike(item)">
 								<image class="icon-popup-menu" :src="icon_like_white" />
-								<text>{{(item.circleLikes||[]).find((dItem)=>dItem.userId === store.userData.userId) ? '取消赞' : '赞'}}</text>
+								<text>{{(item.circleLikes||[]).find((dItem)=>dItem.userId === store.userData.id) ? '取消赞' : '赞'}}</text>
 							</view>
 							<view class="popup-menu-item" @click="useComment(index)">
-								<image class="icon-popup-menu" :src="icon_music_like" />
+								<image class="icon-popup-menu" :src="icon_music_like_white" />
 								<text>评论</text>
 							</view>
 						</view>
@@ -34,20 +34,20 @@
 				</view>
 				<view class="social-wrapper" v-if="item.circleLikes?.length > 0 || item.circleComments?.length > 0">
 					<view class="like-wrapper" v-if="item.circleLikes?.length > 0">
-						<image class="icon-like" src="../../static/icon_music_like.png" />
+						<image class="icon-like" :src="icon_music_like" />
 						<template v-for="aItem,aIndex in item.circleLikes" :key="aItem.id">
 							<text class="like-user">{{aItem.username}}</text>
 							<text v-if="aIndex !== item.circleLikes.length - 1">、</text>
 						</template>
 					</view>
-					<CommentComponent v-if="item.circleComments?.length > 0" ref="commentRefs" :relationId="item.id" :category='CommentEnum.MUSIC_CIRCLE'
+					<CommentComponent :showNoDate="false" v-show="item.circleComments?.length > 0 || commenIndex === index" ref="commentRefs" :relationId="item.id" :category='CommentEnum.MUSIC_CIRCLE'
 						:commentList="item.circleComments"></CommentComponent>
 				</view>
 			</view>
 		</view>
 
 		<text class="bottm" v-if="total">{{pageNum*pageSize >= total?"已经到底了":"正在加载更多"}}</text>
-		<image @click="usePublishCircle" class="icon-add-circle" src="../../static/icon_music_add.png" />
+		<image @click="usePublishCircle" class="icon-add-circle" :src="icon_music_add" />
 	</scroll-view>
 </template>
 
@@ -65,8 +65,12 @@
 	import icon_music_play from "../../static/icon_music_play.png";
 	import icon_music_menu from "../../static/icon_music_menu.png";
 	import icon_like_white from "../../static/icon_like_white.png";
-	import icon_music_like from '../../static/icon_music_like.png'
+	import icon_music_like from "../../static/icon_music_like.png";
+	import icon_music_like_white from '../../static/icon_music_like_white.png';
+	import icon_music_add from "../../static/icon_music_add.png"
 
+
+	const commenIndex = ref<number>(-1);
 	const triggered = ref<boolean>(false);
 	const circleIndex = ref<number>(-1);// 朋友圈动态的id
 	const circleList = reactive<Array<CircleType>>([]);
@@ -177,6 +181,7 @@
 	}
 
 	const useComment = (index:number) => {
+		commenIndex.value = index;
 		commentRefs.value[index].useShowInput()
 	}
 

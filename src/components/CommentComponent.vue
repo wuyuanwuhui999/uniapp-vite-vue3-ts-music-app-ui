@@ -19,7 +19,7 @@
                 </view>
             </view>
         </scroll-view>
-        <text class="no-data" v-else>暂无评论</text>
+        <text class="no-data" v-else-if="showNoDate">暂无评论</text>
         <view class="input-wrapper" :style="{position:isShowInput ? 'relative' : 'fixed'}" v-if="isShowInput || showInput">
 			<input v-model="inputValue" class="input" @blur="useBlur" :placeholder="placeholder" />
 			<text class="btn-send" @click="useSend">发送</text>
@@ -33,7 +33,7 @@
     import { formatTime } from '../utils/util';
     import { insertCommentService } from "../service";
     import {HOST} from '../common/constant';
-    const { commentList,relationId,isShowInput, category} = defineProps({
+    const { commentList,relationId,isShowInput, category, showNoDate} = defineProps({
 		commentList: {
 			type: Object as PropType<Array<CommentType>>,
 			reqiure: true,
@@ -54,9 +54,13 @@
             type: String,
 			reqiure: true,
 			default: ''
+        },
+        showNoDate:{
+            type: Boolean,
+			reqiure: false,
+			default: true
         }
 	});
-
 
     const myCommentList = reactive<Array<CommentType>>([]);
     const showInput = ref<Boolean>(false);//是否显示评论
@@ -72,8 +76,8 @@
 
     onMounted(()=>{
         myCommentList.push(...commentList);
-        console.log("myCommentList.length"+myCommentList.length)
         showInput.value =  isShowInput;
+        console.log("relationId=",relationId)
     });
 
     /**
@@ -127,7 +131,6 @@
 			replyList: []
 		}
 		insertCommentService(commentItem).then((res) => {
-            console.log(res.data);
 			inputValue.value = "";
 			showInput.value = isShowInput;// 如果是弹窗里面的评论框，点击发送之后不隐藏输入框
 			if(firstComment){// 回复的评论，二级评论
@@ -156,7 +159,7 @@
 		// 在点击发送按钮式清除定时器，不要隐藏输入框
 		timer = setTimeout(() => {
 			showInput.value = false;
-		}, 100)
+		}, 500)
 	}
 
     const onScrolltolower = () => {

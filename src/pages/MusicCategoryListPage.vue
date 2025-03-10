@@ -168,7 +168,9 @@
                         transform: rotate(90deg);
                     }
                 }
-                
+                .icon-small{
+                    opacity: 0.2;
+                }
 				&.module-column{
                     display: flex;
                     flex-direction: column;
