@@ -2,17 +2,24 @@
 	<view class="page-wrapper" scroll-y show-scrollbar="false">
 		<NavigatorTitleComponent title="歌曲分类"/>
 		<scroll-view  scroll-y show-scrollbar="false" @scrolltolower="onScrolltolower" class="page-body">
+            <!-- 所有分类 ，默认选中第一个分类-->
 			<view class="module-block">
                 <view class="category-grid">
-                    <text @click="onTabItem(item)" :class="{'category-btn-active':activeCategory?.id === item.id}" class="category-btn" :key="'category-btn'+item.id" v-for="item in currentClassify">{{ item.classifyName }}</text>
+                    <text @click="onTabItem(item)" 
+                        :class="{'category-btn-active':activeCategory?.id === item.id}"
+                        class="category-btn" :key="'category-btn'+item.id" 
+                        v-for="item in currentClassify"
+                    >{{ item.classifyName }}</text>
                 </view>
                 <view class="expand-more" @click="useExpand">
                     <text class="expand-text">{{ expand ? '收起': '展开更多' }}</text>
                     <image class="icon-small" :class="expand ? 'icon-expand' : ''"  :src="icon_arrow"></image>
                 </view>
 			</view>
+            <!-- 歌曲列表，默认加载第一个分类的歌曲 -->
             <view class="module-block">
-                <MusicClassifyListComponent class="component-gap" @onPlayMusic="usePlayMusic" :musicList = 'musicList' :classifyName = 'activeCategory.classifyName'/>
+                <MusicClassifyListComponent class="component-gap" 
+                @onPlayMusic="usePlayMusic" :musicList = 'musicList' :classifyName = 'activeCategory.classifyName'/>
             </view>
             <text class="footer">{{ total >= pageNum * PAGE_SIZE ? '正在加载更多' : '已经到底了'}}</text>
 		</scroll-view>
@@ -45,12 +52,26 @@
 	 * @date: 2024-03-03 11:23
 	 * @author wuwenqiang
 	 */
-	getMusicClassifyService().then((res) => {
-		allClassifies.push(...res.data);
-        activeCategory.value = allClassifies[0] as MusicClassifyType;
-        currentClassify.push(...allClassifies.slice(0,9));
-        useMusicListByClassifyId();
+	getMusicClassifyService().then((res) => {// 获取所有分类
+		allClassifies.push(...res.data);// 所有分类列表
+        activeCategory.value = allClassifies[0] as MusicClassifyType;// 默认选中第一个分类
+        currentClassify.push(...allClassifies.slice(0,9));// 当前只显示9个分类，点击展开后显示全部fenlei
+        useMusicListByClassifyId();// 根据选中的分类加载歌曲列表
 	});
+
+     /**
+	 * @description: 根据分类获取音乐列表
+	 * @date: 2024-09-09 22:47
+	 * @author wuwenqiang
+	 */
+     const useMusicListByClassifyId = () => {
+        loading = true;
+        // 分页加载对应分类的歌曲
+        getMusicListByClassifyIdService(activeCategory.value.id,pageNum.value,PAGE_SIZE).then((res)=>{
+            musicList.push(...res.data);// 渲染当前分类的歌曲列表
+            total.value = res.total;// 当前分类的歌曲总数，用作滚动加载
+        }).finally(()=> loading = false);
+    }
 
     /**
 	 * @description: 展开折叠
@@ -59,22 +80,11 @@
 	 */
     const useExpand = ()=>{
         expand.value = !expand.value;
-        currentClassify.length = 0;
+        currentClassify.length = 0; 
         currentClassify.push(...allClassifies.slice(0,expand.value ? allClassifies.length : 9))
     }
 
-     /**
-	 * @description: 根据分类获取音乐列表
-	 * @date: 2024-09-09 22:47
-	 * @author wuwenqiang
-	 */
-    const useMusicListByClassifyId = () => {
-        loading = true;
-        getMusicListByClassifyIdService(activeCategory.value.id,pageNum.value,PAGE_SIZE).then((res)=>{
-            musicList.push(...res.data);
-            total.value = res.total;
-        }).finally(()=> loading = false);
-    }
+    
 
      /**
 	 * @description: 滚动加载更多

@@ -71,6 +71,7 @@
                 transform: translateY(-50%);
                 width: @small-icon-size;
                 height: @small-icon-size;
+                opacity: 0.5;
             }
         }
     }

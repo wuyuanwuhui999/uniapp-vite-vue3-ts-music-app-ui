@@ -1,5 +1,7 @@
 <template>
 	<view class="page-wrapper">
+		<!-- 页面容器，装载四个页面，activeIndex为当前显示的容器的下标，默认activeIndex为0，加载首页 -->
+		<!-- isInitComponent为初始化页面标志，用作页面懒加载 -->
 		<view class="page-container">
 			<MusicHomeComponent v-show="activeIndex===0" />
 			<MusicRecommentComponent v-if="isInitComponent[1]" v-show="activeIndex===1"/>
@@ -55,11 +57,13 @@
 
 	const angle = ref<number>(0);// 旋转的角度
 	const store = useStore();
-	const activeIndex = ref<number>(0)
+	// 当前显示页面的下标
+	const activeIndex = ref<number>(0);
+	// 初始化页面标志，默认首页已经初始化，其他页面未初始化不加载，点击初始化之后再加载
 	const isInitComponent = reactive<Array<boolean>>([true, false, false, false])
-	const useTab = (index : number) => {
-		activeIndex.value = index;
-		isInitComponent[index] = true
+	const useTab = (index : number) => {// 切换页面
+		activeIndex.value = index;// 设置当前页面的下标
+		isInitComponent[index] = true;// 初始化页面
 	}
 
 	/**

@@ -74,14 +74,41 @@
 
 	/**
 	 * @author: wuwenqiang
+	 * @description: 确定修改用户信息
+	 * @date: 2024-01-06 12:05
+	 */
+	 const useSure = () => {
+		const mUserData = {...store.userData};// 用户信息浅拷贝，防止修改原有的信息
+		mUserData[field.value] = inputValue.value;// 更改用户信息
+		updateUserDataService(mUserData).then(res=>{// 保存更改
+			store.setUserData(mUserData);// 保存成功后更新页面上的用户信息
+			popup1.value?.close();// 关闭弹窗
+		})
+	}
+
+	/**
+	 * @author: wuwenqiang
 	 * @description: 编辑用户信息
 	 * @date: 2024-01-16 22:49
 	 */
 	const useEditUserData = (mTitle:string,mField:string) => {
-		title.value = mTitle;
-		field.value = mField;
-		inputValue.value = store.userData[mField];
-		popup1.value?.open('top')
+		title.value = mTitle;// 修改的个人信息字段名称
+		field.value = mField;// 修改的个人信息的字段
+		inputValue.value = store.userData[mField];// 修改后的值
+		popup1.value?.open('top');// 显示修改弹窗
+	}
+
+	/**
+	 * @author: wuwenqiang
+	 * @description: 性别选择
+	 * @date: 2024-01-16 22:49
+	 */
+	 const useCheckSex = (sex:number) => {
+		const mUserData:UserDataType = {...store.userData};
+		mUserData.sex = sex;
+		updateUserDataService(mUserData).then(res=>{
+			store.setUserData(mUserData);
+		})
 	}
 
 	/**
@@ -91,20 +118,6 @@
 	 */
 	const useCloseDialog = () => {
 		popup1.value?.close()
-	}
-
-
-	/**
-	 * @author: wuwenqiang
-	 * @description: 性别选择
-	 * @date: 2024-01-16 22:49
-	 */
-	const useCheckSex = (sex:number) => {
-		const mUserData:UserDataType = {...store.userData};
-		mUserData.sex = sex;
-		updateUserDataService(mUserData).then(res=>{
-			store.setUserData(mUserData);
-		})
 	}
 
 
@@ -128,21 +141,6 @@
 				}
 		    }
 		})
-	}
-
-	/**
-	 * @author: wuwenqiang
-	 * @description: 确定修改用户信息
-	 * @date: 2024-01-06 12:05
-	 */
-	const useSure = () => {
-		const mUserData = {...store.userData};
-		mUserData[field.value] = inputValue.value
-		updateUserDataService(mUserData).then(res=>{
-			store.setUserData(mUserData)
-			popup1.value?.close()
-		})
-
 	}
 
 	const useEditSex = () => {

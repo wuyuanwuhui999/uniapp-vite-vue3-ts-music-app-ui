@@ -118,28 +118,29 @@
 				})
 			}else{
 				uni.showLoading();
+				// 登录方法，userAccount:账号或邮箱，password密码
 				loginService(userAccount.value,password.value).then((res)=>{
-					uni.setStorage({key:userAccount.value,data:password.value});
-					store.setUserData(res.data)
-					store.setToken(res.token)
-					uni.setStorage({key:'token',data:res.token});
-					httpRequest.setToken(res.token);
-					uni.reLaunch({
+					uni.setStorage({key:userAccount.value,data:password.value});// 登录成功后保存账号和密码到缓存中
+					store.setUserData(res.data);// 将用户信息保存到全局状态管理器中
+					store.setToken(res.token);// 将token保存到状态管理中 
+					uni.setStorage({key:'token',data:res.token});// 将token保存到缓存中,以便下次进入时自动登录
+					httpRequest.setToken(res.token);// 设置请求头token值
+					uni.reLaunch({// 重定向到首页
 						url: `../pages/MusicIndexPage`
 					})
-					uni.showToast({
+					uni.showToast({// 弹出提示
 						duration:2000,
 						position:'center',
 						title:'登录成功'
 					})
-				}).catch(()=>{
+				}).catch(()=>{// 登录失败，弹出提示
 					uni.showToast({
 						duration:2000,
 						position:'center',
 						title:'账号或密码错误'
 					})
 				}).finally(()=>{
-					uni.hideLoading();
+					uni.hideLoading();// 隐藏loading框
 				})
 			}
 		}else{

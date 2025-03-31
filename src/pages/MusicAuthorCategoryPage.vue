@@ -2,10 +2,15 @@
 	<view class="page-wrapper" scroll-y show-scrollbar="false">
 		<NavigatorTitleComponent title="歌手分类"/>
 		<scroll-view  scroll-y show-scrollbar="false" @scrolltolower="onScrolltolower" class="page-body">
+            <!-- 歌手分类，默认选中第一个分类 -->
 			<view class="module-block module-block-grid">
-				<text @click="onTabItem(item)" :class="{'item-two':item.categoryName.length > 2,'category-btn-active':activeAuthorCategory?.id === item.id}" class="category-btn" :key="'category-btn'+item.id" v-for="item in musicAuthorCategoryList">{{ item.categoryName }}</text>
+				<text @click="onTabItem(item)" 
+                    :class="{'item-two':item.categoryName.length > 2,'category-btn-active':activeAuthorCategory?.id === item.id}" 
+                    class="category-btn" :key="'category-btn'+item.id" 
+                    v-for="item in musicAuthorCategoryList"
+                >{{ item.categoryName }}</text>
 			</view>
-
+            <!-- 分类对应的歌手列表，默认加载第一个分类的歌手 -->
             <view class="module-block module-column">
                 <view class="author-item" @click="useAuthoMusicList(item)" :key="'author-item' + item.id" v-for="item in musicAuthorList">
                     <MusicAvaterComponent type="author" :name="item.authorName" :avater="item.avatar"/>
@@ -47,10 +52,10 @@
 	 * @date: 2024-08-26 22:02
 	 * @author wuwenqiang
 	 */
-	getMusicAuthorCategoryService().then((res)=>{
-		musicAuthorCategoryList.push(...res.data);
-        activeAuthorCategory.value = musicAuthorCategoryList[0] as MusicAuthorCategoryType;
-        useMusicAuthorListByCategoryId();
+	getMusicAuthorCategoryService().then((res)=>{// 获取所有歌手分类
+		musicAuthorCategoryList.push(...res.data);// 把分类添加到数组里面渲染出来
+        activeAuthorCategory.value = musicAuthorCategoryList[0] as MusicAuthorCategoryType;// 默认选中第一个分类
+        useMusicAuthorListByCategoryId();// 按照当前选中的分类加载歌曲列表
 	});
 
      /**
@@ -60,9 +65,10 @@
 	 */
     const useMusicAuthorListByCategoryId = () => {
         loading = true;
+        // 歌曲选中的分类，分页加载歌手页表
         getMusicAuthorListByCategoryIdService(activeAuthorCategory.value.id,pageNum.value,PAGE_SIZE).then((res)=>{
-            musicAuthorList.push(...res.data);
-            total.value = res.total;
+            musicAuthorList.push(...res.data);// 把歌手添加到数组里面渲染出来
+            total.value = res.total;// 记录当前分类歌手的总数，做滚动分页加载
         }).finally(()=> loading = false);
     }
 

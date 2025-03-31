@@ -62,16 +62,19 @@
 		<DialogComponent @onClose="showCommentDialog = false" v-if="showCommentDialog">
 			<template #header><text class="comment-header">{{commentTotal}}条评论</text></template>
 			<template #content>
+				<!-- 公共评论组件，relationId表示音乐的id, category表示类型，commentList表示评论列表-->
 				<CommentComponent @onSend="useUpdateTotal" :isShowInput="true" :relationId="store.musicItem.id"
 					:category='CommentEnum.MUSIC' :commentList="commentList"></CommentComponent>
 			</template>
 		</DialogComponent>
 
+		<!-- 音乐收藏弹窗 -->
 		<DialogComponent @onClose="showFavoriteDialog = false" v-if="showFavoriteDialog">
 			<template #header>
 				<text class="comment-header">收藏夹</text>
 			</template>
 			<template #content>
+				<!-- 公共收藏组件，useFavorite点击收藏之后执行的事件，musicId表示音乐的id，isFavorite表示音乐是否已经收藏过-->
 				<FavoriteDirectoryComponent @useFavorite="useMusicFavorite" :isFavorite="isFavorite"
 					:musicId="store.musicItem.id" />
 			</template>
@@ -183,6 +186,16 @@
 	}
 
 	/**
+	 * @description: 切换歌曲进度
+	 * @date: 2024-05-12 11:45
+	 * @author wuwenqiang
+	 */
+	 const useChange = (event : Event) => {
+		store.audio.seek( (store.audio.duration * 60 / 100));  // 关键：调用音频跳转方法
+		store.audio.currentTime =  (store.audio.duration * 60 / 100)
+	}
+
+	/**
 	 * @description: 切换歌曲
 	 * @date: 2024-06-15 00:24
 	 * @author wuwenqiang
@@ -196,48 +209,39 @@
 	}
 
 	/**
-	 * @description: 切换歌曲
+	 * @description: 设置歌词
 	 * @date: 2024-05-12 11:45
 	 * @author wuwenqiang
 	 */
 	const useLyric = () => {
 		if (!store.musicItem?.lyrics) return currentLyric.value = null;
+		// 使用lyric-parse解析歌词
 		currentLyric.value = new Lyric(store.musicItem.lyrics, ({ lineNum = 0 }) => {
-			currentLineNum.value = lineNum;
+			currentLineNum.value = lineNum;// 设置歌词播放的当前行
 		});
 	}
 
 	/**
-	 * @description: 切换歌曲进度
-	 * @date: 2024-05-12 11:45
-	 * @author wuwenqiang
-	 */
-	const useChange = (event : Event) => {
-		store.audio.seek( (store.audio.duration * 60 / 100));  // 关键：调用音频跳转方法
-		store.audio.currentTime =  (store.audio.duration * 60 / 100)
-	}
-
-	/**
 	 * @description: 切换歌曲
-	 * @date: 2024-05-12 11:45
+	 * @date: 2025-01-10 11:45
 	 * @author wuwenqiang
 	 */
 	const useTabMusic = (direct : TabEnum) => {
-		let { playIndex, musicList } = store;
-		if (direct === TabEnum.PREV) {// 切换上一首
-			if (playIndex === 0) {
-				store.resetplayMusicList();
-				playIndex = musicList.length - 1;
+		let { playIndex, musicList } = store;// 从状态管理中获取播放的下标和播放的歌曲列表
+		if (direct === TabEnum.PREV) {// 如果是切换上一首
+			if (playIndex === 0) {// 如果下标为0，
+				store.resetplayMusicList();// 重置一下播放列表
+				playIndex = musicList.length - 1;// 播放下标为最后一首歌曲
 			} else {
-				playIndex--;
+				playIndex--;// 如果下标不是0，点击上一首，设置上一个歌曲的下标
 			}
-		} else if (store.playIndex === store.musicList.length - 1) {
-			store.resetplayMusicList();
-			playIndex = 0;
+		} else if (store.playIndex === store.musicList.length - 1) {// 如果是切换下一首歌曲，而且当前播放是最后一首歌曲
+			store.resetplayMusicList();// 重置一下播放列表
+			playIndex = 0;// 播放到最后一首歌曲，点击下一步切换到第一首歌曲
 		} else {
-			playIndex++;
+			playIndex++;// 如果不是最后一首歌，设置下一首歌曲的下标
 		}
-		store.setMusicPlayIndex(playIndex);
+		store.setMusicPlayIndex(playIndex);// 通过歌曲下标，设置播放器的播放地址
 	}
 
 	/**
@@ -275,15 +279,16 @@
 	}
 
 	/**
-	 * @description: 添加收藏或取消收藏
+	 * @description: 评论组件
 	 * @date: 2024-05-12 11:45
 	 * @author wuwenqiang
 	 */
 	const useComment = () => {
+		// 根据音乐id和类型分页查询一级评论列表
 		getTopCommentListService(store.musicItem.id, CommentEnum.MUSIC, pageNum.value, pageSize).then(res => {
-			commentTotal.value = res.total;
-			commentList.splice(0, commentList.length, ...res.data);
-			showCommentDialog.value = true;
+			commentTotal.value = res.total;// 记录总数
+			commentList.splice(0, commentList.length, ...res.data);// 渲染评论列表
+			showCommentDialog.value = true;// 显示评论弹窗
 		});
 	}
 
@@ -323,13 +328,13 @@
 	}
 
 	/**
-	 * @description: 音乐收藏
+	 * @description: 音乐收藏或取消收藏
 	 * @date: 2024-06-25 22:08
 	 * @author wuwenqiang
 	 */
 	const useMusicFavorite = (isMusicFavorite : boolean) => {
-		isFavorite.value = isMusicFavorite;
-		showFavoriteDialog.value = false
+		isFavorite.value = isMusicFavorite;// 音乐添加收藏或者取消收藏标志
+		showFavoriteDialog.value = false;// 关闭音乐收藏弹窗
 	}
 
 	/**

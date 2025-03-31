@@ -90,7 +90,7 @@
 	const useRefresh = ()=>{
 		pageNum.value = 1;
 		triggered.value = true
-		useCircleListByType();
+		useCircleListByType(true);
 	}
 
 	/**

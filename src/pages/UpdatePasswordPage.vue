@@ -56,14 +56,15 @@
 		}else{
 			if(loading)return;
 			uni.showLoading();
+			//修改密码，oldPassword表示旧密码，newPassword表示新密码
 			updatePasswordService(oldPassword.value,newPassword.value).then((res)=>{
-				if(res.data > 0 ){
+				if(res.data > 0 ){// 修改密码成功，弹出提示
 					uni.showToast({
 						duration:2000,
 						position:'center',
 						title:'修改密码成功'
 					});
-					uni.navigateBack()
+					uni.navigateBack();// 返回上一层
 				}else{
 					uni.showToast({
 						duration:2000,
@@ -71,7 +72,7 @@
 						title:'修改密码失败'
 					});
 				}
-			}).catch((err)=>{
+			}).catch((err)=>{// 修改密码失败
 				uni.showToast({
 					duration:2000,
 					position:'center',

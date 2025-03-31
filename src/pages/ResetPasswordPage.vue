@@ -74,19 +74,20 @@
 				title:'密码和确定密码不一致'
 			})
 		}else{
-			resetPasswordService(decodeURIComponent(email),password.value,code.value).then((res)=>{
-				if(res.data !== null){
-					uni.showToast({
+			// 重置密码，email:邮箱，password:新密码，code:验证码
+			resetPasswordService(email,password.value,code.value).then((res)=>{
+				if(res.data !== null){// 重置密码成功
+					uni.showToast({// 弹出提示
 						duration:2000,
 						position:'center',
 						title:'重置密码成功'
 					});
-					store.setUserData(res.data)
-					store.setToken(res.token)
-					uni.setStorage({key:'token',data:res.token});
-					httpRequest.setToken(res.token);
-					uni.redirectTo({url: '../pages/MusicIndexPage'})
-				}else{
+					store.setUserData(res.data);// 把用户信息保存到全局状态管理器中
+					store.setToken(res.token);// 把token保存到全局状态管理器中
+					uni.setStorage({key:'token',data:res.token});// 把token保存到缓存中
+					httpRequest.setToken(res.token);// 设置请求头的token值
+					uni.redirectTo({url: '../pages/MusicIndexPage'});// 重定向到首页
+				}else{// 重置密码失败
 					uni.showToast({
 						duration:2000,
 						position:'center',
