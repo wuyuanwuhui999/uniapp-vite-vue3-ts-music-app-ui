@@ -114,5 +114,16 @@
         "enable" : false
     },
     "vueVersion" : "3",
-    "locale" : "zh-Hans"
+    "locale" : "zh-Hans",
+    "app-harmony" : {
+        "distribute" : {
+            "icons" : {
+                "foreground" : "F:/app效果图/音乐logo.png",
+                "background" : "F:/app效果图/音乐logo.png"
+            },
+            "splashScreens" : {
+                "startWindowIcon" : "F:/app效果图/音乐logo.png"
+            }
+        }
+    }
 }
