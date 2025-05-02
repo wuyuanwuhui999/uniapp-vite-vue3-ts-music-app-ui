@@ -2,7 +2,7 @@ import {httpRequest} from '../utils/HttpUtils';
 import type {MyAwesomeData} from '../utils/HttpUtils';
 import api from '../api';
 import type * as types from '../types';
-import type {CommentEnum,CircleEnum} from '../common/enum';
+import {CommentEnum,CircleEnum} from '../common/enum';
 import md5 from 'md5';
 /**
  * @description: 根据token获取用户信息
@@ -339,3 +339,13 @@ export const deleteFavoriteAuthorService = (authorId:number):Promise<MyAwesomeDa
 export const getMusicListByAuthorIdService = (authorId:number,pageNum:number,pageSize:number):Promise<MyAwesomeData<Array<types.MusicType>>> => {
     return httpRequest.get<Array<types.MusicType>>(`${api.getMusicListByAuthorId}?authorId=${authorId}&pageNum=${pageNum}&pageSize=${pageSize}`);
 }
+
+/**
+ * @description: 根据歌手id获取歌手
+ * @date: 2024-08-27 23:01
+ * @author wuwenqiang
+ */
+export const getCircleByLastUpdateTimeService = (lastUpdateTime:string):Promise<MyAwesomeData<number>> => {
+    return httpRequest.get<number>(`${api.getCircleByLastUpdateTime}?lastUpdateTime=${lastUpdateTime}&type=${CommentEnum.MUSIC_CIRCLE}`);
+}
+

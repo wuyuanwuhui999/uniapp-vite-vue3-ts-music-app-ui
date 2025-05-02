@@ -18,3 +18,5 @@ export const MAX_FAVORITE_NUMBER:number = 500; // 收藏夹最大歌曲数量
 export const PAGE_SIZE:number = 20;// 每页的数量
 
 export const EMAIL_REG:RegExp = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;// 邮箱正则表达式
+
+export const CIRCLE_UPDATE_TIME = "CIRCLE_UPDATE_TIME";// 音乐圈更新时间

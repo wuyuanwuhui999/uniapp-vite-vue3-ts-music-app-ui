@@ -23,6 +23,7 @@
 				<image class="music-img-cover" :src="getMusicCover(store.musicItem?.cover)" />
 			</view>
 			<view class="tab-item" @click="useTab(2)">
+				<view class="red-circle" v-show="hasCircleMessage"></view>
 				<image class="tab-icon" :src="activeIndex === 2 ? icon_music_circle_active : icon_music_circle" />
 				<text class="tab-text" :class='{"tab-text-active" : activeIndex === 2}'>音乐圈</text>
 			</view>
@@ -41,7 +42,7 @@
 	import MusicMyComponent from '../components/MusicMyComponent.vue';
 	import { useStore } from "../stores/useStore";
 	import { ref, onMounted, reactive, onActivated, onDeactivated, onUnmounted } from 'vue';
-	import { MUSIC_STORAGE_KEY, MUSIC_LIST_STORAGE_KEY, LOOP_STORAGE_KEY} from '../common/constant';
+	import { MUSIC_STORAGE_KEY, MUSIC_LIST_STORAGE_KEY, LOOP_STORAGE_KEY,CIRCLE_UPDATE_TIME} from '../common/constant';
 	import { LoopModeEnum } from '../common/enum';
 	import type { MusicType } from '../types';
 	import {getMusicCover} from '../utils/util';
@@ -53,8 +54,11 @@
 	import icon_music_circle from '../../static/icon_music_circle.png';
 	import icon_user_active from '../../static/icon_user_active.png';
 	import icon_user from '../../static/icon_user.png';
-	import icon_music from '../../static/icon_music.png';
-
+	import api from "../api";
+	import { HOST } from '../common/constant';
+	import { getCircleByLastUpdateTimeService } from '../service';
+	
+	const hasCircleMessage = ref<boolean>(false);
 	const angle = ref<number>(0);// 旋转的角度
 	const store = useStore();
 	// 当前显示页面的下标
@@ -119,6 +123,36 @@
 		});
 	});
 
+	const useWebsocket = ()=>{
+		// 在页面或全局创建连接
+		const socketTask = uni.connectSocket({
+			url: `${HOST.replace(/http/,'ws')}${api.circleWebsocket}`, // WebSocket 服务器地址（必须是 wss 或 ws 协议）
+			success: () => {
+				console.log('WebSocket 连接创建成功');
+			},
+			fail: (err) => {
+				console.error('连接失败:', err);
+			}
+		});
+		socketTask.onOpen(() => {
+			console.log('WebSocket 已连接');
+		});
+		socketTask.onMessage((res) => {
+			hasCircleMessage.value = true;
+			console.log('收到消息：', res.data); // res.data 是服务器返回的数据
+		});
+	}
+
+	uni.getStorage({key:CIRCLE_UPDATE_TIME + store.userData.id}).then((res)=>{
+		if(!res.data){
+			hasCircleMessage.value = true;
+		}else{
+			getCircleByLastUpdateTimeService(res.data).then((result)=>{
+				hasCircleMessage.value = result.data > 0;
+			})
+		}
+	})
+
 	onActivated(() => store.audio.onTimeUpdate(useRotate));// 从缓存中激活
 
 	/**
@@ -129,6 +163,8 @@
 	onDeactivated(() => store.audio.offTimeUpdate(useRotate));// 进入缓存
 
 	onUnmounted(() => store.audio.offTimeUpdate(useRotate));// 销毁
+
+	useWebsocket();
 </script>
 
 <style lang="less">
@@ -195,7 +231,17 @@
 				justify-content: center;
 				display: flex;
 				flex-direction: column;
-
+				position: relative;
+				.red-circle{
+					position: absolute;
+					width: @red-circle;
+					height: @red-circle;
+					background-color: @warn-color;
+					border-radius: 50%;
+					right: calc(@page-padding *2);
+					top: 0;
+					z-index: 1;
+				}
 				.tab-icon {
 					width: @middle-icon-size;
 					height: @middle-icon-size;

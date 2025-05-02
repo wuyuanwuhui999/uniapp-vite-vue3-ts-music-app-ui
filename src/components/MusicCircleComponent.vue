@@ -52,7 +52,7 @@
 </template>
 
 <script setup lang="ts">
-	import { HOST } from "../common/constant";
+	import { CIRCLE_UPDATE_TIME, HOST } from "../common/constant";
 	import { getCircleListByTypeService, saveLikeService, deleteLikeService } from "../service";
 	import { reactive, ref } from "vue";
 	import type { CircleType, LikeType } from '../types';
@@ -104,6 +104,7 @@
 			if(isRefresh)circleList.length = 0;
 			circleList.push(...res.data);
 			total.value = res.total;
+			uni.setStorage({key:CIRCLE_UPDATE_TIME + store.userData.id,data:circleList[0].createTime});
 		}).finally(()=>{
 			triggered.value = false;
 			if(isRefresh)uni.hideLoading();

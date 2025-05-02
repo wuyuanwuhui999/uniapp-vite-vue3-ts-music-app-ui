@@ -133,7 +133,7 @@
 		</view>
 		<DialogComponent @onClose="showFavoriteDialog = false" v-if="showFavoriteDialog">
 			<template #header>
-				<view class="dialog-header"><text class="comment-header">收藏夹</text></view>
+				<text class="comment-header">收藏夹</text>
 			</template>
 			<template #content>
 				<view class="favorite-wrapper">
@@ -441,6 +441,14 @@
 	.page-wrapper {
 		width: 100%;
 		height: 100%;
+		.comment-header{
+			display: block;
+			width: 100%;
+			height: 100%;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+		}
 		/deep/.uni-scroll-view-content {
 			&::-webkit-scrollbar {
 				display: none;
