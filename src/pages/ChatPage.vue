@@ -3,7 +3,7 @@
 		<view class="page-header">
 			<image class="icon-back" @click="useBack" :src="icon_back"/>
 			<text class="my-favorite">deepseek-r1:7b</text>
-			<view class="icon-back"/>
+			<image class="icon-middle icon-record" :src="icon_menu"/>
 		</view>
 		<view class="page-body">
 			
@@ -25,6 +25,7 @@
 	import { EMAIL_REG } from '../common/constant';
 	import icon_back from '../../static/icon_back.png';
 	import icon_send from '../../static/icon_send.png';
+	import icon_menu from '../../static/icon_menu.png';
     const email = ref<string>("");
 	let loading:boolean = false;
 
@@ -93,6 +94,9 @@
 				width: @small-icon-size;
 				height: @small-icon-size;
 				opacity: 0.2;
+			}
+			.icon-record{
+				opacity: 0.5;
 			}
 		}
 		.page-body{
