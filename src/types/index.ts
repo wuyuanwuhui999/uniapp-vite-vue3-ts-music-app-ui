@@ -1,5 +1,6 @@
 // import { type } from "os"
 import type {CircleEnum} from '../common/enum';
+import { PositionEnum } from '../enum/index';
 
 export type UserDataType = {
 	id?: string;
@@ -191,4 +192,12 @@ export type MusicRecordType = {
 	platform:string,// 平台
 	device:string,// 设备型号
 	version:string// 版本
+}
+
+// 聊天气泡
+export type ChatType = {
+	text:string,
+	position:PositionEnum,
+	thinkContent?:string,
+	responseContent?:string
 }

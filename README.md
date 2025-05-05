@@ -34,24 +34,32 @@
 ![重置密码](注册页面.png)
 ![重置密码](音乐播放器-收藏页.png)
 ![重置密码](音乐播放器-评论页面.png)
+![ai智能聊天](ai智能聊天.png)
 =============================界面预览（如果无法预览，请查看项目根目录png文件）==========================   
 
-使用uni-vue3-vite-ts+pinia+router搭建的音乐混合app
+使用uni-vue3-vite-ts+pinia+router搭建的音乐混合app    
+
+加入了ai智能聊天功能
 
 后端接口使用springboot开发，所有音乐数据来自于python爬虫程序，爬取第三方音乐网站数据
 
 
 后端接口项目和sql语句：   
-https://github.com/wuyuanwuhui99/springboot-app-service   
-https://gitee.com/wuyuanwuhui99/springboot-app-service   
+springboot2旧项目：https://github.com/wuyuanwuhui99/springboot-app-service （密钥丢失无法登录，该不在更新，迁移到wuyuanwuhui999账号下）  
+springboot2旧项目：https://github.com/wuyuanwuhui999/springboot-app-service  
+springboot3新项目：https://github.com/wuyuanwuhui999/springboot3-app-service   
+springboot2旧项目：https://gitee.com/wuyuanwuhui99/springboot-app-service   
+springboot3新项目：https://gitee.com/wuyuanwuhui99/springboot3-app-service   
 
 
 flutter电影项目参见:   
-github地址：https://github.com/wuyuanwuhui99/flutter-movie-app-ui   
+github旧地址：https://github.com/wuyuanwuhui99/flutter-movie-app-ui   
+github新地址：https://github.com/wuyuanwuhui999/flutter-movie-app-ui   
 gitee地址：https://hub.nuaa.cf/wuyuanwuhui99/flutter-movie-app-ui
 
 flutter音乐项目参见:   
-github地址：https://github.com/wuyuanwuhui99/flutter-music-app-ui   
+github旧地址：https://github.com/wuyuanwuhui99/flutter-music-app-ui   
+github新地址：https://github.com/wuyuanwuhui999/flutter-music-app-ui   
 gitee地址：https://hub.nuaa.cf/wuyuanwuhui99/flutter-music-app-ui
 
 react native电影参见:   
@@ -62,11 +70,13 @@ java安卓原生电影参见：
 gitee地址：https://hub.nuaa.cf/wuyuanwuhui99/android-java-movie-app-ui
 
 uniapp电影参见：
-github地址：https://github.com/wuyuanwuhui99/uniapp-vite-vue3-ts-movie-app-ui   
+github旧地址：https://github.com/wuyuanwuhui99/uniapp-vite-vue3-ts-movie-app-ui   
+github新地址：https://github.com/wuyuanwuhui999/uniapp-vite-vue3-ts-movie-app-ui   
 gitee地址：https://gitee/wuyuanwuhui99/uniapp-vite-vue3-ts-movie-app-ui  
 
 uniapp音乐项目参见：
-github地址：https://github.com/wuyuanwuhui99/uniapp-vite-vue3-ts-music-app-ui   
+github旧地址：https://github.com/wuyuanwuhui99/uniapp-vite-vue3-ts-music-app-ui   
+github新地址：https://github.com/wuyuanwuhui999/uniapp-vite-vue3-ts-music-app-ui   
 gitee地址：https://gitee/wuyuanwuhui99/uniapp-vite-vue3-ts-music-app-ui  
 
 微信小程序版本参见：  
@@ -74,11 +84,13 @@ gitee地址：https://gitee/wuyuanwuhui99/uniapp-vite-vue3-ts-music-app-ui
 国内镜像地址：https://hub.nuaa.cf/wuyuanwuhui99/weixin-movie-app-ui
 
 harmony鸿蒙电影参见:   
-github地址：https://github.com/wuyuanwuhui99/Harmony_movie_app_ui   
+github旧地址：https://github.com/wuyuanwuhui99/Harmony_movie_app_ui   
+github新地址：https://github.com/wuyuanwuhui999/Harmony_movie_app_ui   
 gitee地址：https://hub.nuaa.cf/wuyuanwuhui99/Harmony_movie_app_ui
 
 harmony鸿蒙音乐项目参见:   
-github地址：https://github.com/wuyuanwuhui99/harmony_music_app_ui   
+github旧地址：https://github.com/wuyuanwuhui99/harmony_music_app_ui   
+github新地址：https://github.com/wuyuanwuhui999/harmony_music_app_ui   
 gitee地址：https://hub.nuaa.cf/wuyuanwuhui99/harmony_music_app_ui
 
 vue在线音乐项目：  

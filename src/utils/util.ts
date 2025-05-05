@@ -36,3 +36,12 @@ export const formatSecond=(value:number,showHour:boolean = false):string => {
 };
 
 export const getMusicCover = (cover:string) => /http[s]?:\/\//.test(cover) ? cover.replace('{size}', '480') : HOST + cover
+
+export const generateSecureID = () => {
+    const array = new Uint8Array(16); // 16 字节（128 位）
+    window.crypto.getRandomValues(array); // 填充随机字节
+    return Array.from(array)
+      .map(b => b.toString(16).padStart(2, '0'))
+      .join('')
+      .slice(0, 32); // 截取前 32 位
+  }

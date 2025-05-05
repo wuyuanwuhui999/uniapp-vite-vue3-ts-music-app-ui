@@ -25,9 +25,9 @@ export default {
   getMusicLike: '/service/music/getMusicLike',// 查询我喜欢的歌曲
   searchMusic: '/service/music/searchMusic',// 音乐搜索
   getSingerCategory:'/service/music/getSingerCategory',// 获取歌手分类
-  saveLike:'/service/social-getway/saveLike',// 添加点赞
-  deleteLike:'/service/social-getway/deleteLike',// 删除点赞
-  insertComment:'/service/social-getway/insertComment',// 新增评论
+  saveLike:'/service/social/saveLike',// 添加点赞
+  deleteLike:'/service/social/deleteLike',// 删除点赞
+  insertComment:'/service/social/insertComment',// 新增评论
   getTopCommentList:'/service/social/getTopCommentList',// 获取一级评论列表
   getCommentCount: '/service/social/getCommentCount',// 获取评论总数
   isMusicFavorite:'/service/music/isMusicFavorite/', // 查询音乐是否收藏
@@ -35,10 +35,11 @@ export default {
   deleteFavoriteDirectory: '/service/music/deleteFavoriteDirectory/',// 删除收藏夹
   insertFavoriteDirectory:'/service/music/insertFavoriteDirectory',// 创建收藏夹
   insertMusicFavorite:'/service/music/insertMusicFavorite/',// 插入收藏夹
-  insertCircle: '/service/circle-getway/insertCircle',// 插入一条朋友圈说说
+  insertCircle: '/service/circle/insertCircle',// 插入一条朋友圈说说
   getMusicListByFavoriteId:'/service/music/getMusicListByFavoriteId',// 按照收藏夹的id查询音乐列表
   getMusicAuthorCategory: '/service/music/getMusicAuthorCategory',// 获取歌手分类
   getMusicListByAuthorId: '/service/music/getMusicListByAuthorId',// 根据歌手id获取音乐列表
   circleWebsocket: '/service/circle/ws',// 音乐圈动态
-  getCircleByLastUpdateTime:'/service/circle-getway/getCircleByLastUpdateTime',// 音乐圈动态
+  getCircleByLastUpdateTime:'/service/circle/getCircleByLastUpdateTime',// 音乐圈动态
+  chat:"/service/ai/chat"// ai聊天
 };

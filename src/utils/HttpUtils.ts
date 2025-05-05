@@ -22,7 +22,7 @@ enum HttpMethod {
 */
 interface RequestConfig {
 	/** API路径 */
-	url: string
+	url?: string
 	/** Method类型 */
 	method?: HttpMethod
 	/** 接口返回数据 */
@@ -33,6 +33,7 @@ interface RequestConfig {
 	dataType?: string
 	/** 请求报错时，是否弹出message提示（默认弹出）*/
 	noShowMsg?: boolean
+	enableChunked?:boolean
 }
 
 /**
@@ -66,6 +67,10 @@ class HttpRequest {
     public setToken(token:string){
         this.token = token;
     }
+
+	public getToken():string{
+		return this.token;
+	}
 
 	public static getInstance(): HttpRequest {
 		if (!this.instance) {
@@ -114,6 +119,7 @@ class HttpRequest {
 				data: requestConfig.data,
 				header: Object.assign(header, requestConfig?.header),
 				dataType: !requestConfig.dataType ? "json" : "其他",
+				enableChunked: requestConfig.enableChunked,
 				success:  (res) => {
 					// console.log("发送返回:", res) //res:{cookies, data, header, statusCode}
 					const code = res.statusCode || -404;
@@ -190,3 +196,53 @@ class HttpRequest {
 }
 
 export const httpRequest = HttpRequest.getInstance()
+
+// 封装流式请求函数
+export const streamRequest = (url:string):Promise<string> => {
+	return new Promise((resolve, reject) => {
+		// const requestTask = uni.request({
+		// url,
+		// method: "GET",
+		// header: {
+		// 	"Content-Type": "application/json",
+		// 	"Accept": "text/event-stream", // 声明接受流式响应
+		// 	"Authorization": `Bearer ${httpRequest.getToken()}`
+		// },
+		// responseType: "text", // 或 "arraybuffer" 处理二进制流
+		// enableChunked: true, // 开启分块传输
+		// success: (res) => resolve(res),
+		// fail: (err) => reject(err)
+		// });
+
+		// // 监听分块数据到达事件
+		// requestTask.onChunkReceived((res) => {
+		// 	console.log("接收分块数据:", res);
+		// 	// 处理数据（如追加到页面）
+		// });
+
+		// // 监听请求头接收完成事件
+		// requestTask.onHeadersReceived((headers) => {
+		// 	console.log("响应头:", headers);
+		// });
+		uni.request({
+			url, // 替换为你的实际接口地址
+			method: 'GET', // Spring接口默认使用GET，如需POST需修改
+			header: {
+				// "Accept": "text/event-stream", // 声明接受流式响应
+			  'Authorization':  `Bearer ${httpRequest.getToken()}`, // 添加Bearer认证头
+			  'Content-Type': 'application/json' // 根据实际情况设置
+			},
+			success: (res) => {
+			  if (res.statusCode === 200) {
+				resolve(res.data as string);
+			  } else {
+				reject(res.data as string);
+			  }
+			},
+			fail: (err) => {
+			  reject(err);
+			}
+		  });
+	});
+};
+
