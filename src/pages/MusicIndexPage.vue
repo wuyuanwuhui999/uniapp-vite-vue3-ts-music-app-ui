@@ -57,6 +57,9 @@
 	import api from "../api";
 	import { HOST } from '../common/constant';
 	import { getCircleByLastUpdateTimeService } from '../service';
+	import { httpRequest } from '@/utils/HttpUtils';
+	import eventBus from '../utils/eventBus.js';
+
 	
 	const hasCircleMessage = ref<boolean>(false);
 	const angle = ref<number>(0);// 旋转的角度
@@ -126,7 +129,10 @@
 	const useWebsocket = ()=>{
 		// 在页面或全局创建连接
 		const socketTask = uni.connectSocket({
-			url: `${HOST.replace(/http/,'ws')}${api.circleWebsocket}`, // WebSocket 服务器地址（必须是 wss 或 ws 协议）
+			header:{
+				Authorization: `Bearer ${httpRequest.getToken()}`
+			},
+			url: `${HOST.replace(/http[s]?/,'ws')}${api.circleWebsocket}`, // WebSocket 服务器地址（必须是 wss 或 ws 协议）
 			success: () => {
 				console.log('WebSocket 连接创建成功');
 			},
@@ -138,7 +144,11 @@
 			console.log('WebSocket 已连接');
 		});
 		socketTask.onMessage((res) => {
-			hasCircleMessage.value = true;
+			if(activeIndex.value === 2){
+				eventBus.emit("update");
+			}else{
+				hasCircleMessage.value = true;
+			}
 			console.log('收到消息：', res.data); // res.data 是服务器返回的数据
 		});
 	}

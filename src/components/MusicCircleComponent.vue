@@ -7,7 +7,7 @@
 			<view class="content-wrapper">
 				<text class="user-name">{{item.username}}</text>
 				<text class="content">{{item.content}}</text>
-				<view class="music-wrapper">
+				<view class="music-wrapper" v-if="item.musicCover">
 					<MusicAvaterComponent type="music" :name="item.musicSongName" :avater="item.musicCover"/>
 					<view class="music-info">
 						<text class="music-name">{{item.musicSongName}} - {{item.musicAuthorName}}</text>
@@ -54,7 +54,7 @@
 <script setup lang="ts">
 	import { CIRCLE_UPDATE_TIME, HOST } from "../common/constant";
 	import { getCircleListByTypeService, saveLikeService, deleteLikeService } from "../service";
-	import { reactive, ref } from "vue";
+	import { reactive, ref,onMounted,onUnmounted } from "vue";
 	import type { CircleType, LikeType } from '../types';
 	import { formatTime } from '../utils/util';
 	import { useStore } from '../stores/useStore';
@@ -68,7 +68,7 @@
 	import icon_music_like from "../../static/icon_music_like.png";
 	import icon_music_like_white from '../../static/icon_music_like_white.png';
 	import icon_music_add from "../../static/icon_music_add.png"
-
+	import eventBus from '../utils/eventBus.js';
 
 	const commenIndex = ref<number>(-1);
 	const triggered = ref<boolean>(false);
@@ -187,6 +187,15 @@
 	}
 
 	useCircleListByType();
+
+	onMounted(()=>{
+		eventBus.on('update', useRefresh);
+	})
+
+	onUnmounted(()=>{
+		eventBus.off('update', useRefresh);
+	});
+
 </script>
 
 <style lang="less">

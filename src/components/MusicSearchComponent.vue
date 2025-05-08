@@ -57,6 +57,7 @@
 	        display: flex;
 	        align-items: center;
 	        .search-input-placehold{
+				padding-left: @page-padding;
 	            color: @search-input-placehold;
 	        }
 	    }

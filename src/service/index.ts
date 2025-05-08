@@ -346,5 +346,5 @@ export const getMusicListByAuthorIdService = (authorId:number,pageNum:number,pag
  * @author wuwenqiang
  */
 export const getCircleByLastUpdateTimeService = (lastUpdateTime:string):Promise<MyAwesomeData<number>> => {
-    return httpRequest.get<number>(`${api.getCircleByLastUpdateTime}?lastUpdateTime=${lastUpdateTime}&type=${CommentEnum.MUSIC_CIRCLE}`);
+    return httpRequest.get<number>(`${api.getCircleByLastUpdateTime}?lastUpdateTime=${lastUpdateTime}&type=${CircleEnum.MUSIC}`);
 }

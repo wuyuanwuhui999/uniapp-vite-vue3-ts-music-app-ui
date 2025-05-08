@@ -1,4 +1,8 @@
 import {HOST} from '../common/constant';
+import type { RequestTask } from '@dcloudio/types'
+import axios from 'axios';
+ 
+axios.defaults.responseType = 'text'; // 或者 'stream'，取决于你的后端如何处理流
 
 enum StatusEnum {
     FAIL="FAIL",
@@ -198,8 +202,8 @@ class HttpRequest {
 export const httpRequest = HttpRequest.getInstance()
 
 // 封装流式请求函数
-export const streamRequest = (url:string):Promise<string> => {
-	return new Promise((resolve, reject) => {
+export const streamRequest = (url:string):RequestTask<string> => {
+	// return new Promise((resolve, reject) => {
 		// const requestTask = uni.request({
 		// url,
 		// method: "GET",
@@ -224,25 +228,51 @@ export const streamRequest = (url:string):Promise<string> => {
 		// requestTask.onHeadersReceived((headers) => {
 		// 	console.log("响应头:", headers);
 		// });
-		uni.request({
+		return uni.request({
 			url, // 替换为你的实际接口地址
 			method: 'GET', // Spring接口默认使用GET，如需POST需修改
+			enableChunked: true,
 			header: {
-				// "Accept": "text/event-stream", // 声明接受流式响应
+				"Accept": "text/event-stream", // 声明接受流式响应
 			  'Authorization':  `Bearer ${httpRequest.getToken()}`, // 添加Bearer认证头
 			  'Content-Type': 'application/json' // 根据实际情况设置
 			},
-			success: (res) => {
-			  if (res.statusCode === 200) {
-				resolve(res.data as string);
-			  } else {
-				reject(res.data as string);
-			  }
-			},
+
 			fail: (err) => {
 			  reject(err);
 			}
 		  });
-	});
+	// });
 };
 
+export const fetchApi = (url:string)=>{ 
+	axios.get(url, {
+		responseType: 'text', // 或者 'stream'，具体取决于你的后端实现
+		headers: {
+			'Accept': 'text/event-stream', // 对于 SSE (Server-Sent Events) 流
+			'Authorization':  `Bearer ${httpRequest.getToken()}`, // 添加Bearer认证头
+		},
+		onDownloadProgress: (progressEvent) => {
+			// 处理流式数据，例如更新UI显示接收到的文本
+			const data = progressEvent.target.response;
+			if (data) {
+				// 处理数据，例如解析事件流中的消息
+				const lines = data.split('\n\n'); // SSE通常以双换行符分隔事件
+				lines.forEach(line => {
+					console.log(line);
+					if (line.trim() !== '') {
+						// const event = JSON.parse(`{${line.split('\n').slice(1).join('')}}`); // 解析事件数据
+						// console.log(event.data); // 输出或处理数据内容
+						// 更新UI等操作
+					}
+				});
+			}
+		}
+	}).then(response => {
+		// 完整的响应处理（如果有的话）
+		console.log("response",response)
+	}).catch(error => {
+		console.error('Error during request:', error);
+	});
+	
+}
