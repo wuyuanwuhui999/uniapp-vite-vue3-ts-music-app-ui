@@ -45,3 +45,53 @@ export const generateSecureID = () => {
       .join('')
       .slice(0, 32); // 截取前 32 位
   }
+
+export const formatTimeAgo = (createTime:string)=> {
+    // 获取当前时间和目标时间
+    const now = new Date()
+    const targetDate = new Date(createTime)
+    
+    // 计算时间差（毫秒）
+    const diff = now.getTime() - targetDate.getTime();
+    
+    // 处理未来时间
+    if (diff < 0) return '刚刚'
+  
+    // 计算各时间单位
+    const seconds = Math.floor(diff / 1000)
+    const minutes = Math.floor(seconds / 60)
+    const hours = Math.floor(minutes / 60)
+    const days = Math.floor(hours / 24)
+    
+    // 计算精确的月份和年份差
+    const targetYear = targetDate.getFullYear()
+    const targetMonth = targetDate.getMonth()
+    const targetDay = targetDate.getDate()
+    const nowYear = now.getFullYear()
+    const nowMonth = now.getMonth()
+    const nowDay = now.getDate()
+  
+    let monthsDiff = (nowYear - targetYear) * 12 + (nowMonth - targetMonth)
+    if (nowDay < targetDay) monthsDiff--
+  
+    let yearsDiff = nowYear - targetYear
+    if (nowMonth < targetMonth || (nowMonth === targetMonth && nowDay < targetDay)) {
+      yearsDiff--
+    }
+  
+    // 判断并返回结果
+    if (seconds < 60) {
+      return '刚刚'
+    } else if (minutes < 60) {
+      return `${minutes}分钟前`
+    } else if (hours < 24) {
+      return `${hours}小时前`
+    } else if (days <= 31) {
+      return `${days}天前`
+    } else if (monthsDiff < 12) {
+      return `${monthsDiff}个月前`
+    } else {
+      return `${yearsDiff}年前`
+    }
+  }
+  

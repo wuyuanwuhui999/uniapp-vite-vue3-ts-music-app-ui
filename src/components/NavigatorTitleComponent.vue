@@ -32,15 +32,15 @@
 	@import '../theme/size.less';
 
 	.page-header {
-			padding: @page-padding;
-			display: flex;
-			justify-content: space-between;
-			background: @module-background-color;
+		padding: @page-padding;
+		display: flex;
+		justify-content: space-between;
+		background: @module-background-color;
 
-			.icon-back{
-				width: @small-icon-size;
-				height: @small-icon-size;
-				opacity: 0.2;
-			}
+		.icon-back{
+			width: @small-icon-size;
+			height: @small-icon-size;
+			opacity: 0.2;
 		}
+	}
 </style>

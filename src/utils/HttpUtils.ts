@@ -1,7 +1,7 @@
 import {HOST} from '../common/constant';
 import type { RequestTask } from '@dcloudio/types'
 import axios from 'axios';
- 
+import type {ChatType} from '../types'; 
 axios.defaults.responseType = 'text'; // 或者 'stream'，取决于你的后端如何处理流
 
 enum StatusEnum {
@@ -245,8 +245,8 @@ export const streamRequest = (url:string):RequestTask<string> => {
 	// });
 };
 
-export const fetchApi = (url:string)=>{ 
-	axios.get(url, {
+export const fetchApi = (url:string,chatItem:ChatType)=>{ 
+	return axios.get(url, {
 		responseType: 'text', // 或者 'stream'，具体取决于你的后端实现
 		headers: {
 			'Accept': 'text/event-stream', // 对于 SSE (Server-Sent Events) 流
@@ -258,8 +258,9 @@ export const fetchApi = (url:string)=>{
 			if (data) {
 				// 处理数据，例如解析事件流中的消息
 				const lines = data.split('\n\n'); // SSE通常以双换行符分隔事件
-				lines.forEach(line => {
+				lines.forEach((line) => {
 					console.log(line);
+					chatItem.responseContent = line;
 					if (line.trim() !== '') {
 						// const event = JSON.parse(`{${line.split('\n').slice(1).join('')}}`); // 解析事件数据
 						// console.log(event.data); // 输出或处理数据内容

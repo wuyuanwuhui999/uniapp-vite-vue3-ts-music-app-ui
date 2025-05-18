@@ -348,3 +348,12 @@ export const getMusicListByAuthorIdService = (authorId:number,pageNum:number,pag
 export const getCircleByLastUpdateTimeService = (lastUpdateTime:string):Promise<MyAwesomeData<number>> => {
     return httpRequest.get<number>(`${api.getCircleByLastUpdateTime}?lastUpdateTime=${lastUpdateTime}&type=${CircleEnum.MUSIC}`);
 }
+
+/**
+ * @description: 获取聊天对话历史记录
+ * @date: 2025-05-16 00:19
+ * @author wuwenqiang
+ */
+export const getChatHistoryService = (pageNum:number,pageSize:number):Promise<MyAwesomeData<Array<types.ChatHistoryType>>> => {
+    return httpRequest.get<Array<types.ChatHistoryType>>(`${api.getChatHistory}?pageNum=${pageNum}&pageSize=${pageSize}`);
+}
