@@ -42,5 +42,6 @@ export default {
   circleWebsocket: '/service/circle/ws',// 音乐圈动态
   getCircleByLastUpdateTime:'/service/circle/getCircleByLastUpdateTime',// 音乐圈动态
   chat:"/service/ai/chat",// ai聊天
-  getChatHistory: "/service/ai/getChatHistory"// ai聊天
+  getChatHistory: "/service/ai/getChatHistory",// ai聊天
+  chatWs: "/service/ai/ws/chat"// ai聊天
 };

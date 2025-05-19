@@ -199,7 +199,8 @@ export type ChatType = {
 	text:string,
 	position:PositionEnum,
 	thinkContent?:string,
-	responseContent?:string
+	responseContent?:string,
+	start?:boolean
 }
 
 // 聊天气泡

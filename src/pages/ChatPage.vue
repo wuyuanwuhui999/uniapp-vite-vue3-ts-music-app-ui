@@ -12,7 +12,7 @@
 						<image :src="icon_ai" class="icon-middle" v-if="item.position === PositionEnum.LEFT"/>
 						<view class="chat-text">
 							<view class="icon-angle" :class="item.position === PositionEnum.LEFT ? 'icon-angle-left' : 'icon-angle-right'"></view>
-							<template v-if="item.thinkContent">
+							<template v-if="item.thinkContent && item.start !== false">
 								<view class="think-text">
 									<text>
 										{{ item.thinkContent }}
@@ -67,167 +67,23 @@
 	import { HOST, PAGE_SIZE } from '../common/constant';
 	import api from '@/api';
 	import { getChatHistoryService }from "../service";
+	import { useStore } from "../stores/useStore";
 
 	// 响应式状态
-	const content = ref<string>('');
+	let socketTask: UniApp.SocketTask | null = null; // WebSocket 实例
 	const chatHistoryData = reactive<ChatStructure>({});
 	const pageNum = ref<number>(1);
 	const showHistory = ref<boolean>(false);
 	const total = ref<number>(0);
 	let chatId:string = ""
 	const inputValue = ref<string>("");
+	const store = useStore();
 	const chatList = reactive<Array<ChatType>>([
 		{
 			text:"你好，我是智能助手小吴同学，请问有什么可以帮助您？",
 			position: PositionEnum.LEFT
 		}
 	]);
-
-	const state = reactive({
-		socket: null,
-		isConnected: false,
-		chatId: generateSecureID(),
-		retryCount: 0,
-		maxRetries: 5,
-		heartbeatTimer: null
-	})
-
-	// WebSocket 配置
-	const config = reactive({
-		wsBaseUrl: `ws://${HOST.replace(/http.+\/\//,"")}/ws`,
-		token: 'your_jwt_token_here'
-	})
-
-	// 初始化 WebSocket
-	// const initWebSocket = () => {
-	// 	state.socket = uni.connectSocket({
-	// 		url: `${config.wsBaseUrl}?chatId=${state.chatId}`,
-	// 		header: {
-	// 		'Authorization': `Bearer ${httpRequest.getToken()}`
-	// 		},
-	// 		success: () => console.log('WS 连接初始化'),
-	// 		fail: err => console.error('连接失败:', err)
-	// 	})
-
-	// 	setupSocketEvents()
-	// }
-
-	// 设置事件监听
-	// const setupSocketEvents = () => {
-	// 	if (!state.socket) return
-
-	// 	state.socket.onOpen(() => {
-	// 		console.log('WS 连接已建立')
-	// 		state.isConnected = true
-	// 		state.retryCount = 0
-	// 		startHeartbeat()
-	// 		subscribeToTopic()
-	// 	})
-
-	// 	state.socket.onMessage(res => {
-	// 		handleMessage(res.data)
-	// 	})
-
-	// 	state.socket.onError(err => {
-	// 		console.error('WS 错误:', err)
-	// 		handleReconnect()
-	// 	})
-
-	// 	state.socket.onClose(() => {
-	// 		console.log('WS 连接关闭')
-	// 		state.isConnected = false
-	// 		stopHeartbeat()
-	// 		handleReconnect()
-	// 	})
-	// }
-
-	// 消息处理
-	// const handleMessage = data => {
-	// 	try {
-	// 		const parsed = JSON.parse(data)
-	// 		if (parsed.type === 'text_chunk') {
-	// 		content.value += parsed.payload
-	// 		}
-	// 	} catch (e) {
-	// 		content.value += data // 原始文本处理
-	// 	}
-	// }
-
-	// 发送消息
-	// const sendMessage = (command, destination, body) => {
-	// 	if (!state.isConnected) return
-
-	// 	const frame = JSON.stringify({
-	// 		command,
-	// 		headers: { destination },
-	// 		body: JSON.stringify(body)
-	// 	})
-
-	// 	state.socket.send({
-	// 		data: frame,
-	// 		success: () => console.log('消息已发送'),
-	// 		fail: err => console.error('发送失败:', err)
-	// 	})
-	// }
-
-	// 订阅主题
-	// const subscribeToTopic = () => {
-	// 	sendMessage('SUBSCRIBE', `/topic/chat/${state.chatId}`, {})
-	// }
-
-	// 处理用户发送
-	const handleSend = () => {
-		if (!inputValue.value.trim()) return
-		
-		// sendMessage('SEND', '/app/chat', {
-		// 	prompt: inputValue.value,
-		// 	chatId: state.chatId
-		// })
-		
-		inputValue.value = ''
-	}
-
-	// 心跳机制
-	// const startHeartbeat = () => {
-	// 	state.heartbeatTimer = setInterval(() => {
-	// 		if (state.isConnected) {
-	// 		state.socket.send({ data: '\n' }) // 空心跳包
-	// 		}
-	// 	}, 30000)
-	// }
-
-	// const stopHeartbeat = () => {
-	// 	clearInterval(state.heartbeatTimer)
-	// 	state.heartbeatTimer = null
-	// }
-
-	// 重连机制
-	// const handleReconnect = () => {
-		// if (state.retryCount >= state.maxRetries) return
-		
-		// state.retryCount++
-		// setTimeout(() => {
-		// 	console.log(`尝试第 ${state.retryCount} 次重连...`)
-		// 	initWebSocket()
-		// }, 3000)
-	// }
-
-	// 主动断开
-	// const disconnect = () => {
-	// 	if (state.socket) {
-	// 		state.socket.close()
-	// 		state.socket = null
-	// 	}
-	// }
-
-	// 生命周期
-	onMounted(() => {
-		// initWebSocket()
-	})
-
-	onBeforeUnmount(() => {
-		// disconnect()
-	})
 
     /**
 	 * @author: wuwenqiang
@@ -245,13 +101,30 @@
 				text:"",
 				position:PositionEnum.LEFT,
 				thinkContent:"",
-				responseContent:""
+				responseContent:"",
+				start:false
 			}
-			chatList.push(item)
-			fetchApi(`${HOST}${api.chat}?chatId=${chatId}&prompt=${inputValue.value}`,item).then(()=>{
+			chatList.push(item);
+			const payload = {
+				token: store.token, // 替换为实际用户ID
+				chatId, // 替换为实际聊天ID
+				prompt: inputValue.value,
+				files: [] // 如果需要上传文件，请根据实际情况调整
+			};
+			socketTask?.send({
+				data: JSON.stringify(payload),
+				success: () => {
+					console.log('消息发送成功');
+					inputValue.value = "";
+				},
+				fail: (err) => {
+				console.error('消息发送失败:', err);
+				}
+			});
+			
+			// fetchApi(`${HOST}${api.chat}?chatId=${chatId}&prompt=${inputValue.value}`,item).then(()=>{
 				
-			})
-			inputValue.value = "";
+			// })
 		}	
 	}
 
@@ -351,8 +224,63 @@
 				responseContent:responseContent
 			});
 		})
-		
 	}	
+
+	const connectWebSocket = () => {
+      socketTask = uni.connectSocket({
+        url: `${HOST.replace(/http[s]?/,'ws')}${api.chatWs}`,
+        success: (res) => {
+          console.log('WebSocket 连接成功:', res);
+        },
+        fail: (err) => {
+          console.error('WebSocket 连接失败:', err);
+        }
+      });
+
+      socketTask.onOpen(() => {
+        console.log('WebSocket 连接已建立');
+      });
+
+      socketTask.onMessage(({data}) => {
+		chatList[chatList.length - 1].start = true;
+		// 匹配所有形式的 `<think>` 标签（包括属性和自闭合）
+		const regex = /<\/?think\b[^>]*>/gi;
+		if(regex.test(chatList[chatList.length - 1].thinkContent || "")){
+			chatList[chatList.length - 1].responseContent += data;
+		}else{
+			chatList[chatList.length - 1].thinkContent += data;
+		}
+		
+        // const data = JSON.parse(res.data);
+        // if (data.content) {
+        //   console.log(data.content)
+        // }
+      });
+
+      socketTask.onError((err) => {
+        console.error('WebSocket 错误:', err);
+      });
+
+      socketTask.onClose(() => {
+        console.log('WebSocket 连接已关闭');
+      });
+    };
+
+	// 在组件挂载时连接 WebSocket
+    onMounted(() => {
+      connectWebSocket();
+    });
+
+	// 在组件卸载前断开 WebSocket 连接
+    onBeforeUnmount(() => {
+      if (socketTask) {
+        socketTask.close({
+          success: () => {
+            console.log('WebSocket 连接已关闭');
+          }
+        });
+      }
+    });
 </script>
 
 <style lang="less" scoped>
