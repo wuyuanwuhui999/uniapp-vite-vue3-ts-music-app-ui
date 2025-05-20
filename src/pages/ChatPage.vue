@@ -48,13 +48,12 @@
 					</view>
 				</scroll-view>
 			</view>
-			<view class="side-mask"></view>
+			<view class="side-mask" @click="onClose"></view>
 		</view>
 	</view>
 </template>
 
 <script setup lang="ts">
-	import {httpRequest, streamRequest,fetchApi} from '../utils/HttpUtils';
     import { reactive, ref,onMounted,onBeforeUnmount } from 'vue';
 	import icon_back from '../../static/icon_back.png';
 	import icon_send from '../../static/icon_send.png';
@@ -91,9 +90,9 @@
 	 * @date: 2024-01-10 22:13
 	 */
 	const onSend = async() => {
-		if(inputValue.value){
+		if(inputValue.value.trim()){
 			chatList.push({
-				text:inputValue.value,
+				text:inputValue.value.trim(),
 				position:PositionEnum.RIGHT
 			});
 			if(!chatId)chatId = generateSecureID();
@@ -108,7 +107,7 @@
 			const payload = {
 				token: store.token, // 替换为实际用户ID
 				chatId, // 替换为实际聊天ID
-				prompt: inputValue.value,
+				prompt: inputValue.value.trim(),
 				files: [] // 如果需要上传文件，请根据实际情况调整
 			};
 			socketTask?.send({
@@ -172,6 +171,10 @@
 	 */
 	const onShowHistory = ()=>{
 		showHistory.value = true;
+		pageNum.value = 1;
+		for(let key in chatHistoryData){
+			delete chatHistoryData[key]
+		}
 		useChatHistory();
 	}
 
@@ -244,17 +247,12 @@
       socketTask.onMessage(({data}) => {
 		chatList[chatList.length - 1].start = true;
 		// 匹配所有形式的 `<think>` 标签（包括属性和自闭合）
-		const regex = /<\/?think\b[^>]*>/gi;
+		const regex = /<think>([\s\S]*?)<\/think>/gi
 		if(regex.test(chatList[chatList.length - 1].thinkContent || "")){
 			chatList[chatList.length - 1].responseContent += data;
 		}else{
 			chatList[chatList.length - 1].thinkContent += data;
 		}
-		
-        // const data = JSON.parse(res.data);
-        // if (data.content) {
-        //   console.log(data.content)
-        // }
       });
 
       socketTask.onError((err) => {
@@ -281,6 +279,10 @@
         });
       }
     });
+
+	const onClose = ()=>{
+		showHistory.value = false;
+	}
 </script>
 
 <style lang="less" scoped>
