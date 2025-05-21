@@ -6,35 +6,39 @@
 			<image class="icon-middle icon-record" @click="onShowHistory" :src="icon_menu"/>
 		</view>
 		<view class="page-body">
-			<scroll-view class="scroll-view" scroll-y :show-scrollbar="false">
+			<scroll-view class="scroll-view" scroll-y :show-scrollbar="false" :scroll-top="scrollTop" @scroll="onScroll">
 				<view class="chat-list">
-					<view class="chat-wrapper" :key="'chat'+index" v-for="item,index in chatList">
-						<image :src="icon_ai" class="icon-middle" v-if="item.position === PositionEnum.LEFT"/>
-						<view class="chat-text">
-							<view class="icon-angle" :class="item.position === PositionEnum.LEFT ? 'icon-angle-left' : 'icon-angle-right'"></view>
-							<template v-if="item.thinkContent && item.start !== false">
-								<view class="think-text">
-									<text>
-										{{ item.thinkContent }}
-									</text>
-								</view>
-							
-								<!-- 正式回答黑色区块 -->
-								<view class="response-box">
-									<text>{{ item.responseContent }}</text>
-								</view>
-							</template>
-							<text v-else>{{ item.text }}</text>
+					<template v-for="item,index in chatList" :key="'chat'+index">
+						<view class="chat-wrapper" v-if="item.position == PositionEnum.LEFT && item.start !== false || item.position == PositionEnum.RIGHT " >
+							<image :src="icon_ai" class="icon-middle" v-if="item.position === PositionEnum.LEFT"/>
+							<view class="chat-text">
+								<view class="icon-angle" :class="item.position === PositionEnum.LEFT ? 'icon-angle-left' : 'icon-angle-right'"></view>
+								<template v-if="item.thinkContent">
+									<view class="think-text">
+										<text>
+											{{ item.thinkContent }}
+										</text>
+									</view>
+								
+									<!-- 正式回答黑色区块 -->
+									<view class="response-box">
+										<text>{{ item.responseContent }}</text>
+									</view>
+								</template>
+								<text v-else>{{ item.text }}</text>
+							</view>
+							<AvaterComponent v-if="item.position === PositionEnum.RIGHT"/>
 						</view>
-						<AvaterComponent v-if="item.position === PositionEnum.RIGHT"/>
-					</view>
+					</template>
+					
 				</view>
 			</scroll-view>
 		</view>
 		<view class="input-wrapper">
 			<input class="chat-input" placeholder="有问题，尽管问" v-model="inputValue">
 			<view class="icon-wrapper">
-				<image :src="icon_send" class="icon-middle icon_send" @click="onSend"></image>
+				<image v-show="isCompleted" :src="icon_send" class="icon-middle icon_send" @click="onSend"></image>
+				<view class="icon-sending" v-show="!isCompleted"></view>
 			</view>
 		</view>
 		<view class="side-wrapper" v-show="showHistory">
@@ -70,6 +74,7 @@
 
 	// 响应式状态
 	let socketTask: UniApp.SocketTask | null = null; // WebSocket 实例
+	const isCompleted = ref<boolean>(true);
 	const chatHistoryData = reactive<ChatStructure>({});
 	const pageNum = ref<number>(1);
 	const showHistory = ref<boolean>(false);
@@ -77,6 +82,7 @@
 	let chatId:string = ""
 	const inputValue = ref<string>("");
 	const store = useStore();
+	const scrollTop = ref<number>(0);
 	const chatList = reactive<Array<ChatType>>([
 		{
 			text:"你好，我是智能助手小吴同学，请问有什么可以帮助您？",
@@ -115,15 +121,12 @@
 				success: () => {
 					console.log('消息发送成功');
 					inputValue.value = "";
+					isCompleted.value = false;
 				},
 				fail: (err) => {
 				console.error('消息发送失败:', err);
 				}
 			});
-			
-			// fetchApi(`${HOST}${api.chat}?chatId=${chatId}&prompt=${inputValue.value}`,item).then(()=>{
-				
-			// })
 		}	
 	}
 
@@ -145,22 +148,39 @@
 		getChatHistoryService(pageNum.value,PAGE_SIZE).then((res) => {
 			total.value = res.total;
 			const historyList:Array<Array<ChatHistoryType>> = []; 
+			const chatIdData:any = {};
 			res.data.forEach((aItem)=>{
 				aItem.timeAgo = formatTimeAgo(aItem.createTime);
-				let items = historyList.find((bItem)=>{
-					return bItem[0].chatId === aItem.chatId;
-				});
-				if(!items){
-					items = [];
-					historyList.push(items);
+				if(!chatIdData[aItem.chatId]){
+					chatIdData[aItem.chatId] = [];
 				}
-				items?.push(aItem);
-			})
-			historyList.forEach((items)=>{
-				const key = items[items.length - 1].timeAgo;
-				if(!chatHistoryData[key])chatHistoryData[key] = [];
-				chatHistoryData[key].push(items.reverse())
+				chatIdData[aItem.chatId].push(aItem);
 			});
+			console.log(JSON.parse(JSON.stringify(chatIdData)))
+			for(let key in chatIdData){
+				const item:ChatHistoryType = chatIdData[key][0];
+				if(!chatHistoryData[item.timeAgo]){
+					chatHistoryData[item.timeAgo] = [];
+				}
+				chatHistoryData[item.timeAgo].push(chatIdData[key]);
+			}
+			// res.data.forEach((aItem)=>{
+			// 	aItem.timeAgo = formatTimeAgo(aItem.createTime);
+			// 	let items = historyList.find((bItem)=>{
+			// 		return bItem[0].chatId === aItem.chatId;
+			// 	});
+			// 	if(!items){
+			// 		items = [];
+			// 		historyList.push(items);
+			// 	}
+			// 	items?.push(aItem);
+			// })
+			// historyList.forEach((items)=>{
+			// 	const key = items[items.length - 1].timeAgo;
+			// 	if(!chatHistoryData[key])chatHistoryData[key] = [];
+			// 	chatHistoryData[key].push(items.reverse())
+			// });
+			// console.log(JSON.parse(JSON.stringify(chatHistoryData)))
 		});
 	}
 
@@ -245,6 +265,9 @@
       });
 
       socketTask.onMessage(({data}) => {
+		if(data == "#end"){
+			isCompleted.value = false;
+		}
 		chatList[chatList.length - 1].start = true;
 		// 匹配所有形式的 `<think>` 标签（包括属性和自闭合）
 		const regex = /<think>([\s\S]*?)<\/think>/gi
@@ -282,6 +305,10 @@
 
 	const onClose = ()=>{
 		showHistory.value = false;
+	}
+
+	const onScroll = (event : Event)=>{
+		scrollTop.value = event.detail.scrollTop
 	}
 </script>
 
@@ -368,8 +395,15 @@
 				align-items: center;
 				justify-content: center;
 				border-radius: 50%;
-				padding: @small-margin;
 				background-color: @page-background-color;
+				width:  @middle-avater;
+				height:  @middle-avater;
+				.icon-sending{
+					width: 35%;
+					height: 35%;
+					border-radius: @btn-border-radius;
+					background-color: @sub-title-color;
+				}
 			}
 		}
 		.side-wrapper{
