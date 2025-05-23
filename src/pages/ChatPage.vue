@@ -13,8 +13,8 @@
 							<image :src="icon_ai" class="icon-middle" v-if="item.position === PositionEnum.LEFT"/>
 							<view class="chat-text">
 								<view class="icon-angle" :class="item.position === PositionEnum.LEFT ? 'icon-angle-left' : 'icon-angle-right'"></view>
-								<template v-if="item.thinkContent">
-									<view class="think-text">
+								<template v-if="item.thinkContent || item.responseContent">
+									<view class="think-text" v-if="item.thinkContent">
 										<text>
 											{{ item.thinkContent }}
 										</text>
@@ -45,9 +45,9 @@
 			<view class="history-wrapper">
 				<scroll-view class="history-scroll-view" scroll-y :show-scrollbar="false" @scrolltolower="onScrolltolower">
 					<view class="history-list">
-						<view class="chat-item" :key="key" v-for="(items, key) in chatHistoryData">
-							<text class="chat-time">{{ key }}</text>
-							<text class="chat-content" @click="onChat(item)" :key="key+item[0].chatId" v-for="item in items">{{ item[0].prompt }}</text>
+						<view class="chat-item" :key="items.timeAgo" v-for="items in chatHistoryData">
+							<text class="chat-time">{{ items.timeAgo }}</text>
+							<text class="chat-content" @click="onChat(item)" :key="'chat-content'+index" v-for="item,index in items.list">{{ item[0].prompt }}</text>
 						</view>
 					</view>
 				</scroll-view>
@@ -75,7 +75,7 @@
 	// 响应式状态
 	let socketTask: UniApp.SocketTask | null = null; // WebSocket 实例
 	const isCompleted = ref<boolean>(true);
-	const chatHistoryData = reactive<ChatStructure>({});
+	const chatHistoryData = reactive<Array<ChatStructure>>([]);
 	const pageNum = ref<number>(1);
 	const showHistory = ref<boolean>(false);
 	const total = ref<number>(0);
@@ -116,6 +116,9 @@
 				prompt: inputValue.value.trim(),
 				files: [] // 如果需要上传文件，请根据实际情况调整
 			};
+			if(!socketTask){
+				await connectWebSocket();
+			}
 			socketTask?.send({
 				data: JSON.stringify(payload),
 				success: () => {
@@ -145,42 +148,30 @@
 	 * @author wuwenqiang
 	 */
 	const useChatHistory = () => {
+		chatHistoryData.length = 0;
 		getChatHistoryService(pageNum.value,PAGE_SIZE).then((res) => {
 			total.value = res.total;
-			const historyList:Array<Array<ChatHistoryType>> = []; 
-			const chatIdData:any = {};
-			res.data.forEach((aItem)=>{
-				aItem.timeAgo = formatTimeAgo(aItem.createTime);
-				if(!chatIdData[aItem.chatId]){
-					chatIdData[aItem.chatId] = [];
+			const chatIdGroud:any = {};
+			res.data.forEach((item)=>{
+				item.timeAgo = formatTimeAgo(item.createTime);
+				if(!chatIdGroud[item.chatId]){
+					chatIdGroud[item.chatId] = [];
 				}
-				chatIdData[aItem.chatId].push(aItem);
+				chatIdGroud[item.chatId].push(item)
 			});
-			console.log(JSON.parse(JSON.stringify(chatIdData)))
-			for(let key in chatIdData){
-				const item:ChatHistoryType = chatIdData[key][0];
-				if(!chatHistoryData[item.timeAgo]){
-					chatHistoryData[item.timeAgo] = [];
+			for(let key in chatIdGroud){
+				chatIdGroud[key].reverse();
+				const timeAgo:string = chatIdGroud[key][0].timeAgo;
+				let items = chatHistoryData.find((item)=>item.timeAgo === timeAgo);
+				if(!items){
+					items = {
+						timeAgo,
+						list:[]
+					}
+					chatHistoryData.push(items)
 				}
-				chatHistoryData[item.timeAgo].push(chatIdData[key]);
+				items?.list.unshift(chatIdGroud[key])
 			}
-			// res.data.forEach((aItem)=>{
-			// 	aItem.timeAgo = formatTimeAgo(aItem.createTime);
-			// 	let items = historyList.find((bItem)=>{
-			// 		return bItem[0].chatId === aItem.chatId;
-			// 	});
-			// 	if(!items){
-			// 		items = [];
-			// 		historyList.push(items);
-			// 	}
-			// 	items?.push(aItem);
-			// })
-			// historyList.forEach((items)=>{
-			// 	const key = items[items.length - 1].timeAgo;
-			// 	if(!chatHistoryData[key])chatHistoryData[key] = [];
-			// 	chatHistoryData[key].push(items.reverse())
-			// });
-			// console.log(JSON.parse(JSON.stringify(chatHistoryData)))
 		});
 	}
 
@@ -192,9 +183,6 @@
 	const onShowHistory = ()=>{
 		showHistory.value = true;
 		pageNum.value = 1;
-		for(let key in chatHistoryData){
-			delete chatHistoryData[key]
-		}
 		useChatHistory();
 	}
 
@@ -242,55 +230,56 @@
 				.replace(/^\s+|\s+$/g, '')
 			chatList.push({
 				text:"",
+				start:true,
 				position:PositionEnum.LEFT,
 				thinkContent: thinkContent,
 				responseContent:responseContent
 			});
 		})
+		console.log(JSON.parse(JSON.stringify(chatList)))
 	}	
 
 	const connectWebSocket = () => {
-      socketTask = uni.connectSocket({
-        url: `${HOST.replace(/http[s]?/,'ws')}${api.chatWs}`,
-        success: (res) => {
-          console.log('WebSocket 连接成功:', res);
-        },
-        fail: (err) => {
-          console.error('WebSocket 连接失败:', err);
-        }
-      });
+		return new Promise((resolve,reject)=>{
+			socketTask = uni.connectSocket({
+				url: `${HOST.replace(/http[s]?/,'ws')}${api.chatWs}`,
+				success: (res) => {
+					console.error('WebSocket 连接成功:', res);
+					resolve(res)
+				},
+				fail: (err) => {
+				console.error('WebSocket 连接失败:', err);
+				}
+			});
 
-      socketTask.onOpen(() => {
-        console.log('WebSocket 连接已建立');
-      });
+			socketTask.onOpen(() => {
+				console.log('WebSocket 连接已建立');
+			});
 
-      socketTask.onMessage(({data}) => {
-		if(data == "#end"){
-			isCompleted.value = false;
-		}
-		chatList[chatList.length - 1].start = true;
-		// 匹配所有形式的 `<think>` 标签（包括属性和自闭合）
-		const regex = /<think>([\s\S]*?)<\/think>/gi
-		if(regex.test(chatList[chatList.length - 1].thinkContent || "")){
-			chatList[chatList.length - 1].responseContent += data;
-		}else{
-			chatList[chatList.length - 1].thinkContent += data;
-		}
-      });
+			socketTask.onMessage(({data}) => {
+				if(data == "#end"){
+					isCompleted.value = false;
+				}
+				chatList[chatList.length - 1].start = true;
+				// 匹配所有形式的 `<think>` 标签（包括属性和自闭合）
+				const regex = /<think>([\s\S]*?)<\/think>/gi
+				if(regex.test(chatList[chatList.length - 1].thinkContent || "")){
+					chatList[chatList.length - 1].responseContent += data;
+				}else{
+					chatList[chatList.length - 1].thinkContent += data;
+				}
+			});
 
-      socketTask.onError((err) => {
-        console.error('WebSocket 错误:', err);
-      });
+			socketTask.onError((err) => {
+				console.error('WebSocket 错误:', err);
+			});
 
-      socketTask.onClose(() => {
-        console.log('WebSocket 连接已关闭');
-      });
+			socketTask.onClose(() => {
+				console.log('WebSocket 连接已关闭');
+			});
+		})
+      
     };
-
-	// 在组件挂载时连接 WebSocket
-    onMounted(() => {
-      connectWebSocket();
-    });
 
 	// 在组件卸载前断开 WebSocket 连接
     onBeforeUnmount(() => {

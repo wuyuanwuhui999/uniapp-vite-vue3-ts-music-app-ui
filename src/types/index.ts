@@ -217,5 +217,6 @@ export type ChatHistoryType = {
 
 // 主体数据结构，键是时间前缀，值是该时间前缀下的消息组
 export type ChatStructure = {
-	[key: string]: Array<Array<ChatHistoryType>>;
+	timeAgo:string,
+	list:Array<Array<ChatHistoryType>>
 }
