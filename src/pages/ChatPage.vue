@@ -111,6 +111,7 @@
 			}
 			chatList.push(item);
 			const payload = {
+				model:"qwen3:8b",
 				token: store.token, // 替换为实际用户ID
 				chatId, // 替换为实际聊天ID
 				prompt: inputValue.value.trim(),
@@ -127,7 +128,7 @@
 					isCompleted.value = false;
 				},
 				fail: (err) => {
-				console.error('消息发送失败:', err);
+					console.error('消息发送失败:', err);
 				}
 			});
 		}	
@@ -245,7 +246,7 @@
 				url: `${HOST.replace(/http[s]?/,'ws')}${api.chatWs}`,
 				success: (res) => {
 					console.error('WebSocket 连接成功:', res);
-					resolve(res)
+					
 				},
 				fail: (err) => {
 				console.error('WebSocket 连接失败:', err);
@@ -253,12 +254,13 @@
 			});
 
 			socketTask.onOpen(() => {
+				resolve(null)
 				console.log('WebSocket 连接已建立');
 			});
 
 			socketTask.onMessage(({data}) => {
-				if(data == "#end"){
-					isCompleted.value = false;
+				if(data == "[completed]"){
+					isCompleted.value = true;
 				}
 				chatList[chatList.length - 1].start = true;
 				// 匹配所有形式的 `<think>` 标签（包括属性和自闭合）
