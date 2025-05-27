@@ -85,7 +85,7 @@
 	const scrollTop = ref<number>(0);
 	const chatList = reactive<Array<ChatType>>([
 		{
-			text:"你好，我是智能助手小吴同学，请问有什么可以帮助您？",
+			text:"你好，我是智能音乐助手小吴同学，请问有什么可以帮助您？",
 			position: PositionEnum.LEFT
 		}
 	]);
@@ -260,7 +260,7 @@
 
 			socketTask.onMessage(({data}) => {
 				if(data == "[completed]"){
-					isCompleted.value = true;
+					return isCompleted.value = true;
 				}
 				chatList[chatList.length - 1].start = true;
 				// 匹配所有形式的 `<think>` 标签（包括属性和自闭合）
