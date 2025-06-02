@@ -220,3 +220,10 @@ export type ChatStructure = {
 	timeAgo:string,
 	list:Array<Array<ChatHistoryType>>
 }
+
+export type ChatModelType = {
+  id:number,
+  modelName:string,
+  updateTime:string,
+  createTime:string
+}

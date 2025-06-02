@@ -357,3 +357,7 @@ export const getCircleByLastUpdateTimeService = (lastUpdateTime:string):Promise<
 export const getChatHistoryService = (pageNum:number,pageSize:number):Promise<MyAwesomeData<Array<types.ChatHistoryType>>> => {
     return httpRequest.get<Array<types.ChatHistoryType>>(`${api.getChatHistory}?pageNum=${pageNum}&pageSize=${pageSize}`);
 }
+
+export const getModelListService = ():Promise<MyAwesomeData<Array<types.ChatModelType>>> => {
+  return httpRequest.get<Array<types.ChatModelType>>(api.getModelList)
+}

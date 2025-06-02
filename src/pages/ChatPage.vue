@@ -2,8 +2,8 @@
 	<view class="page-wrapper">
 		<view class="page-header">
 			<image class="icon-back" @click="useBack" :src="icon_back"/>
-			<text class="my-favorite">当前接入模型：deepseek-r1:7b</text>
-			<image class="icon-middle icon-record" @click="onShowHistory" :src="icon_menu"/>
+			<text class="my-favorite">当前接入模型：{{ activeModel?.modelName }}</text>
+			<image class="icon-small icon-record" @click="onShowHistory" :src="icon_menu"/>
 		</view>
 		<view class="page-body">
 			<scroll-view class="scroll-view" scroll-y :show-scrollbar="false" :scroll-top="scrollTop" @scroll="onScroll">
@@ -58,18 +58,18 @@
 </template>
 
 <script setup lang="ts">
-    import { reactive, ref,onMounted,onBeforeUnmount } from 'vue';
+    import { reactive, ref, onBeforeUnmount } from 'vue';
 	import icon_back from '../../static/icon_back.png';
 	import icon_send from '../../static/icon_send.png';
 	import icon_menu from '../../static/icon_menu.png';
 	import icon_ai from '../../static/icon_ai.png';
 	import AvaterComponent from '../components/AvaterComponent.vue';
-	import type { ChatHistoryType, ChatType, ChatStructure} from '../types';
+	import type { ChatHistoryType, ChatType, ChatStructure, ChatModelType} from '../types';
     import { PositionEnum } from '../enum';
 	import { formatTimeAgo, generateSecureID } from "../utils/util";
 	import { HOST, PAGE_SIZE } from '../common/constant';
 	import api from '@/api';
-	import { getChatHistoryService }from "../service";
+	import { getChatHistoryService,getModelListService }from "../service";
 	import { useStore } from "../stores/useStore";
 
 	// 响应式状态
@@ -83,17 +83,30 @@
 	const inputValue = ref<string>("");
 	const store = useStore();
 	const scrollTop = ref<number>(0);
+	const activeModel = ref<ChatModelType|null>(null)
 	const chatList = reactive<Array<ChatType>>([
 		{
 			text:"你好，我是智能音乐助手小吴同学，请问有什么可以帮助您？",
 			position: PositionEnum.LEFT
 		}
 	]);
+	const chatModelList = reactive<Array<ChatModelType>>([]);
+
+		
+    /**
+	 * @author: wuwenqiang
+	 * @description: 获取模型列表
+	 * @date: 2025-06-02 21:45
+	 */
+	getModelListService().then((res)=>{
+		chatModelList.push(...res.data);
+		activeModel.value = res.data[0];
+	});
 
     /**
 	 * @author: wuwenqiang
-	 * @description: 注册
-	 * @date: 2024-01-10 22:13
+	 * @description: 发送
+	 * @date: 2025-05-10 22:13
 	 */
 	const onSend = async() => {
 		if(inputValue.value.trim()){
