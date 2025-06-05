@@ -194,27 +194,6 @@ export type MusicRecordType = {
 	version:string// 版本
 }
 
-// 聊天气泡
-export type ChatType = {
-	text:string,
-	position:PositionEnum,
-	thinkContent?:string,
-	responseContent?:string,
-	start?:boolean
-}
-
-// 聊天气泡
-export type ChatHistoryType = {
-	id: number;          // 主键 
-	userId: string;      // 用户id
-	files?: string;       // 文件（
-	chatId: string;      // 会话id
-	prompt: string;      // 提示词
-	content: string;     // 内容
-	createTime: string;  // 创建时间
-	timeAgo:string;// xx分钟、小时、天、月前
-}
-
 // 主体数据结构，键是时间前缀，值是该时间前缀下的消息组
 export type ChatStructure = {
 	timeAgo:string,
@@ -226,4 +205,35 @@ export type ChatModelType = {
   modelName:string,
   updateTime:string,
   createTime:string
+}
+
+// 聊天气泡
+export type ChatType = {
+  type?:string,
+  text:string,
+  position:PositionEnum,
+  thinkContent?:string,
+  responseContent?:string,
+  start?:boolean
+}
+// 聊天气泡
+export type ChatHistoryType = {
+  id: number;          // 主键
+  userId: string;      // 用户id
+  files?: string;       // 文件（
+  chatId: string;      // 会话id
+  prompt: string;      // 提示词
+  content: string;     // 内容
+  createTime: string;  // 创建时间
+  thinkContent?:string,// 思考内容
+  responseContent?:string,// 正文内容
+  timeAgo:string;// xx分钟、小时、天、月前
+}
+
+export type GroupedByChatIdType = {
+  [chatId: string]: ChatHistoryType[];
+}
+
+export type GroupedByTimeAgoType = {
+  [timeAgo: string]:  ChatHistoryType[][];
 }

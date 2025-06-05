@@ -64,7 +64,7 @@
 	import icon_menu from '../../static/icon_menu.png';
 	import icon_ai from '../../static/icon_ai.png';
 	import AvaterComponent from '../components/AvaterComponent.vue';
-	import type { ChatHistoryType, ChatType, ChatStructure, ChatModelType} from '../types';
+	import type { ChatHistoryType, ChatType, ChatStructure, ChatModelType, GroupedByChatIdType} from '../types';
     import { PositionEnum } from '../enum';
 	import { formatTimeAgo, generateSecureID } from "../utils/util";
 	import { HOST, PAGE_SIZE } from '../common/constant';
@@ -165,7 +165,7 @@
 		chatHistoryData.length = 0;
 		getChatHistoryService(pageNum.value,PAGE_SIZE).then((res) => {
 			total.value = res.total;
-			const chatIdGroud:any = {};
+			const chatIdGroud:GroupedByChatIdType = {};
 			res.data.forEach((item)=>{
 				item.timeAgo = formatTimeAgo(item.createTime);
 				if(!chatIdGroud[item.chatId]){
