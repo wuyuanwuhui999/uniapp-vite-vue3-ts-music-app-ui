@@ -9,25 +9,39 @@
 			<scroll-view class="scroll-view" scroll-y :show-scrollbar="false" :scroll-top="scrollTop" @scroll="onScroll">
 				<view class="chat-list">
 					<template v-for="item,index in chatList" :key="'chat'+index">
-						<view class="chat-wrapper" v-if="item.position == PositionEnum.LEFT && item.start !== false || item.position == PositionEnum.RIGHT " >
-							<image :src="icon_ai" class="icon-middle" v-if="item.position === PositionEnum.LEFT"/>
-							<view class="chat-text">
-								<view class="icon-angle" :class="item.position === PositionEnum.LEFT ? 'icon-angle-left' : 'icon-angle-right'"></view>
-								<template v-if="item.thinkContent || item.responseContent">
-									<view class="think-text" v-if="item.thinkContent">
-										<text>
-											{{ item.thinkContent }}
-										</text>
+						<view class="chat-wrapper">
+							<template v-if="item.position === PositionEnum.LEFT">
+								<image :src="icon_ai" class="icon-middle"/>
+								<view class="chat-text chat-prompt">
+									<view class="icon-angle icon-angle-left"></view>
+									<view  class="think-text" v-if="!item.thinkContent && !item.responseContent">
+										<text>正在思考中</text>
 									</view>
+									<template v-else>
+										<view class="think-text" v-if="item.thinkContent">
+											<text>
+												{{ item.thinkContent.replace(/^(<think>)[\s\s\n]?|(<\/think>[\s\S\n]?)$/gi,"") }}
+											</text>
+										</view>
+									
+										<!-- 正式回答黑色区块 -->
+										<view class="response-box">
+											<text>{{ item.responseContent }}</text>
+										</view>
+									</template>
+								</view>
 								
-									<!-- 正式回答黑色区块 -->
-									<view class="response-box">
-										<text>{{ item.responseContent }}</text>
-									</view>
-								</template>
-								<text v-else>{{ item.text }}</text>
-							</view>
-							<AvaterComponent v-if="item.position === PositionEnum.RIGHT"/>
+							</template>
+							<template v-else>
+								<view class="chat-prompt-wrapper">
+									<view class="chat-prompt">
+										<view class="icon-angle icon-angle-right"></view>
+									<text>{{ item.text }}</text>
+								</view>
+								</view>
+								
+								<AvaterComponent/>
+							</template>
 						</view>
 					</template>
 					
@@ -86,7 +100,7 @@
 	const activeModel = ref<ChatModelType|null>(null)
 	const chatList = reactive<Array<ChatType>>([
 		{
-			text:"你好，我是智能音乐助手小吴同学，请问有什么可以帮助您？",
+			responseContent:"你好，我是智能音乐助手小吴同学，请问有什么可以帮助您？",
 			position: PositionEnum.LEFT
 		}
 	]);
@@ -124,7 +138,7 @@
 			}
 			chatList.push(item);
 			const payload = {
-				model:"qwen3:8b",
+				modelId: activeModel.value?.id,
 				token: store.token, // 替换为实际用户ID
 				chatId, // 替换为实际聊天ID
 				prompt: inputValue.value.trim(),
@@ -225,29 +239,12 @@
 				text:item.prompt,
 				position:PositionEnum.RIGHT,
 			});
-			let thinkContent = "",responseContent="";
-			const thinkMatch = item.content.match(/<think>([\s\S]*?)<\/think>/i)
-			if (thinkMatch) {
-				// 去除首尾空白及换行
-				thinkContent = thinkMatch[1]
-				.trim()
-				.replace(/^\s+|\s+$/g, '')
-			}
-
-			// 提取正式回答内容
-			responseContent =  item.content
-				// 移除think标签及内容
-				.replace(/<think>[\s\S]*?<\/think>/gi, '')
-				// 清理多余空白
-				.trim()
-				// 去除首尾空格
-				.replace(/^\s+|\s+$/g, '')
 			chatList.push({
 				text:"",
 				start:true,
 				position:PositionEnum.LEFT,
-				thinkContent: thinkContent,
-				responseContent:responseContent
+				thinkContent: item.thinkContent,
+				responseContent: item.responseContent
 			});
 		})
 		console.log(JSON.parse(JSON.stringify(chatList)))
@@ -283,6 +280,7 @@
 				}else{
 					chatList[chatList.length - 1].thinkContent += data;
 				}
+				scrollTop.value++
 			});
 
 			socketTask.onError((err) => {
@@ -349,31 +347,44 @@
 					padding: @page-padding;
 					.chat-wrapper{
 						display: flex;
-						gap:@page-padding;
+						gap:@page-padding;	
+						.chat-prompt-wrapper{
+							flex: 1;
+							display: flex;
+							justify-content: flex-end;
+							.chat-prompt{
+								max-width: 100%;
+								background-color: @module-background-color;
+								padding: @page-padding;
+								border-radius: @btn-border-radius;
+								position: relative;
+							}
+						}
 						.chat-text{
 							flex: 1;
 							background-color: @module-background-color;
 							padding: @page-padding;
 							border-radius: @btn-border-radius;
 							position: relative;
+							
 							.think-text{
 								color:@sub-title-color;
 							}
-							.icon-angle{
-								position: absolute;
-								width: 0;
-								height: 0;
-								top: 15rpx;
-								border-top: 15rpx solid transparent;   
-								border-bottom: 15rpx solid transparent; 
-								&.icon-angle-left{
-									left: -15rpx;
-									border-right: 15rpx solid @module-background-color;
-								}
-								&.icon-angle-right{
-									right: -15rpx;
-									border-left: 15rpx solid @module-background-color;
-								}
+						}
+						.icon-angle{
+							position: absolute;
+							width: 0;
+							height: 0;
+							top: 15rpx;
+							border-top: 15rpx solid transparent;   
+							border-bottom: 15rpx solid transparent; 
+							&.icon-angle-left{
+								left: -15rpx;
+								border-right: 15rpx solid @module-background-color;
+							}
+							&.icon-angle-right{
+								right: -15rpx;
+								border-left: 15rpx solid @module-background-color;
 							}
 						}
 					}

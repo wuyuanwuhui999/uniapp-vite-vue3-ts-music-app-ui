@@ -209,8 +209,7 @@ export type ChatModelType = {
 
 // 聊天气泡
 export type ChatType = {
-  type?:string,
-  text:string,
+  text?:string,
   position:PositionEnum,
   thinkContent?:string,
   responseContent?:string,
@@ -219,6 +218,7 @@ export type ChatType = {
 // 聊天气泡
 export type ChatHistoryType = {
   id: number;          // 主键
+  modelId:number,      // 模型id
   userId: string;      // 用户id
   files?: string;       // 文件（
   chatId: string;      // 会话id
