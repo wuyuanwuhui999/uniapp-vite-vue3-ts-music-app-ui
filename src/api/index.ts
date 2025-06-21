@@ -43,7 +43,7 @@ export default {
   getCircleByLastUpdateTime:'/service/circle/getCircleByLastUpdateTime',// 音乐圈动态
   chat:"/service/ai/chat",// ai聊天
   getChatHistory: "/service/music/getChatHistory",// ai聊天
-  // chatWs: "/service/ai/ws/chat"// ai聊天
   chatWs: "/service/music/ws/chat",// ai聊天
-  getModelList: "/service/music/getModelList"// ai聊天
+  getModelList: "/service/music/getModelList",// ai聊天
+  generateVector: "/service/music/generateVector"// 生成向量
 };

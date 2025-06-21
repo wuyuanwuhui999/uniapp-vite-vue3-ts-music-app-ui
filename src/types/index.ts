@@ -237,3 +237,27 @@ export type GroupedByChatIdType = {
 export type GroupedByTimeAgoType = {
   [timeAgo: string]:  ChatHistoryType[][];
 }
+
+export type FileType = 'txt' | 'pdf';
+
+// 定义文件类型
+export interface FileItem {
+  name: string;
+  path: string;
+  size: number;
+  type: string;
+  file?:File;
+}
+
+export interface UploadFile {
+  path: string;
+  name: string;
+  size: number;
+  type: string;
+}
+
+export interface UploadResponse {
+  code: number;
+  message: string;
+  data?: any;
+}

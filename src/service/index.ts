@@ -358,6 +358,20 @@ export const getChatHistoryService = (pageNum:number,pageSize:number):Promise<My
     return httpRequest.get<Array<types.ChatHistoryType>>(`${api.getChatHistory}?pageNum=${pageNum}&pageSize=${pageSize}`);
 }
 
+/**
+ * @description: 获取模型列表
+ * @date: 2025-05-16 00:19
+ * @author wuwenqiang
+ */
 export const getModelListService = ():Promise<MyAwesomeData<Array<types.ChatModelType>>> => {
   return httpRequest.get<Array<types.ChatModelType>>(api.getModelList)
+}
+
+/**
+ * @description: 上传文档
+ * @date: 2025-06-21 13:48
+ * @author wuwenqiang
+ */
+export const generateVectorService = (base64:string[]):Promise<MyAwesomeData<number>> => {
+    return httpRequest.post<number>(api.generateVector,{base64});
 }
