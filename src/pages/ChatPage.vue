@@ -606,7 +606,7 @@
 			display: flex;
 			justify-content: space-between;
 			background: @module-background-color;
-
+			align-items: center;
 			.icon-back{
 				width: @small-icon-size;
 				height: @small-icon-size;
