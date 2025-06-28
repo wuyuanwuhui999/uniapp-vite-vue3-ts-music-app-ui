@@ -240,15 +240,6 @@ export type GroupedByTimeAgoType = {
 
 export type FileType = 'txt' | 'pdf';
 
-// 定义文件类型
-export interface FileItem {
-  name: string;
-  path: string;
-  size: number;
-  type: string;
-  file?:File;
-}
-
 export interface UploadFile {
   path: string;
   name: string;
@@ -261,3 +252,12 @@ export interface UploadResponse {
   message: string;
   data?: any;
 }
+
+export interface PayloadInterface {
+  modelId?: number;
+  token: string; // 替换为实际用户ID
+  chatId:string; // 替换为实际聊天ID
+  type: string,
+  prompt: string,
+  files?: string[] // 如果需要上传文件，请根据实际情况调整
+};

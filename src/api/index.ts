@@ -45,5 +45,5 @@ export default {
   getChatHistory: "/service/music/getChatHistory",// ai聊天
   chatWs: "/service/music/ws/chat",// ai聊天
   getModelList: "/service/music/getModelList",// ai聊天
-  generateVector: "/service/music/generateVector"// 生成向量
+  generateVector: "/service/music/uploadDoc"// 生成向量
 };

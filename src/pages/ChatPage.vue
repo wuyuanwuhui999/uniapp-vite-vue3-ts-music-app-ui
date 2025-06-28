@@ -64,6 +64,10 @@
 				</view>
 			</scroll-view>
 		</view>
+		<view class="type-wrapper">
+			<text class="type-item" :class="{'type-item-active': type === 'document'}" @click="onCheckType('document')">查询文档</text>
+			<text class="type-item" :class="{'type-item-active': type === 'db'}" @click="onCheckType('db')">查询数据库</text>
+		</view>
 		<view class="input-wrapper">
 			<image :src="icon_chat" class="icon-middle icon_send" @click="onCreateNewChat"/>
 			<input class="chat-input" placeholder="有问题，尽管问" v-model="inputValue">
@@ -96,7 +100,7 @@
 	import icon_ai from '../../static/icon_ai.png';
 	import icon_chat from '../../static/icon_chat.png';
 	import AvaterComponent from '../components/AvaterComponent.vue';
-	import type { ChatHistoryType, ChatType, ChatStructure, ChatModelType, GroupedByChatIdType,FileType,FileItem,UploadFile,UploadResponse} from '../types';
+	import type { ChatHistoryType, ChatType, ChatStructure, ChatModelType, GroupedByChatIdType,FileType,PayloadInterface,UploadFile,UploadResponse} from '../types';
     import { PositionEnum } from '../enum';
 	import { formatTimeAgo, generateSecureID } from "../utils/util";
 	import { HOST, PAGE_SIZE } from '../common/constant';
@@ -124,7 +128,7 @@
 		}
 	]);
 	const chatModelList = reactive<Array<ChatModelType>>([]);
-	const fileInput = ref<HTMLInputElement | null>(null)
+	const type = ref<string>("");
 	// 支持的MIME类型映射
     const supportedMimeTypes = {
       'txt': 'text/plain',
@@ -163,10 +167,11 @@
 				start:false
 			}
 			chatList.push(item);
-			const payload = {
+			const payload:PayloadInterface = {
 				modelId: activeModel.value?.id,
 				token: store.token, // 替换为实际用户ID
 				chatId, // 替换为实际聊天ID
+				type:type.value,
 				prompt: inputValue.value.trim(),
 				files: [] // 如果需要上传文件，请根据实际情况调整
 			};
@@ -292,7 +297,6 @@
 				responseContent: item.responseContent
 			});
 		})
-		console.log(JSON.parse(JSON.stringify(chatList)))
 	}	
 
 	const connectWebSocket = () => {
@@ -439,6 +443,7 @@
 					duration: 2000
 				});
 			} finally {
+				showMenu.value = false;
 				uni.hideLoading();
 			}
 			},
@@ -451,74 +456,6 @@
 				});
 			}
 		});
-		};
-
-
-	/**
-	 * 生成带格式的 Base64 编码数组
-	 * @param files 文件列表
-	 * @returns Promise<string[]> 每个元素是带格式的 Base64 字符串
-	 */
-	const generateBase64 = (files: FileItem[]): Promise<string[]> => {
-		// 创建一个 Promise 数组，每个 Promise 处理一个文件
-		const promises = files.map((file) => {
-			return new Promise<string>((resolve, reject) => {
-				// 在非 Web 平台（如小程序/App）中，使用 uni.getFileSystemManager
-				console.log("file",file.file)
-				if (uni.getFileSystemManager) {
-					const fs = uni.getFileSystemManager();
-					fs.readFile({
-					filePath: file.path,
-					encoding: 'base64',
-					success: (res) => {
-						// 手动拼接格式前缀（小程序可能无法获取 file.type，需根据扩展名推断）
-						const mimeType = file.type || getMimeTypeFromExtension(file.name);
-						const base64WithFormat = `data:${mimeType};base64,${res.data}`;
-						resolve(base64WithFormat);
-					},
-					fail: (err) => {
-						console.error(`读取文件 ${file.name} 失败:`, err);
-						reject(err);
-					}
-					});
-				} 
-				// 在 Web 平台中，使用 FileReader API
-				else if (typeof FileReader !== 'undefined') {
-					const reader = new FileReader();
-					reader.onload = (event) => {
-					// 直接使用 readAsDataURL 生成的完整 Base64（带格式）
-						const base64WithFormat = event.target?.result as string;
-						resolve(base64WithFormat);
-					};
-					reader.onerror = (error) => {
-						console.error(`读取文件 ${file.name} 失败:`, error);
-						reject(error);
-					};
-					reader.readAsDataURL(file.file);
-				} else {
-					reject(new Error('不支持的平台或文件格式'));
-				}
-			});
-		});
-
-		return Promise.all(promises);
-	};
-
-	/**
-	 * 根据文件名后缀推断 MIME 类型（用于小程序端）
-	 * @param filename 文件名（如 "test.pdf"）
-	 * @returns string MIME 类型（如 "application/pdf"）
-	 */
-	const getMimeTypeFromExtension = (filename: string): string => {
-		const extension = filename.split('.').pop()?.toLowerCase();
-		switch (extension) {
-			case 'pdf':
-				return 'application/pdf';
-			case 'txt':
-				return 'text/plain';
-			default:
-				return 'application/octet-stream'; // 默认二进制流
-		}
 	};
 
 	/**	
@@ -548,51 +485,15 @@
         });
       }
     });
-
-	/**	
-	 * @description: web端文件选择
-	 * @date: 2025-06-21 18:49
-	 * @author wuwenqiang
-	 */
-	const onFileChange = async (event:Event)=>{
-      const input = event.target as HTMLInputElement
-      if (input.files && input.files.length > 0) {
-        // 将FileList转换为数组
-		const files = Array.from(input.files);
-		
-		// 生成Base64数组
-		const base64Array = await Promise.all(
-			files.map(file => readFileAsBase64(file))
-		);
-
-		generateVectorService(base64Array);
-      }
-	}
 	
 	/**	
-	 * @description: web端将单个文件读取为Base64
+	 * @description: 选择文档
 	 * @date: 2025-06-21 18:47
 	 * @author wuwenqiang
 	 */
-	const readFileAsBase64 = (file: File): Promise<string> => {
-	return new Promise((resolve, reject) => {
-		const reader = new FileReader();
-		
-		reader.onload = (event) => {
-		// 移除可能的数据URL前缀（如"data:image/png;base64,"）
-		const base64 = (event.target?.result as string).split(',')[1] || 
-						(event.target?.result as string);
-		resolve(base64);
-		};
-		
-		reader.onerror = (error) => {
-			reject(new Error(`读取文件 ${file.name} 失败`));
-		};
-		
-		reader.readAsDataURL(file);
-	});
-	};
-
+	const onCheckType = (checkType:string)=>{
+		type.value = type.value === checkType ? "" : checkType;
+	}
 </script>
 
 <style lang="less" scoped>
@@ -719,6 +620,24 @@
 							}
 						}
 					}
+				}
+			}
+		}
+		.type-wrapper{
+			display: flex;
+			justify-content: start;
+			background-color: @page-background-color;
+			padding: @page-padding;
+			gap: @page-padding;
+			.type-item{
+				padding: @small-margin;
+				color: @sub-title-color;
+				border: 1rpx solid @disable-text-color;
+				border-radius: @btn-border-radius;
+				background-color: @module-background-color;
+				&.type-item-active{
+					border-color: @selected-color;
+					color:  @selected-color;
 				}
 			}
 		}
