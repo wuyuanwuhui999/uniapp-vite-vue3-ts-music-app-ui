@@ -372,6 +372,6 @@ export const getModelListService = ():Promise<MyAwesomeData<Array<types.ChatMode
  * @date: 2025-06-21 13:48
  * @author wuwenqiang
  */
-export const generateVectorService = (base64:string[]):Promise<MyAwesomeData<number>> => {
-    return httpRequest.post<number>(api.generateVector,{base64});
+export const getMyDocumentService = ():Promise<MyAwesomeData<Array<types.DocumentInterface>>> => {
+    return httpRequest.get<Array<types.DocumentInterface>>(api.getDocList);
 }

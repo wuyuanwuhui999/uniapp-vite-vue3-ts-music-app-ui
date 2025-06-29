@@ -254,10 +254,20 @@ export interface UploadResponse {
 }
 
 export interface PayloadInterface {
+  think:boolean;// 是否深度思考
   modelId?: number;
   token: string; // 替换为实际用户ID
   chatId:string; // 替换为实际聊天ID
   type: string,
   prompt: string,
   files?: string[] // 如果需要上传文件，请根据实际情况调整
+};
+
+export interface DocumentInterface {
+  id: string;// 文档id
+  name: string; // 文档名称
+  ext:string; // 文档格式
+  userId: string;// 用户id
+  createTime: string;//创建时间
+  updateTime: string// 更新时间
 };

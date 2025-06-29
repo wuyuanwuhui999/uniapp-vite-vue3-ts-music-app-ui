@@ -65,6 +65,7 @@
 			</scroll-view>
 		</view>
 		<view class="type-wrapper">
+			<text class="type-item" :class="{'type-item-active': think}" @click="onSwitchThink()">深度思考</text>
 			<text class="type-item" :class="{'type-item-active': type === 'document'}" @click="onCheckType('document')">查询文档</text>
 			<text class="type-item" :class="{'type-item-active': type === 'db'}" @click="onCheckType('db')">查询数据库</text>
 		</view>
@@ -77,8 +78,8 @@
 			</view>
 		</view>
 		<view class="side-wrapper" v-show="showHistory">
-			<view class="history-wrapper">
-				<scroll-view class="history-scroll-view" scroll-y :show-scrollbar="false" @scrolltolower="onScrolltolower">
+			<view class="pop-wrapper">
+				<scroll-view class="pop-scroll-view" scroll-y :show-scrollbar="false" @scrolltolower="onScrolltolower">
 					<view class="history-list">
 						<view class="chat-item" :key="items.timeAgo" v-for="items in chatHistoryData">
 							<text class="chat-time">{{ items.timeAgo }}</text>
@@ -89,23 +90,36 @@
 			</view>
 			<view class="side-mask" @click="onClose"></view>
 		</view>
+		<view class="side-wrapper" v-show="showMyDoc">
+			<view class="pop-wrapper">
+				<scroll-view class="pop-scroll-view" scroll-y :show-scrollbar="false">
+					<view class="doc-list">
+						<view class="doc-item" :key="item.id" v-for="item in myDocList">
+							<text class="doc-name">{{ item.name }}</text>
+							<text class="doc-time">{{ formatTimeAgo(item.createTime) }}</text>
+						</view>
+					</view>
+				</scroll-view>
+			</view>
+			<view class="side-mask" @click="onClose"></view>
+		</view>
 	</view>
 </template>
 
 <script setup lang="ts">
-    import { reactive, ref, onBeforeUnmount, onMounted } from 'vue';
+    import { reactive, ref, onBeforeUnmount } from 'vue';
 	import icon_back from '../../static/icon_back.png';
 	import icon_send from '../../static/icon_send.png';
 	import icon_menu from '../../static/icon_menu.png';
 	import icon_ai from '../../static/icon_ai.png';
 	import icon_chat from '../../static/icon_chat.png';
 	import AvaterComponent from '../components/AvaterComponent.vue';
-	import type { ChatHistoryType, ChatType, ChatStructure, ChatModelType, GroupedByChatIdType,FileType,PayloadInterface,UploadFile,UploadResponse} from '../types';
+	import type {DocumentInterface ,ChatHistoryType, ChatType, ChatStructure, ChatModelType, GroupedByChatIdType,FileType,PayloadInterface,UploadFile,UploadResponse} from '../types';
     import { PositionEnum } from '../enum';
 	import { formatTimeAgo, generateSecureID } from "../utils/util";
 	import { HOST, PAGE_SIZE } from '../common/constant';
 	import api from '@/api';
-	import { getChatHistoryService, getModelListService, generateVectorService }from "../service";
+	import { getChatHistoryService, getModelListService, getMyDocumentService }from "../service";
 	import { useStore } from "../stores/useStore";
 	
 	// 响应式状态
@@ -121,6 +135,9 @@
 	const scrollTop = ref<number>(0);
 	const activeModel = ref<ChatModelType|null>(null);
 	const showMenu = ref<boolean>(false);
+	const showMyDoc = ref<boolean>(false);
+	const myDocList = reactive<Array<DocumentInterface>>([]);
+	const think = ref<boolean>(false);// 是否深度思考
 	const chatList = reactive<Array<ChatType>>([
 		{
 			responseContent:"你好，我是智能音乐助手小吴同学，请问有什么可以帮助您？",
@@ -168,6 +185,7 @@
 			}
 			chatList.push(item);
 			const payload:PayloadInterface = {
+				think:true,
 				modelId: activeModel.value?.id,
 				token: store.token, // 替换为实际用户ID
 				chatId, // 替换为实际聊天ID
@@ -464,11 +482,19 @@
 	 * @author wuwenqiang
 	 */
 	const onShowMyDoc = () => {
-
+		uni.showLoading();
+		getMyDocumentService().then((res)=>{
+			showMyDoc.value = true;
+			showMenu.value = false;
+			myDocList.length = 0;
+			myDocList.push(...res.data);
+		}).finally(()=>{
+			uni.hideLoading();
+		})
 	}
 
 	const onClose = ()=>{
-		showHistory.value = false;
+		showMyDoc.value = showHistory.value = false;
 	}
 
 	const onScroll = (event : Event)=>{
@@ -493,6 +519,15 @@
 	 */
 	const onCheckType = (checkType:string)=>{
 		type.value = type.value === checkType ? "" : checkType;
+	}
+
+	/**	
+	 * @description: 是否开启深度思考
+	 * @date: 2025-06-21 18:47
+	 * @author wuwenqiang
+	 */
+	const onSwitchThink = () => {
+		think.value = !think.value;
 	}
 </script>
 
@@ -676,10 +711,10 @@
 			width: 100vw;
 			position: absolute;
 			display: flex;
-			.history-wrapper{
+			.pop-wrapper{
 				width: 70%;
 				background-color: @module-background-color;
-				.history-scroll-view{
+				.pop-scroll-view{
 					height: 100vh;
 					.history-list{
 						padding: @page-padding;
@@ -702,6 +737,30 @@
 							}
 						}
 						
+					}
+					.doc-list{
+						padding: @page-padding;
+						display: flex;
+						flex-direction: column;
+						.doc-item{
+							display: flex;
+							flex-direction: row;
+							padding-bottom: @page-padding;
+							border-bottom: 1rpx solid @disable-text-color;
+							padding-top: @page-padding;
+							&:last-child{
+								border-bottom: none;
+							}
+							&:first-child{
+								padding-top:0;
+							}
+							.doc-name{
+								flex: 1;
+							}
+							.doc-time{
+								color: @sub-title-color;
+							}
+						}
 					}
 				}
 			}
