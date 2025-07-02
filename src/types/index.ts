@@ -1,6 +1,6 @@
 // import { type } from "os"
 import type {CircleEnum} from '../common/enum';
-import { PositionEnum } from '../enum/index';
+import type { PositionEnum } from '../enum/index';
 
 export type UserDataType = {
 	id?: string;
@@ -218,7 +218,7 @@ export type ChatType = {
 // 聊天气泡
 export type ChatHistoryType = {
   id: number;          // 主键
-  modelId:number,      // 模型id
+  modelName:string,      // 模型id
   userId: string;      // 用户id
   files?: string;       // 文件（
   chatId: string;      // 会话id
@@ -255,7 +255,7 @@ export interface UploadResponse {
 
 export interface PayloadInterface {
   think:boolean;// 是否深度思考
-  modelId?: number;
+  modelName: string;
   token: string; // 替换为实际用户ID
   chatId:string; // 替换为实际聊天ID
   type: string,

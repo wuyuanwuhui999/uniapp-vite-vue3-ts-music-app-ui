@@ -28,25 +28,26 @@
 						<view class="chat-wrapper">
 							<template v-if="item.position === PositionEnum.LEFT">
 								<image :src="icon_ai" class="icon-middle"/>
-								<view class="chat-text chat-prompt">
-									<view class="icon-angle icon-angle-left"></view>
-									<view  class="think-text" v-if="!item.thinkContent && !item.responseContent">
-										<text>正在思考中</text>
+								<view class="chat-text-wrapper">
+									<view class="chat-text chat-prompt">
+										<view class="icon-angle icon-angle-left"></view>
+										<view  class="think-text" v-if="!item.thinkContent && !item.responseContent">
+											<text>正在思考中</text>
+										</view>
+										<template v-else>
+											<view class="think-text" v-if="item.thinkContent">
+												<text>
+													{{ item.thinkContent.replace(/^(<think>)[\s\s\n]?|(<\/think>[\s\S\n]?)$/gi,"") }}
+												</text>
+											</view>
+										
+											<!-- 正式回答黑色区块 -->
+											<view class="response-box">
+												<text>{{ item.responseContent }}</text>
+											</view>
+										</template>
 									</view>
-									<template v-else>
-										<view class="think-text" v-if="item.thinkContent">
-											<text>
-												{{ item.thinkContent.replace(/^(<think>)[\s\s\n]?|(<\/think>[\s\S\n]?)$/gi,"") }}
-											</text>
-										</view>
-									
-										<!-- 正式回答黑色区块 -->
-										<view class="response-box">
-											<text>{{ item.responseContent }}</text>
-										</view>
-									</template>
-								</view>
-								
+								</view>								
 							</template>
 							<template v-else>
 								<view class="chat-prompt-wrapper">
@@ -186,7 +187,7 @@
 			chatList.push(item);
 			const payload:PayloadInterface = {
 				think:true,
-				modelId: activeModel.value?.id,
+				modelName: activeModel.value!.modelName,
 				token: store.token, // 替换为实际用户ID
 				chatId, // 替换为实际聊天ID
 				type:type.value,
@@ -627,17 +628,22 @@
 								position: relative;
 							}
 						}
-						.chat-text{
+						.chat-text-wrapper{
 							flex: 1;
-							background-color: @module-background-color;
-							padding: @page-padding;
-							border-radius: @btn-border-radius;
-							position: relative;
-							
-							.think-text{
-								color:@sub-title-color;
+							display: flex;
+							.chat-text{
+								max-width: 100%;
+								background-color: @module-background-color;
+								padding: @page-padding;
+								border-radius: @btn-border-radius;
+								position: relative;
+								
+								.think-text{
+									color:@sub-title-color;
+								}
 							}
 						}
+						
 						.icon-angle{
 							position: absolute;
 							width: 0;
