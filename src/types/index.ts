@@ -271,3 +271,8 @@ export interface DocumentInterface {
   createTime: string;//创建时间
   updateTime: string// 更新时间
 };
+
+export interface OptionInterce {
+		text:string,
+		value:string | number
+	}

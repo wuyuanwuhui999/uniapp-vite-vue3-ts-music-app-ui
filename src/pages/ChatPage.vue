@@ -2,7 +2,7 @@
 	<view class="page-wrapper">
 		<view class="page-header">
 			<image class="icon-back" @click="useBack" :src="icon_back"/>
-			<text class="my-favorite">当前接入模型：{{ activeModel?.modelName }}</text>
+			<text class="my-favorite">当前接入模型：{{ activeModel }}</text>
 			<view class="menu-wrapper">
 				<image class="icon-small icon-record" @click="onShowMenu" :src="icon_menu"/>
 				<template v-if="showMenu">
@@ -14,6 +14,8 @@
 							<view class="menu-item" @click="onShowMyDoc">我的文档</view>
 							<view class="menu-line"></view>
 							<view class="menu-item" @click="onShowHistory">会话记录</view>
+							<view class="menu-line"></view>
+							<view class="menu-item" @click="onSwitchModel">切换模型</view>
 						</view>
 					</view>
 					<view class="menu-mask" @click="onHideMenu"></view>
@@ -108,6 +110,7 @@
 			</view>
 			<view class="side-mask" @click="onClose"></view>
 		</view>
+		<OptionsDialog ref="modelOptionsDialog" @onCheck= "onCheckModel" :options="chatModelOption"/>
 	</view>
 </template>
 
@@ -119,13 +122,14 @@
 	import icon_ai from '../../static/icon_ai.png';
 	import icon_chat from '../../static/icon_chat.png';
 	import AvaterComponent from '../components/AvaterComponent.vue';
-	import type {DocumentInterface ,ChatHistoryType, ChatType, ChatStructure, ChatModelType, GroupedByChatIdType,FileType,PayloadInterface,UploadFile,UploadResponse} from '../types';
+	import type {OptionInterce,DocumentInterface ,ChatHistoryType, ChatType, ChatStructure, ChatModelType, GroupedByChatIdType,FileType,PayloadInterface,UploadFile,UploadResponse} from '../types';
     import { PositionEnum } from '../enum';
 	import { formatTimeAgo, generateSecureID } from "../utils/util";
 	import { HOST, PAGE_SIZE } from '../common/constant';
 	import api from '@/api';
 	import { getChatHistoryService, getModelListService, getMyDocumentService }from "../service";
 	import { useStore } from "../stores/useStore";
+	import OptionsDialog from '../components/OptionsDialog.vue';
 	
 	// 响应式状态
 	let socketTask: UniApp.SocketTask | null = null; // WebSocket 实例
@@ -138,7 +142,7 @@
 	const inputValue = ref<string>("");
 	const store = useStore();
 	const scrollTop = ref<number>(0);
-	const activeModel = ref<ChatModelType|null>(null);
+	const activeModel = ref<string>("");
 	const showMenu = ref<boolean>(false);
 	const showMyDoc = ref<boolean>(false);
 	const myDocList = reactive<Array<DocumentInterface>>([]);
@@ -151,6 +155,8 @@
 		}
 	]);
 	const chatModelList = reactive<Array<ChatModelType>>([]);
+	const chatModelOption = reactive<Array<OptionInterce>>([]);
+	const modelOptionsDialog = ref<null | InstanceType<typeof OptionsDialog>>(null);
 	const type = ref<string>("");
 	// 支持的MIME类型映射
     const supportedMimeTypes = {
@@ -167,7 +173,8 @@
 	 */
 	getModelListService().then((res)=>{
 		chatModelList.push(...res.data);
-		activeModel.value = res.data[0];
+		res.data.forEach((item)=>chatModelOption.push({value:item.modelName,text:item.modelName}));
+		activeModel.value = res.data[0].modelName;
 	});
 
     /**
@@ -192,7 +199,7 @@
 			chatList.push(item);
 			const payload:PayloadInterface = {
 				think:true,
-				modelName: activeModel.value!.modelName,
+				modelName: activeModel.value,
 				token: store.token, // 替换为实际用户ID
 				chatId, // 替换为实际聊天ID
 				type:type.value,
@@ -543,6 +550,26 @@
 	 */
 	const onSwitchThink = () => {
 		showThink.value = !showThink.value;
+	}
+
+	/**	
+	 * @description: 切换类型
+	 * @date: 2025-07-05 18:47
+	 * @author wuwenqiang
+	 */
+	const onSwitchModel = ()=>{
+		modelOptionsDialog.value?.$refs.popup.open('top');
+		showMenu.value = false;
+	}
+
+	/**	
+	 * @description: 选择模型
+	 * @date: 2025-07-05 18:47
+	 * @author wuwenqiang
+	 */
+	const onCheckModel = (model:string|number) => {
+		console.log("model=",model)
+		activeModel.value = model.toString()
 	}
 </script>
 
