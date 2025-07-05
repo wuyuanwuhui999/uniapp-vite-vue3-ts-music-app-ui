@@ -26,15 +26,11 @@
 				<view class="chat-list">
 					<template v-for="item,index in chatList" :key="'chat'+index">
 						<view class="chat-wrapper">
-							<template v-if="item.position === PositionEnum.LEFT">
+							<template v-if="item.position === PositionEnum.LEFT && (item.thinkContent || item.responseContent)">
 								<image :src="icon_ai" class="icon-middle"/>
 								<view class="chat-text-wrapper">
 									<view class="chat-text chat-prompt">
 										<view class="icon-angle icon-angle-left"></view>
-										<view  class="think-text" v-if="!item.thinkContent && !item.responseContent">
-											<text>正在思考中</text>
-										</view>
-										<template v-else>
 											<view class="think-text" v-if="item.thinkContent">
 												<text>
 													{{ item.thinkContent.replace(/^(<think>)[\s\s\n]?|(<\/think>[\s\S\n]?)$/gi,"") }}
@@ -45,28 +41,36 @@
 											<view class="response-box">
 												<text>{{ item.responseContent }}</text>
 											</view>
-										</template>
 									</view>
 								</view>								
 							</template>
-							<template v-else>
+							<template v-else-if="item.text">
 								<view class="chat-prompt-wrapper">
 									<view class="chat-prompt">
 										<view class="icon-angle icon-angle-right"></view>
 									<text>{{ item.text }}</text>
 								</view>
 								</view>
-								
 								<AvaterComponent/>
 							</template>
 						</view>
 					</template>
-					
+					<view class="chat-wrapper" v-if="thinking">
+						<image :src="icon_ai" class="icon-middle"/>
+						<view class="chat-text-wrapper">
+							<view class="chat-text chat-prompt">
+								<view class="icon-angle icon-angle-left"></view>
+								<view  class="think-text">
+									<text>正在思考中</text>
+								</view>
+							</view>
+						</view>	
+					</view>
 				</view>
 			</scroll-view>
 		</view>
 		<view class="type-wrapper">
-			<text class="type-item" :class="{'type-item-active': think}" @click="onSwitchThink()">深度思考</text>
+			<text class="type-item" :class="{'type-item-active': showThink}" @click="onSwitchThink()">深度思考</text>
 			<text class="type-item" :class="{'type-item-active': type === 'document'}" @click="onCheckType('document')">查询文档</text>
 			<text class="type-item" :class="{'type-item-active': type === 'db'}" @click="onCheckType('db')">查询数据库</text>
 		</view>
@@ -138,7 +142,8 @@
 	const showMenu = ref<boolean>(false);
 	const showMyDoc = ref<boolean>(false);
 	const myDocList = reactive<Array<DocumentInterface>>([]);
-	const think = ref<boolean>(false);// 是否深度思考
+	const showThink = ref<boolean>(false);// 是否深度思考
+	const thinking = ref<boolean>(false);
 	const chatList = reactive<Array<ChatType>>([
 		{
 			responseContent:"你好，我是智能音乐助手小吴同学，请问有什么可以帮助您？",
@@ -192,7 +197,7 @@
 				chatId, // 替换为实际聊天ID
 				type:type.value,
 				prompt: inputValue.value.trim(),
-				files: [] // 如果需要上传文件，请根据实际情况调整
+				showThink:showThink.value
 			};
 			if(!socketTask){
 				await connectWebSocket();
@@ -203,9 +208,14 @@
 					console.log('消息发送成功');
 					inputValue.value = "";
 					isCompleted.value = false;
+					thinking.value = true;
 				},
 				fail: (err) => {
-					console.error('消息发送失败:', err);
+					uni.showToast({
+					duration: 2000,
+						position: 'center',
+						title: '发送消息失败：' + err.toString()
+					});
 				}
 			});
 		}	
@@ -337,6 +347,7 @@
 			});
 
 			socketTask.onMessage(({data}) => {
+				thinking.value = false;
 				if(data == "[completed]"){
 					return isCompleted.value = true;
 				}
@@ -353,11 +364,14 @@
 
 			socketTask.onError((err) => {
 				console.error('WebSocket 错误:', err);
+				thinking.value = false;
 			});
 
 			socketTask.onClose(() => {
+				thinking.value = false;
 				console.log('WebSocket 连接已关闭');
 			});
+			
 		})
       
     };
@@ -528,7 +542,7 @@
 	 * @author wuwenqiang
 	 */
 	const onSwitchThink = () => {
-		think.value = !think.value;
+		showThink.value = !showThink.value;
 	}
 </script>
 
@@ -666,7 +680,7 @@
 		}
 		.type-wrapper{
 			display: flex;
-			justify-content: start;
+			justify-content: flex-start;
 			background-color: @page-background-color;
 			padding: @page-padding;
 			gap: @page-padding;

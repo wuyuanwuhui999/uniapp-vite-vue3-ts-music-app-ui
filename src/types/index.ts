@@ -258,9 +258,9 @@ export interface PayloadInterface {
   modelName: string;
   token: string; // 替换为实际用户ID
   chatId:string; // 替换为实际聊天ID
-  type: string,
-  prompt: string,
-  files?: string[] // 如果需要上传文件，请根据实际情况调整
+  type: string;
+  prompt: string;
+  showThink:boolean;
 };
 
 export interface DocumentInterface {
