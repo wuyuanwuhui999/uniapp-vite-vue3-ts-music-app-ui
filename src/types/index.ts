@@ -251,10 +251,10 @@ export interface UploadResponse {
   code: number;
   message: string;
   data?: any;
+  status:string;
 }
 
 export interface PayloadInterface {
-  think:boolean;// 是否深度思考
   modelName: string;
   token: string; // 替换为实际用户ID
   chatId:string; // 替换为实际聊天ID

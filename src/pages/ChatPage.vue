@@ -102,8 +102,8 @@
 				<scroll-view class="pop-scroll-view" scroll-y :show-scrollbar="false">
 					<view class="doc-list">
 						<view class="doc-item" :key="item.id" v-for="item in myDocList">
-							<text class="doc-name">{{ item.name }}</text>
 							<text class="doc-time">{{ formatTimeAgo(item.createTime) }}</text>
+							<text class="doc-name">{{ item.name }}</text>
 						</view>
 					</view>
 				</scroll-view>
@@ -198,13 +198,12 @@
 			}
 			chatList.push(item);
 			const payload:PayloadInterface = {
-				think:true,
 				modelName: activeModel.value,
 				token: store.token, // 替换为实际用户ID
 				chatId, // 替换为实际聊天ID
 				type:type.value,
 				prompt: inputValue.value.trim(),
-				showThink:showThink.value
+				showThink:showThink.value,
 			};
 			if(!socketTask){
 				await connectWebSocket();
@@ -442,7 +441,7 @@
 				const uploadPromises = validFiles.map(file => {
 					return new Promise<void>((resolve, reject) => {
 						uni.uploadFile({
-						url: HOST + api.generateVector, // 替换为你的上传接口URL
+						url: HOST + api.uploadDoc, // 替换为你的上传接口URL
 						filePath: file.path,
 						name: 'file',
 						formData: {
@@ -451,9 +450,14 @@
 						success: (uploadRes) => {
 							try {
 							const data: UploadResponse = JSON.parse(uploadRes.data);
-							if (data.code !== 200) {
+							if (data.status !== "SUCCESS") {
 								reject(new Error(data.message || '上传失败'));
 							} else {
+								uni.showToast({
+									duration: 2000,
+									position: 'center',
+									title: '文件上传成功'
+								});
 								resolve();
 							}
 							} catch (e) {
@@ -791,7 +795,7 @@
 						flex-direction: column;
 						.doc-item{
 							display: flex;
-							flex-direction: row;
+							flex-direction: column;
 							padding-bottom: @page-padding;
 							border-bottom: 1rpx solid @disable-text-color;
 							padding-top: @page-padding;
