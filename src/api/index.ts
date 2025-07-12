@@ -46,6 +46,7 @@ export default {
   // chatWs: "/service/music/ws/chat",// ai聊天
   chatWs: "/service/ai/ws/chat",// ai聊天
   getModelList: "/service/ai/getModelList",// ai聊天
-  uploadDoc: "/service/ai/uploadDoc",// 生成向量
-  getDocList: "/service/ai/getDocList",// 查询我的文档
+  uploadDoc: "/service/music/uploadDoc",// 生成向量
+  getDocList: "/service/music/getDocList",// 查询我的文档
+  deleteDoc: "/service/music/deleteDoc/",// 查询我的文档
 };

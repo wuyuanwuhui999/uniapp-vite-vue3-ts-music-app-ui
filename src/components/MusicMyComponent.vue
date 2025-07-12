@@ -141,20 +141,7 @@
 				</view>
 			</template>
 		</DialogComponent>
-		<uni-popup ref="popup" class="popup-wrapper"  type="dialog">
-			<view class="dialog-wrapper">
-				<view class="dialog-box">
-					<view class="dialog-header"><text>提示</text></view>
-					<view class="dialog-content">
-						<text class="field-text">{{ dialogText }}</text>
-					</view>
-					<view class="dialog-btn">
-						<text class="btn-cancle" @click="useCloseDialog">取消</text>
-						<text class="btn-sure" @click="useSureDelete">确定</text>
-					</view>
-				</view>
-			</view>
-		</uni-popup>
+		<PopupComponent ref="popupComponent" :text="dialogText" @on-sure="useDeleteAuthor" @on-cancle="useCloseDialog"></PopupComponent>
 	</scroll-view>
 </template>
 
@@ -177,6 +164,7 @@
 	import icon_refresh from '../../static/icon_refresh.png';
 	import icon_music_play from '../../static/icon_music_play.png';
 	import icon_music_menu from '../../static/icon_music_menu.png'
+	import PopupComponent from "../components/PopupComponent.vue";
 
 	const store = useStore();
 	const favoriteDirectoryList = reactive<Array<FavoriteDirectoryType>>([]);
@@ -186,7 +174,7 @@
 	const isFoldMusicMenu = ref<boolean>(false);// 是否展开歌单
 	const isFoldSingerList = ref<boolean>(false);// 是否展开我关注的歌手
 	const isFoldPlayRecord = ref<boolean>(false);// 是否展开我的播放记录
-	const popup = ref<null | InstanceType<typeof uniPopup>>(null);
+	const popupComponent = ref<null | InstanceType<typeof PopupComponent>>(null);
 	const totalRecord = ref<number>(0);// 总记录条数
 	const isFoldFavoriteMusic = ref<boolean>(false);// 是否折叠我喜欢的歌曲
 	const favoriteMusicList = reactive<Array<MusicType>>([]);// 我喜欢的歌曲
@@ -317,7 +305,7 @@
 	const useDeleteFavoriteDirectory = (index:number)=>{
 		deletefavoriteDirectoryIndex.value = index;
 		dialogText.value = `是否删除收藏夹：${favoriteDirectoryList[index].name}`;
-		popup.value?.open('top');
+		popupComponent.value?.popup.open('top');
 	}
 
 	/**
@@ -328,7 +316,7 @@
 	 const useDeleteAuthor = (index:number)=>{
 		deleteFavoriteAuthorIndex.value = index;
 		dialogText.value = `是否删除歌手：${favoriteAuthorList[index].authorName}`;
-		popup.value?.open('top');
+		popupComponent.value?.popup.open('top');
 	}
 
 	/**
@@ -337,7 +325,7 @@
 	 * @author wuwenqiang
 	 */
 	const useCloseDialog = ()=>{
-		popup.value?.close()
+		popupComponent.value?.popup.close()
 		deletefavoriteDirectoryIndex.value = deleteFavoriteAuthorIndex.value = -1
 	}
 
@@ -365,7 +353,7 @@
 					position:'center',
 					title: res.data > 0 ? '删除成功' : '删除失败'
 				})
-				popup.value?.close()
+				popupComponent.value?.popup.close()
 				favoriteAuthorList.splice(deleteFavoriteAuthorIndex.value,1);
 			}).finally(()=>{
 				uni.hideLoading();
@@ -378,7 +366,7 @@
 					position:'center',
 					title: res.data > 0 ? '删除成功' : '删除失败'
 				})
-				popup.value?.close();
+				popupComponent.value?.popup.close();
 				favoriteMusicList.splice(deleteFavoriteMusicIndex.value,1);
 			}).finally(()=>{
 				uni.hideLoading();
@@ -409,7 +397,7 @@
 	 const useDeleteFavoriteMusic = (index:number)=>{
 		deleteFavoriteMusicIndex.value = index;
 		dialogText.value = `是否删除歌曲：${favoriteMusicList[index].songName}`;
-		popup.value?.open('top');
+		popupComponent.value?.popup.open('top');
 	}
 
 	/**
@@ -525,63 +513,6 @@
 			.delete-button-text{
 				color: @module-background-color;
 				padding: 0 calc(@page-padding * 2);
-			}
-		}
-		.popup-wrapper{
-			width: 100%;
-			height: 100%;
-			background-color: rgba(0,0,0,0.2);
-			top: 0;
-			left: 0;
-			.dialog-wrapper{
-				display: flex;
-				height: 100vh;
-				width: 100%;
-				align-items: center;
-				justify-content: center;
-				.dialog-box{
-					width: 80%;
-					left: 50%;
-					top: 50%;
-					border-radius: @module-border-radius;
-					background-color: @white-background-color;
-					.dialog-header{
-						padding: @page-padding;
-						display: flex;
-						align-items: center;
-						justify-content: center;
-						font-weight: bold;
-						box-sizing: border-box;
-					}
-					.dialog-content{
-						padding: calc(@page-padding * 2);
-						display: flex;
-						box-sizing: border-box;
-						justify-content: center;
-					}
-					.dialog-btn{
-						display: flex;
-						border-top: 1rpx solid @page-background-color;
-						.btn-cancle{
-							height: @btn-height;
-							flex: 1;
-							justify-content: center;
-							align-items: center;
-							display: flex;
-							color: @sub-title-color;
-						}
-						.btn-sure{
-							flex: 1;
-							color: @line-color;
-							height: @btn-height;
-							display: flex;
-							justify-content: center;
-							align-items: center;
-							font-weight: bold;
-							border-left: 1rpx solid @page-background-color;;
-						}
-					}
-				}
 			}
 		}
 		.line{

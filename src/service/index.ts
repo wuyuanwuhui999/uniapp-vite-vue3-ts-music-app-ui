@@ -375,3 +375,12 @@ export const getModelListService = ():Promise<MyAwesomeData<Array<types.ChatMode
 export const getMyDocumentService = ():Promise<MyAwesomeData<Array<types.DocumentInterface>>> => {
     return httpRequest.get<Array<types.DocumentInterface>>(api.getDocList);
 }
+
+/**
+ * @description: 删除文档
+ * @date: 2025-07-12 11:31
+ * @author wuwenqiang
+ */
+export const deleteMyDocumentService = (docId:string):Promise<MyAwesomeData<number>> => {
+  return httpRequest.delete<number>(api.deleteDoc + docId);
+}

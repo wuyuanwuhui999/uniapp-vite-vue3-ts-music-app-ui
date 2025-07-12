@@ -100,17 +100,26 @@
 		<view class="side-wrapper" v-show="showMyDoc">
 			<view class="pop-wrapper">
 				<scroll-view class="pop-scroll-view" scroll-y :show-scrollbar="false">
-					<view class="doc-list">
-						<view class="doc-item" :key="item.id" v-for="item in myDocList">
-							<text class="doc-time">{{ formatTimeAgo(item.createTime) }}</text>
-							<text class="doc-name">{{ item.name }}</text>
-						</view>
-					</view>
+					<uni-swipe-action v-if="myDocList.length !== 0">
+						<template v-for="item,index in myDocList" :key="item.id">
+							<uni-swipe-action-item >
+								<view class="doc-item" :key="item.id" v-for="item in myDocList">
+									<text class="doc-time">{{ formatTimeAgo(item.createTime) }}</text>
+									<text class="doc-name">{{ item.name }}</text>
+								</view>
+								<template v-slot:right>
+									<view class="delete-button" @click="onDeleteDoc(item,index)"><text class="delete-button-text">删除</text></view>
+								</template>
+							</uni-swipe-action-item>
+							<view class="line" v-if="index < myDocList.length -1"></view>
+						</template>
+					</uni-swipe-action>
 				</scroll-view>
 			</view>
 			<view class="side-mask" @click="onClose"></view>
 		</view>
 		<OptionsDialog ref="modelOptionsDialog" @onCheck= "onCheckModel" :options="chatModelOption"/>
+		<PopupComponent :text="dialogText" @on-sure="sureDeleteDoc" ref="popupComponent"></PopupComponent>
 	</view>
 </template>
 
@@ -127,10 +136,13 @@
 	import { formatTimeAgo, generateSecureID } from "../utils/util";
 	import { HOST, PAGE_SIZE } from '../common/constant';
 	import api from '@/api';
-	import { getChatHistoryService, getModelListService, getMyDocumentService }from "../service";
+	import { getChatHistoryService, getModelListService, getMyDocumentService,deleteMyDocumentService }from "../service";
 	import { useStore } from "../stores/useStore";
 	import OptionsDialog from '../components/OptionsDialog.vue';
-	
+	import uniSwipeAction from '@dcloudio/uni-ui/lib/uni-swipe-action/uni-swipe-action.vue';
+	import uniSwipeActionItem from '@dcloudio/uni-ui/lib/uni-swipe-action-item/uni-swipe-action-item.vue';
+	import PopupComponent from "../components/PopupComponent.vue";
+
 	// 响应式状态
 	let socketTask: UniApp.SocketTask | null = null; // WebSocket 实例
 	const isCompleted = ref<boolean>(true);
@@ -138,7 +150,9 @@
 	const pageNum = ref<number>(1);
 	const showHistory = ref<boolean>(false);
 	const total = ref<number>(0);
-	let chatId:string = ""
+	let chatId:string = "";
+	let deleteIndex:number = -1;
+	const popupComponent = ref<null | InstanceType<typeof PopupComponent>>(null);
 	const inputValue = ref<string>("");
 	const store = useStore();
 	const scrollTop = ref<number>(0);
@@ -148,6 +162,7 @@
 	const myDocList = reactive<Array<DocumentInterface>>([]);
 	const showThink = ref<boolean>(false);// 是否深度思考
 	const thinking = ref<boolean>(false);
+	const dialogText = ref<string>("");// 弹窗的内容
 	const chatList = reactive<Array<ChatType>>([
 		{
 			responseContent:"你好，我是智能音乐助手小吴同学，请问有什么可以帮助您？",
@@ -575,6 +590,41 @@
 		console.log("model=",model)
 		activeModel.value = model.toString()
 	}
+
+	/**	
+	 * @description: 删除文档
+	 * @date: 2025-07-12 13:03
+	 * @author wuwenqiang
+	 */
+	const onDeleteDoc = (item:DocumentInterface,index:number) =>{
+		deleteIndex = index;
+		dialogText.value = `是否删除文档：${item.name}`;
+		popupComponent.value?.popup.value?.open('top');
+		console.log("popupComponent.value?.popup.value?=",popupComponent.value?.popup.open("top"))
+	}
+
+	/**	
+	 * @description: 确认删除文档
+	 * @date: 2025-07-12 13:03
+	 * @author wuwenqiang
+	 */
+	const sureDeleteDoc = ()=>{
+		deleteMyDocumentService(myDocList[deleteIndex].id).then((res)=>{
+			uni.showToast({
+				duration:2000,
+				position:'center',
+				title: "删除文档成功"
+			});
+			myDocList.splice(deleteIndex,1);
+			popupComponent.value?.popup?.close();
+		}).catch(()=>{
+			uni.showToast({
+				duration:2000,
+				position:'center',
+				title: "删除文档失败"
+			});
+		});
+	}
 </script>
 
 <style lang="less" scoped>
@@ -716,10 +766,10 @@
 			padding: @page-padding;
 			gap: @page-padding;
 			.type-item{
-				padding: @small-margin;
+				padding: @small-margin @page-padding;
 				color: @sub-title-color;
 				border: 1rpx solid @disable-text-color;
-				border-radius: @btn-border-radius;
+				border-radius: @big-border-radius;
 				background-color: @module-background-color;
 				&.type-item-active{
 					border-color: @selected-color;
@@ -767,6 +817,8 @@
 				background-color: @module-background-color;
 				.pop-scroll-view{
 					height: 100vh;
+					padding: @page-padding;
+					box-sizing: border-box;
 					.history-list{
 						padding: @page-padding;
 						display: flex;
@@ -789,29 +841,39 @@
 						}
 						
 					}
-					.doc-list{
-						padding: @page-padding;
+					.delete-button{
+						display: flex;
+						height: 100%;
+						flex: 1;
+						flex-direction: row;
+						justify-content: center;
+						align-items: center;
+						background-color: @warn-color;
+						margin-left: @page-padding;
+						.delete-button-text{
+							color: @module-background-color;
+							padding: 0 calc(@page-padding * 2);
+						}
+					}
+					.doc-item{
 						display: flex;
 						flex-direction: column;
-						.doc-item{
-							display: flex;
-							flex-direction: column;
-							padding-bottom: @page-padding;
-							border-bottom: 1rpx solid @disable-text-color;
-							padding-top: @page-padding;
-							&:last-child{
-								border-bottom: none;
-							}
-							&:first-child{
-								padding-top:0;
-							}
-							.doc-name{
-								flex: 1;
-							}
-							.doc-time{
-								color: @sub-title-color;
-							}
+						padding-bottom: @page-padding;
+						border-bottom: 1rpx solid @disable-text-color;
+						padding-top: @page-padding;
+						&:last-child{
+							border-bottom: none;
 						}
+						&:first-child{
+							padding-top:0;
+						}
+						.doc-name{
+							flex: 1;
+						}
+						.doc-time{
+							color: @sub-title-color;
+						}
+						
 					}
 				}
 			}
