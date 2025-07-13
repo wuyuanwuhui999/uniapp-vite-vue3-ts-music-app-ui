@@ -270,6 +270,7 @@ export interface DocumentInterface {
   userId: string;// 用户id
   createTime: string;//创建时间
   updateTime: string// 更新时间
+  appId:string// 租户id
 };
 
 export interface OptionInterce {
