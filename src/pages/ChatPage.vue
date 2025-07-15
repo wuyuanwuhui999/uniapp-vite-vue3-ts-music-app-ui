@@ -220,9 +220,7 @@
 				prompt: inputValue.value.trim(),
 				showThink:showThink.value,
 			};
-			if(!socketTask){
-				await connectWebSocket();
-			}
+			await connectWebSocket();
 			socketTask?.send({
 				data: JSON.stringify(payload),
 				success: () => {
@@ -371,6 +369,7 @@
 				thinking.value = false;
 				if(data == "[completed]"){
 					return isCompleted.value = true;
+					closeSocket()
 				}
 				chatList[chatList.length - 1].start = true;
 				// 匹配所有形式的 `<think>` 标签（包括属性和自闭合）
@@ -544,15 +543,20 @@
 
 	// 在组件卸载前断开 WebSocket 连接
     onBeforeUnmount(() => {
-      if (socketTask) {
-        socketTask.close({
+      	socketTask?.close({
           success: () => {
             console.log('WebSocket 连接已关闭');
           }
         });
-      }
     });
 	
+	const closeSocket = ()=>{
+		socketTask?.close({
+          success: () => {
+            console.log('WebSocket 连接已关闭');
+          }
+        });
+	}
 	/**	
 	 * @description: 选择文档
 	 * @date: 2025-06-21 18:47
