@@ -261,6 +261,7 @@ export interface PayloadInterface {
   type: string;
   prompt: string;
   showThink:boolean;
+  language:string;
 };
 
 export interface DocumentInterface {

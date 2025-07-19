@@ -71,11 +71,15 @@
 				</view>
 			</scroll-view>
 		</view>
-		<view class="type-wrapper">
-			<text class="type-item" :class="{'type-item-active': showThink}" @click="onSwitchThink()">深度思考</text>
-			<text class="type-item" :class="{'type-item-active': type === 'document'}" @click="onCheckType('document')">查询文档</text>
-			<text class="type-item" :class="{'type-item-active': type === 'db'}" @click="onCheckType('db')">查询数据库</text>
-		</view>
+		<scroll-view scroll-x class="scroll-container">
+			<view class="type-wrapper">
+				<text class="type-item" :class="{'type-item-active': showThink}" @click="onSwitchThink()">深度思考</text>
+				<text class="type-item" :class="{'type-item-active': type === 'document'}" @click="onCheckType('document')">查询文档</text>
+				<text class="type-item" :class="{'type-item-active': type === 'db'}" @click="onCheckType('db')">查询数据库</text>
+				<view class="type-item type-item-language" @click="onSwitchLang()"><text>{{ language }}</text><image class="icon-small" :src="icon_switch"/></view>
+			</view>
+		</scroll-view>
+		
 		<view class="input-wrapper">
 			<image :src="icon_chat" class="icon-middle icon_send" @click="onCreateNewChat"/>
 			<input class="chat-input" placeholder="有问题，尽管问" v-model="inputValue">
@@ -130,6 +134,7 @@
 	import icon_menu from '../../static/icon_menu.png';
 	import icon_ai from '../../static/icon_ai.png';
 	import icon_chat from '../../static/icon_chat.png';
+	import icon_switch from '../../static/icon_switch.png';
 	import AvaterComponent from '../components/AvaterComponent.vue';
 	import type {OptionInterce,DocumentInterface ,ChatHistoryType, ChatType, ChatStructure, ChatModelType, GroupedByChatIdType,FileType,PayloadInterface,UploadFile,UploadResponse} from '../types';
     import { PositionEnum } from '../enum';
@@ -142,6 +147,7 @@
 	import uniSwipeAction from '@dcloudio/uni-ui/lib/uni-swipe-action/uni-swipe-action.vue';
 	import uniSwipeActionItem from '@dcloudio/uni-ui/lib/uni-swipe-action-item/uni-swipe-action-item.vue';
 	import PopupComponent from "../components/PopupComponent.vue";
+	import {LanguageEnum,LanguageMap} from '../enum/index';
 
 	// 响应式状态
 	let socketTask: UniApp.SocketTask | null = null; // WebSocket 实例
@@ -173,6 +179,7 @@
 	const chatModelOption = reactive<Array<OptionInterce>>([]);
 	const modelOptionsDialog = ref<null | InstanceType<typeof OptionsDialog>>(null);
 	const type = ref<string>("");
+	const language = ref<LanguageEnum>(LanguageEnum.zh);
 	// 支持的MIME类型映射
     const supportedMimeTypes = {
       'txt': 'text/plain',
@@ -219,6 +226,7 @@
 				type:type.value,
 				prompt: inputValue.value.trim(),
 				showThink:showThink.value,
+				language: LanguageMap[language.value],
 			};
 			await connectWebSocket();
 			socketTask?.send({
@@ -629,6 +637,10 @@
 			});
 		});
 	}
+
+	const onSwitchLang = ()=>{
+		language.value = language.value === LanguageEnum.zh ? LanguageEnum.cn : LanguageEnum.zh
+	}
 </script>
 
 <style lang="less" scoped>
@@ -763,24 +775,47 @@
 				}
 			}
 		}
-		.type-wrapper{
-			display: flex;
-			justify-content: flex-start;
-			background-color: @page-background-color;
-			padding: @page-padding;
-			gap: @page-padding;
-			.type-item{
-				padding: @small-margin @page-padding;
-				color: @sub-title-color;
-				border: 1rpx solid @disable-text-color;
-				border-radius: @big-border-radius;
-				background-color: @module-background-color;
-				&.type-item-active{
-					border-color: @selected-color;
-					color:  @selected-color;
+		.scroll-container {
+			width: 100%;
+			white-space: nowrap;
+			.type-wrapper{
+				display: flex;
+				justify-content: flex-start;
+				background-color: @page-background-color;
+				padding: @page-padding 0;
+				gap: @page-padding;
+				flex-wrap: nowrap;
+				width: auto;
+				float: left;
+				.type-item{
+					padding: @small-margin @page-padding;
+					color: @sub-title-color;
+					border: 1rpx solid @disable-text-color;
+					border-radius: @big-border-radius;
+					background-color: @module-background-color;
+					display: flex;
+					justify-content: center;
+					align-items: center;
+					white-space: nowrap;
+					flex-shrink: 0;
+					gap:@small-margin;
+					&.type-item-language{
+						color: #000;
+					}
+					&.type-item-active{
+						border-color: @selected-color;
+						color:  @selected-color;
+					}
+					&:first-child{
+						margin-left: @page-padding;
+					}
+					&:last-child{
+						margin-right: calc(@page-padding * 3);
+					}
 				}
 			}
 		}
+		
 		.input-wrapper{
 			display: flex;
 			gap:@page-padding;
