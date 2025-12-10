@@ -21,6 +21,11 @@ export type UserDataType = {
     permission?: number;
 }
 
+export interface OptionType {
+  text:string,
+  value:string | number
+}
+
 // 歌曲字段
 export type MusicType = {
 	id : number, //主键
@@ -201,7 +206,7 @@ export type ChatStructure = {
 }
 
 export type ChatModelType = {
-  id:number,
+  id:string,
   modelName:string,
   updateTime:string,
   createTime:string
@@ -255,10 +260,8 @@ export interface UploadResponse {
 }
 
 export interface PayloadInterface {
-  modelName: string;
-  token: string; // 替换为实际用户ID
+  modelId: string;
   chatId:string; // 替换为实际聊天ID
-  type: string;
   prompt: string;
   showThink:boolean;
   language:string;

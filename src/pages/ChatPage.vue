@@ -1,18 +1,14 @@
 <template>
 	<view class="page-wrapper">
 		<view class="page-header">
-			<image class="icon-back" @click="useBack" :src="icon_back"/>
-			<text class="my-favorite">当前接入模型：{{ activeModel }}</text>
+			<AvaterComponent size="small"/>
+			<text class="my-favorite" @click="onSwitchModel">当前接入模型：{{ chatModelList[activeModelIndex]?.modelName }}</text>
 			<view class="menu-wrapper">
 				<image class="icon-small icon-record" @click="onShowMenu" :src="icon_menu"/>
 				<template v-if="showMenu">
 					<view class="menu-box" >
 						<view class="menu-arrow"></view>
 						<view class="menu-list">
-							<view class="menu-item" @click="onUploadDoc">上传文档</view>
-							<view class="menu-line"></view>
-							<view class="menu-item" @click="onShowMyDoc">我的文档</view>
-							<view class="menu-line"></view>
 							<view class="menu-item" @click="onShowHistory">会话记录</view>
 							<view class="menu-line"></view>
 							<view class="menu-item" @click="onSwitchModel">切换模型</view>
@@ -40,18 +36,20 @@
 											</view>
 										
 											<!-- 正式回答黑色区块 -->
-											<view class="response-box">
-												<text>{{ item.responseContent }}</text>
-											</view>
+											 <view class="response-box">
+												<mp-html :content="marked.parse(item.responseContent)"></mp-html>
+											 </view>
+
 									</view>
-								</view>								
+								</view>		
+								<image v-if="item.type === 'system'" @click="onEditPrompt" :src="icon_edit" class="icon-small"/>
 							</template>
 							<template v-else-if="item.text">
 								<view class="chat-prompt-wrapper">
 									<view class="chat-prompt">
 										<view class="icon-angle icon-angle-right"></view>
-									<text>{{ item.text }}</text>
-								</view>
+										<text>{{ item.text }}</text>
+									</view>
 								</view>
 								<AvaterComponent/>
 							</template>
@@ -74,8 +72,6 @@
 		<scroll-view scroll-x class="scroll-container">
 			<view class="type-wrapper">
 				<text class="type-item" :class="{'type-item-active': showThink}" @click="onSwitchThink()">深度思考</text>
-				<text class="type-item" :class="{'type-item-active': type === 'document'}" @click="onCheckType('document')">查询文档</text>
-				<text class="type-item" :class="{'type-item-active': type === 'db'}" @click="onCheckType('db')">查询数据库</text>
 				<view class="type-item type-item-language" @click="onSwitchLang()"><text>{{ language }}</text><image class="icon-small" :src="icon_switch"/></view>
 			</view>
 		</scroll-view>
@@ -89,37 +85,14 @@
 			</view>
 		</view>
 		<view class="side-wrapper" v-show="showHistory">
-			<view class="pop-wrapper">
-				<scroll-view class="pop-scroll-view" scroll-y :show-scrollbar="false" @scrolltolower="onScrolltolower">
-					<view class="history-list">
-						<view class="chat-item" :key="items.timeAgo" v-for="items in chatHistoryData">
-							<text class="chat-time">{{ items.timeAgo }}</text>
-							<text class="chat-content" @click="onChat(item)" :key="'chat-content'+index" v-for="item,index in items.list">{{ item[0].prompt }}</text>
-						</view>
+			<scroll-view class="pop-scroll-view side-scroll-view" scroll-y :show-scrollbar="false" @scrolltolower="onScrolltolower">
+				<view class="history-list">
+					<view class="chat-item" :key="items.timeAgo" v-for="items in chatHistoryData">
+						<text class="chat-time">{{ items.timeAgo }}</text>
+						<text class="chat-content" @click="onChat(item)" :key="'chat-content'+index" v-for="item,index in items.list">{{ item[0].prompt }}</text>
 					</view>
-				</scroll-view>
-			</view>
-			<view class="side-mask" @click="onClose"></view>
-		</view>
-		<view class="side-wrapper" v-show="showMyDoc">
-			<view class="pop-wrapper">
-				<scroll-view class="pop-scroll-view" scroll-y :show-scrollbar="false">
-					<uni-swipe-action v-if="myDocList.length !== 0">
-						<template v-for="item,index in myDocList" :key="item.id">
-							<uni-swipe-action-item >
-								<view class="doc-item" :key="item.id" v-for="item in myDocList">
-									<text class="doc-time">{{ formatTimeAgo(item.createTime) }}</text>
-									<text class="doc-name">{{ item.name }}</text>
-								</view>
-								<template v-slot:right>
-									<view class="delete-button" @click="onDeleteDoc(item,index)"><text class="delete-button-text">删除</text></view>
-								</template>
-							</uni-swipe-action-item>
-							<view class="line" v-if="index < myDocList.length -1"></view>
-						</template>
-					</uni-swipe-action>
-				</scroll-view>
-			</view>
+				</view>
+			</scroll-view>
 			<view class="side-mask" @click="onClose"></view>
 		</view>
 		<OptionsDialog ref="modelOptionsDialog" @onCheck= "onCheckModel" :options="chatModelOption"/>
@@ -128,26 +101,41 @@
 </template>
 
 <script setup lang="ts">
-    import { reactive, ref, onBeforeUnmount } from 'vue';
-	import icon_back from '../../static/icon_back.png';
+	import { marked } from 'marked';
+	import mpHtml from "mp-html/dist/uni-app/components/mp-html/mp-html";
+	import 'highlight.js/styles/github.css';
+	import "highlight.js/styles/paraiso-light.css";
+    import { reactive, ref, onBeforeUnmount,defineAsyncComponent } from 'vue';
 	import icon_send from '../../static/icon_send.png';
 	import icon_menu from '../../static/icon_menu.png';
 	import icon_ai from '../../static/icon_ai.png';
 	import icon_chat from '../../static/icon_chat.png';
 	import icon_switch from '../../static/icon_switch.png';
+	import icon_edit from "../../static/icon_edit.png";
 	import AvaterComponent from '../components/AvaterComponent.vue';
-	import type {OptionInterce,DocumentInterface ,ChatHistoryType, ChatType, ChatStructure, ChatModelType, GroupedByChatIdType,FileType,PayloadInterface,UploadFile,UploadResponse} from '../types';
+    import type {
+      OptionType,
+      ChatHistoryType,
+      ChatType,
+      ChatStructure,
+      ChatModelType,
+      GroupedByChatIdType,
+      FileType,
+      PayloadInterface,
+    } from '../types';
     import { PositionEnum } from '../enum';
 	import { formatTimeAgo, generateSecureID } from "../utils/util";
-	import { HOST, PAGE_SIZE } from '../common/constant';
+    import {HOST, PAGE_SIZE} from '../common/constant';
 	import api from '@/api';
-	import { getChatHistoryService, getModelListService, getMyDocumentService,deleteMyDocumentService }from "../service";
+    import {
+      getChatHistoryService,
+      getModelListService,
+    } from "../service";
 	import { useStore } from "../stores/useStore";
-	import OptionsDialog from '../components/OptionsDialog.vue';
-	import uniSwipeAction from '@dcloudio/uni-ui/lib/uni-swipe-action/uni-swipe-action.vue';
-	import uniSwipeActionItem from '@dcloudio/uni-ui/lib/uni-swipe-action-item/uni-swipe-action-item.vue';
 	import PopupComponent from "../components/PopupComponent.vue";
 	import {LanguageEnum,LanguageMap} from '../enum/index';
+
+	const OptionsDialog = defineAsyncComponent(()=>import('../components/OptionsDialog.vue'))
 
 	// 响应式状态
 	let socketTask: UniApp.SocketTask | null = null; // WebSocket 实例
@@ -157,37 +145,39 @@
 	const showHistory = ref<boolean>(false);
 	const total = ref<number>(0);
 	let chatId:string = "";
-	let deleteIndex:number = -1;
-	const popupComponent = ref<null | InstanceType<typeof PopupComponent>>(null);
 	const inputValue = ref<string>("");
 	const store = useStore();
 	const scrollTop = ref<number>(0);
-	const activeModel = ref<string>("");
+	const activeModelIndex = ref<number>(0);
 	const showMenu = ref<boolean>(false);
-	const showMyDoc = ref<boolean>(false);
-	const myDocList = reactive<Array<DocumentInterface>>([]);
 	const showThink = ref<boolean>(false);// 是否深度思考
 	const thinking = ref<boolean>(false);
 	const dialogText = ref<string>("");// 弹窗的内容
 	const chatList = reactive<Array<ChatType>>([
 		{
-			responseContent:"你好，我是智能音乐助手小吴同学，请问有什么可以帮助您？",
-			position: PositionEnum.LEFT
+			responseContent:"你好，我是智能助手小吴同学，请问有什么可以帮助您？",
+			position: PositionEnum.LEFT,
 		}
 	]);
 	const chatModelList = reactive<Array<ChatModelType>>([]);
-	const chatModelOption = reactive<Array<OptionInterce>>([]);
+	const chatModelOption = reactive<Array<OptionType>>([]);
 	const modelOptionsDialog = ref<null | InstanceType<typeof OptionsDialog>>(null);
 	const type = ref<string>("");
 	const language = ref<LanguageEnum>(LanguageEnum.zh);
+	const directoryId = ref<string>("default");
+	const mDirectoryId = ref<string>("default");// 待确定选择的文件夹
+	const showDirDialog = ref<boolean>(false);// 实现上传文档的目录
+	const showCreateDialog = ref<boolean>(false);// 创建文件夹弹窗
+	const directoryName = ref<string>("");// 文件夹名称
+	const showCheckDocument = ref<boolean>(false);
+
 	// 支持的MIME类型映射
     const supportedMimeTypes = {
       'txt': 'text/plain',
       'pdf': 'application/pdf'
     }
-	// 支持的扩展名
+
 	
-    const supportedExtensions = Object.keys(supportedMimeTypes) as FileType[]
     /**
 	 * @author: wuwenqiang
 	 * @description: 获取模型列表
@@ -195,8 +185,8 @@
 	 */
 	getModelListService().then((res)=>{
 		chatModelList.push(...res.data);
-		res.data.forEach((item)=>chatModelOption.push({value:item.modelName,text:item.modelName}));
-		activeModel.value = res.data[0].modelName;
+		res.data.forEach((item,index)=>chatModelOption.push({value:index,text:item.modelName}));
+    	activeModelIndex.value = 0;
 	});
 
     /**
@@ -220,14 +210,13 @@
 			}
 			chatList.push(item);
 			const payload:PayloadInterface = {
-				modelName: activeModel.value,
-				token: store.token, // 替换为实际用户ID
+				modelId: chatModelList[activeModelIndex.value].id,
 				chatId, // 替换为实际聊天ID
-				type:type.value,
 				prompt: inputValue.value.trim(),
 				showThink:showThink.value,
 				language: LanguageMap[language.value],
 			};
+			console.log(payload)
 			await connectWebSocket();
 			socketTask?.send({
 				data: JSON.stringify(payload),
@@ -239,7 +228,7 @@
 				},
 				fail: (err) => {
 					uni.showToast({
-					duration: 2000,
+						duration: 2000,
 						position: 'center',
 						title: '发送消息失败：' + err.toString()
 					});
@@ -358,10 +347,9 @@
 	const connectWebSocket = () => {
 		return new Promise((resolve,reject)=>{
 			socketTask = uni.connectSocket({
-				url: `${HOST.replace(/http[s]?/,'ws')}${api.chatWs}`,
+				url: `${HOST.replace(/http[s]?/,'ws')}${api.chatWs}?token=${encodeURIComponent(store.token)}`,
 				success: (res) => {
-					console.error('WebSocket 连接成功:', res);
-					
+					console.log('WebSocket 连接成功:', res);
 				},
 				fail: (err) => {
 				console.error('WebSocket 连接失败:', err);
@@ -382,7 +370,7 @@
 				chatList[chatList.length - 1].start = true;
 				// 匹配所有形式的 `<think>` 标签（包括属性和自闭合）
 				const regex = /<think>([\s\S]*?)<\/think>/gi
-				if(regex.test(chatList[chatList.length - 1].thinkContent || "")){
+				if(!showThink.value || regex.test(chatList[chatList.length - 1].thinkContent || "")){
 					chatList[chatList.length - 1].responseContent += data;
 				}else{
 					chatList[chatList.length - 1].thinkContent += data;
@@ -418,132 +406,6 @@
 		});
 	}
 
-	/**	
-	 * @description: 上传文档
-	 * @date: 2025-06-21 12:58
-	 * @author wuwenqiang
-	 */	
-    const onUploadDoc = () => {
-		uni.chooseFile({
-			count: 9,
-			type: 'file',
-			extension: supportedExtensions,
-			success: async (res: { tempFiles: UploadFile[] }) => {
-			// 过滤出符合类型的文件
-			const validFiles = res.tempFiles.filter(file => {
-				const ext = file.name.split('.').pop()?.toLowerCase() as FileType | undefined;
-				return ext && supportedExtensions.includes(ext);
-			});
-
-			if (validFiles.length === 0) {
-				uni.showToast({
-				icon: 'none',
-				title: '未选择有效的txt或pdf文件',
-				duration: 2000
-				});
-				return;
-			}
-
-			// 显示加载中
-			uni.showLoading({
-				title: '上传中...',
-				mask: true
-			});
-
-			try {
-				uni.addInterceptor('uploadFile', {
-					invoke(options) {
-						options.header = {
-							...options.header,
-							'Authorization': `Bearer ${store.token}`
-						};
-					}
-				});
-				// 使用Promise.all并行上传所有文件
-				const uploadPromises = validFiles.map(file => {
-					return new Promise<void>((resolve, reject) => {
-						uni.uploadFile({
-						url: HOST + api.uploadDoc, // 替换为你的上传接口URL
-						filePath: file.path,
-						name: 'file',
-						formData: {
-							filename: file.name
-						},
-						success: (uploadRes) => {
-							try {
-							const data: UploadResponse = JSON.parse(uploadRes.data);
-							if (data.status !== "SUCCESS") {
-								reject(new Error(data.message || '上传失败'));
-							} else {
-								uni.showToast({
-									duration: 2000,
-									position: 'center',
-									title: '文件上传成功'
-								});
-								resolve();
-							}
-							} catch (e) {
-								reject(new Error('解析响应数据失败'));
-							}
-						},
-						fail: (err) => {
-							reject(new Error(err.errMsg || '上传请求失败'));
-						}
-						});
-					});
-				});
-
-				// 等待所有文件上传完成
-				await Promise.all(uploadPromises);
-				
-				// 上传成功提示
-				uni.showToast({
-					title: `成功上传${validFiles.length}个文件`,
-					icon: 'success',
-					duration: 2000
-				});
-			} catch (error) {
-				uni.showToast({
-					title: error instanceof Error ? error.message : '上传过程中出错',
-					icon: 'none',
-					duration: 2000
-				});
-			} finally {
-				showMenu.value = false;
-				uni.hideLoading();
-			}
-			},
-			fail: (err) => {
-				uni.showToast({
-					duration: 2000,
-					position: 'center',
-					title: "上传文档失败",
-					icon: 'none'
-				});
-			}
-		});
-	};
-
-	/**	
-	 * @description: 展示我的文档
-	 * @date: 2025-06-21 12:58
-	 * @author wuwenqiang
-	 */
-	const onShowMyDoc = () => {
-		uni.showLoading();
-		getMyDocumentService().then((res)=>{
-			showMyDoc.value = true;
-			showMenu.value = false;
-			myDocList.length = 0;
-			myDocList.push(...res.data);
-		}).finally(()=>{
-			uni.hideLoading();
-		})
-	}
-
-	const onClose = ()=>{
-		showMyDoc.value = showHistory.value = false;
-	}
 
 	const onScroll = (event : Event)=>{
 		scrollTop.value = event.detail.scrollTop
@@ -598,48 +460,12 @@
 	 * @date: 2025-07-05 18:47
 	 * @author wuwenqiang
 	 */
-	const onCheckModel = (model:string|number) => {
-		console.log("model=",model)
-		activeModel.value = model.toString()
-	}
-
-	/**	
-	 * @description: 删除文档
-	 * @date: 2025-07-12 13:03
-	 * @author wuwenqiang
-	 */
-	const onDeleteDoc = (item:DocumentInterface,index:number) =>{
-		deleteIndex = index;
-		dialogText.value = `是否删除文档：${item.name}`;
-		popupComponent.value?.popup.value?.open('top');
-		console.log("popupComponent.value?.popup.value?=",popupComponent.value?.popup.open("top"))
-	}
-
-	/**	
-	 * @description: 确认删除文档
-	 * @date: 2025-07-12 13:03
-	 * @author wuwenqiang
-	 */
-	const sureDeleteDoc = ()=>{
-		deleteMyDocumentService(myDocList[deleteIndex].id).then((res)=>{
-			uni.showToast({
-				duration:2000,
-				position:'center',
-				title: "删除文档成功"
-			});
-			myDocList.splice(deleteIndex,1);
-			popupComponent.value?.popup?.close();
-		}).catch(()=>{
-			uni.showToast({
-				duration:2000,
-				position:'center',
-				title: "删除文档失败"
-			});
-		});
+	const onCheckModel = (index:number) => {
+    	activeModelIndex.value = index
 	}
 
 	const onSwitchLang = ()=>{
-		language.value = language.value === LanguageEnum.zh ? LanguageEnum.cn : LanguageEnum.zh
+		language.value = language.value === LanguageEnum.zh ? LanguageEnum.en : LanguageEnum.zh
 	}
 </script>
 
@@ -799,6 +625,9 @@
 					white-space: nowrap;
 					flex-shrink: 0;
 					gap:@small-margin;
+					&.type-item-doc{
+						display: flex;
+					}
 					&.type-item-language{
 						color: #000;
 					}
@@ -846,80 +675,40 @@
 				}
 			}
 		}
-		.side-wrapper{
+		.pop-scroll-view{
+			background-color: @module-background-color;
+			&.side-scroll-view{
+				width: 80%;
+			}
 			height: 100vh;
-			width: 100vw;
-			position: absolute;
-			display: flex;
-			.pop-wrapper{
-				width: 70%;
-				background-color: @module-background-color;
-				.pop-scroll-view{
-					height: 100vh;
-					padding: @page-padding;
-					box-sizing: border-box;
-					.history-list{
-						padding: @page-padding;
-						display: flex;
-						flex-direction: column;
-						gap: calc(@page-padding * 2);
-						.chat-item{
-							display: flex;
-							flex-direction: column;
-							gap:  @page-padding;
-							.chat-time{
-								color: @sub-title-color;
-							}
-							.chat-content{
-								display: block;
-								width: 100%;
-								overflow: hidden;
-								text-overflow: ellipsis;
-								white-space: nowrap;
-							}
-						}
-						
+			padding: @page-padding;
+			box-sizing: border-box;
+			.line{
+				height: 1rpx;
+				background-color: @disable-text-color;
+				margin-bottom: @page-padding;
+			}
+			.history-list{
+				padding: @page-padding;
+				display: flex;
+				flex-direction: column;
+				gap: calc(@page-padding * 2);
+				.chat-item{
+					display: flex;
+					flex-direction: column;
+					gap:  @page-padding;
+					.chat-time{
+						color: @sub-title-color;
 					}
-					.delete-button{
-						display: flex;
-						height: 100%;
-						flex: 1;
-						flex-direction: row;
-						justify-content: center;
-						align-items: center;
-						background-color: @warn-color;
-						margin-left: @page-padding;
-						.delete-button-text{
-							color: @module-background-color;
-							padding: 0 calc(@page-padding * 2);
-						}
-					}
-					.doc-item{
-						display: flex;
-						flex-direction: column;
-						padding-bottom: @page-padding;
-						border-bottom: 1rpx solid @disable-text-color;
-						padding-top: @page-padding;
-						&:last-child{
-							border-bottom: none;
-						}
-						&:first-child{
-							padding-top:0;
-						}
-						.doc-name{
-							flex: 1;
-						}
-						.doc-time{
-							color: @sub-title-color;
-						}
-						
+					.chat-content{
+						display: block;
+						width: 100%;
+						overflow: hidden;
+						text-overflow: ellipsis;
+						white-space: nowrap;
 					}
 				}
-			}
-			.side-mask{
-				flex: 1;
-				background-color: @black-background-color;
-				opacity: 0.5;
+				
 			}
 		}
 	}

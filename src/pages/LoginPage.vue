@@ -122,9 +122,10 @@
 				loginService(userAccount.value,password.value).then((res)=>{
 					uni.setStorage({key:userAccount.value,data:password.value});// 登录成功后保存账号和密码到缓存中
 					store.setUserData(res.data);// 将用户信息保存到全局状态管理器中
-					store.setToken(res.token);// 将token保存到状态管理中 
-					uni.setStorage({key:'token',data:res.token});// 将token保存到缓存中,以便下次进入时自动登录
-					httpRequest.setToken(res.token);// 设置请求头token值
+					const token = `Bearer ${res.token}`;
+					store.setToken(token);// 将token保存到状态管理中 
+					uni.setStorage({key:'token',data:token});// 将token保存到缓存中,以便下次进入时自动登录
+					httpRequest.setToken(token);// 设置请求头token值
 					uni.reLaunch({// 重定向到首页
 						url: `../pages/MusicIndexPage`
 					})
