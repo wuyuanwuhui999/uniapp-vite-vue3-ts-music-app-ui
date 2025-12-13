@@ -9,6 +9,7 @@
 	import defaulAvater from '../../static/default_avater.png';
 	const store = useStore();
 	const sizeMap = {
+		small:'user-avater-small',
 		middle:'user-avater-middle',
 		big:'user-avater-big'
 	}
@@ -40,6 +41,10 @@
 		&.user-avater-big{
 		    width: @big-avater;
 		    height: @big-avater;
+		}
+		&.user-avater-small{
+			width: @small-avater;
+			height: @small-avater;
 		}
 	}
 </style>

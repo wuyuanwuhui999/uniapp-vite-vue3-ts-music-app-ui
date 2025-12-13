@@ -96,7 +96,6 @@
 			<view class="side-mask" @click="onClose"></view>
 		</view>
 		<OptionsDialog ref="modelOptionsDialog" @onCheck= "onCheckModel" :options="chatModelOption"/>
-		<PopupComponent :text="dialogText" @on-sure="sureDeleteDoc" ref="popupComponent"></PopupComponent>
 	</view>
 </template>
 
