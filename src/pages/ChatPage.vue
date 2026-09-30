@@ -124,7 +124,7 @@
     } from '../types';
     import { PositionEnum } from '../enum';
 	import { formatTimeAgo, generateSecureID } from "../utils/util";
-    import {HOST, PAGE_SIZE} from '../common/constant';
+    import {HOST, PAGE_SIZE, COMPANY_ID} from '../common/constant';
 	import api from '@/api';
     import {
       getChatHistoryService,
@@ -182,7 +182,7 @@
 	 * @description: 获取模型列表
 	 * @date: 2025-06-02 21:45
 	 */
-	getModelListService().then((res)=>{
+	getModelListService(COMPANY_ID).then((res)=>{
 		chatModelList.push(...res.data);
 		res.data.forEach((item,index)=>chatModelOption.push({value:index,text:item.modelName}));
     	activeModelIndex.value = 0;

@@ -360,9 +360,10 @@ export const getChatHistoryService = (pageNum:number,pageSize:number):Promise<My
 
 /**
  * @description: 获取模型列表
+ * @param {string} companyId 公司id，用于区分不同公司接入的模型
  * @date: 2025-05-16 00:19
  * @author wuwenqiang
  */
-export const getModelListService = ():Promise<MyAwesomeData<Array<types.ChatModelType>>> => {
-  return httpRequest.get<Array<types.ChatModelType>>(api.getModelList)
+export const getModelListService = (companyId:string):Promise<MyAwesomeData<Array<types.ChatModelType>>> => {
+  return httpRequest.get<Array<types.ChatModelType>>(`${api.getModelList}?companyId=${companyId}`)
 }
