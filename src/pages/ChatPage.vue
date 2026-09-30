@@ -346,7 +346,8 @@
 	const connectWebSocket = () => {
 		return new Promise((resolve,reject)=>{
 			socketTask = uni.connectSocket({
-				url: `${HOST.replace(/http[s]?/,'ws')}${api.chatWs}?token=${encodeURIComponent(store.token)}`,
+				// token 参数带上 Bearer 前缀（与 http 请求头 Authorization 的格式保持一致）
+				url: `${HOST.replace(/http[s]?/,'ws')}${api.chatWs}?token=${encodeURIComponent('Bearer ' + store.token)}`,
 				success: (res) => {
 					console.log('WebSocket 连接成功:', res);
 				},
