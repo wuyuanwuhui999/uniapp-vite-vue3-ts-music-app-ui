@@ -309,6 +309,15 @@
 	}
 
 	/**
+	 * @description: 关闭会话记录抽屉（点击遮罩时触发）
+	 * @date: 2026-09-30 21:10
+	 * @author wuwenqiang
+	 */
+	const onClose = () =>{
+		showHistory.value = false;
+	}
+
+	/**
 	 * @description: 滚动加载历史记录
 	 * @date: 2024-05-18 12:29
 	 * @author wuwenqiang
@@ -673,6 +682,30 @@
 					border-radius: @btn-border-radius;
 					background-color: @sub-title-color;
 				}
+			}
+		}
+		.side-wrapper{
+			// 历史记录抽屉：固定定位铺满屏幕，叠在页面之上，不参与文档流（避免把输入框顶走）
+			position: fixed;
+			left: 0;
+			top: 0;
+			width: 100%;
+			height: 100%;
+			z-index: 2;
+			.side-mask{
+				// 遮罩层铺满屏幕，点击可关闭抽屉
+				position: absolute;
+				left: 0;
+				top: 0;
+				width: 100%;
+				height: 100%;
+				background: @black-background-color;
+				opacity: 0.5;
+			}
+			.pop-scroll-view{
+				// 历史记录面板叠在遮罩之上
+				position: relative;
+				z-index: 1;
 			}
 		}
 		.pop-scroll-view{
