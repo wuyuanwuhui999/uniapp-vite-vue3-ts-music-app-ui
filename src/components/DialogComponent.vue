@@ -55,8 +55,8 @@
         width: 100%;
         z-index: 1;
         bottom: 0;
-        border-top-right-radius: @module-border-radius;
-        border-top-left-radius: @module-border-radius;
+        border-top-right-radius: @md-border-radius;
+        border-top-left-radius: @md-border-radius;
         display: flex;
         flex-direction: column;
         
@@ -66,11 +66,11 @@
             border-bottom: 1rpx solid @page-background-color;
             .icon-close{
                 position: absolute;
-                right: @page-padding;
+                right: @md-padding;
                 top: 50%;
                 transform: translateY(-50%);
-                width: @small-icon-size;
-                height: @small-icon-size;
+                width: @sm-icon-size;
+                height: @sm-icon-size;
                 opacity: 0.5;
             }
         }

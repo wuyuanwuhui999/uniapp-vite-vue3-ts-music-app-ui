@@ -128,7 +128,7 @@
 		flex: 1;
 		display: flex;
 		flex-direction: column;
-		padding: @page-padding;
+		padding: @md-padding;
 
 		.favorite-add {
 			display: flex;
@@ -137,8 +137,8 @@
 		}
 
 		.rectangle {
-			width: calc(@middle-icon-size * 2);
-			height: calc(@middle-icon-size * 2);
+			width: calc(@md-icon-size * 2);
+			height: calc(@md-icon-size * 2);
 			display: flex;
 			justify-content: center;
 			align-items: center;
@@ -146,15 +146,15 @@
 			border-radius: @btn-border-radius;
 
 			.icon-favorite-add {
-				width: @middle-icon-size;
-				height: @middle-icon-size;
+				width: @md-icon-size;
+				height: @md-icon-size;
 			}
 		}
 
 		.favorite-btn-row {
 			.favorite-btn {
 				width: 100%;
-				margin-top: @page-padding;
+				margin-top: @md-padding;
 				border-radius: @big-border-radius;
 
 				&.favorite-create {
@@ -178,10 +178,10 @@
 		.favorite-directory {
 			flex: 1;
 			height: 0;
-			margin-top: @page-padding;
+			margin-top: @md-padding;
 
 			.checkbox-item {
-				margin-bottom: @page-padding;
+				margin-bottom: @md-padding;
 				display: flex;
 				align-items: center;
 
@@ -192,7 +192,7 @@
 				.checkbox-name {
 					display: flex;
 					flex: 1;
-					margin-left: @page-padding;
+					margin-left: @md-padding;
 					flex-direction: column;
 
 					.favorite-total {
@@ -206,9 +206,9 @@
 			border: none;
 			display: block;
 			width: 100%;
-			margin-top: @page-padding;
+			margin-top: @md-padding;
 			background-color: @warn-color;
-			color: @module-background-color;
+			color: @white-color;
 			border-radius: @big-border-radius;
 		}
 	}

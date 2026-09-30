@@ -445,7 +445,7 @@
 		.user-wrapper{
 			align-items: center;
 			.use-info{
-				margin-left: @page-padding;
+				margin-left: @md-padding;
 				display: flex;
 				flex-direction: column;
 				flex: 1;
@@ -453,21 +453,21 @@
 					font-weight: bold;
 				}
 				.sign{
-					color: @disable-text-color;
+					color: @gray-color;
 				}
 			}
 		}
 		
 		.icon-add{
-			font-size: @middle-icon-size;
-			color: @disable-text-color;
-			line-height: calc(@middle-icon-size / 1.5);
+			font-size: @md-icon-size;
+			color: @gray-color;
+			line-height: calc(@md-icon-size / 1.5);
 		}
 		.singer-list{
 			display: flex;
-			margin-top: @page-padding;
+			margin-top: @md-padding;
 			align-items: center;
-			gap:@page-padding;
+			gap:@md-padding;
 			.music-cover{
 				background-color: @page-background-color;
 				border-radius: 50%;
@@ -481,12 +481,12 @@
 				flex-direction: column;
 				flex: 1;
 				.total{
-					color: @disable-text-color;
+					color: @gray-color;
 				}
 			}
 			.icon-operate{
-				width: @small-icon-size;
-				height: @small-icon-size;
+				width: @sm-icon-size;
+				height: @sm-icon-size;
 			}
 		}
 		.dialog-header{
@@ -496,7 +496,7 @@
 			align-items: center;
 		}
 		.favorite-wrapper{
-			padding: @page-padding;
+			padding: @md-padding;
 		}
 		.icon-small{
 			opacity: 0.2;
@@ -509,23 +509,23 @@
 			justify-content: center;
 			align-items: center;
 			background-color: @warn-color;
-			margin-left: @page-padding;
+			margin-left: @md-padding;
 			.delete-button-text{
-				color: @module-background-color;
-				padding: 0 calc(@page-padding * 2);
+				color: @white-color;
+				padding: 0 calc(@md-padding * 2);
 			}
 		}
 		.line{
 			height: 1rpx;
-			margin-top: @page-padding;;
+			margin-top: @md-padding;;
 			background-color: @page-background-color;
 		}
 		.operate-wrappper{
 			display: flex;
-			gap:@page-padding;
+			gap:@md-padding;
 			align-items: center;
 			.more{
-				color:@disable-text-color;
+				color:@gray-color;
 				text-decoration: underline;
 			}
 		}

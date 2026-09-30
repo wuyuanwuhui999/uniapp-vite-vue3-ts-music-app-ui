@@ -122,7 +122,7 @@
 				loginService(userAccount.value,password.value).then((res)=>{
 					uni.setStorage({key:userAccount.value,data:password.value});// 登录成功后保存账号和密码到缓存中
 					store.setUserData(res.data);// 将用户信息保存到全局状态管理器中
-					const token = `Bearer ${res.token}`;
+					const token = res.token;
 					store.setToken(token);// 将token保存到状态管理中 
 					uni.setStorage({key:'token',data:token});// 将token保存到缓存中,以便下次进入时自动登录
 					httpRequest.setToken(token);// 设置请求头token值
@@ -239,11 +239,11 @@
 		display: flex;
 		flex-direction: column;
 		box-sizing: border-box;
-		padding: 0 @page-padding @page-padding;
+		padding: 0 @md-padding @md-padding;
 		background-color: @page-background-color;
 		.tab-container{
 				display: flex;
-				gap: @page-padding;
+				gap: @md-padding;
 				width: 100%;
 				.tab-item{
 					padding-bottom: @small-margin;
@@ -261,50 +261,50 @@
 			.icon-logo{
 				width: @big-avater;
 				height: @big-avater;
-				margin: @middle-icon-size 0;
+				margin: @md-icon-size 0;
 			}
 			.login-input-wrapper{
-				margin-top: @page-padding;
+				margin-top: @md-padding;
 				display: flex;
 				align-items: center;
 				width: 100%;
-				border: 1rpx solid @disable-text-color;
-				padding: @page-padding;
+				border: 1rpx solid @gray-color;
+				padding: @md-padding;
 				box-sizing: border-box;
 				border-radius: @big-border-radius;
 				.icon-login{
-					width: @small-icon-size;
-					height: @middle-icon-size;
+					width: @sm-icon-size;
+					height: @md-icon-size;
 					&.icon-send{
-						margin-right: @page-padding;
+						margin-right: @md-padding;
 					}
 				}
 				.login-input{
 					flex: 1;
-					margin-left: @page-padding;
+					margin-left: @md-padding;
 				}
 			}
 
 			.login-btn{
 				text-align: center;
 				width: 100%;
-				padding: @page-padding;
+				padding: @md-padding;
 				box-sizing: border-box;
 				border-radius: @big-border-radius;
-				margin-top:  @page-padding;
+				margin-top:  @md-padding;
 				background-color: @warn-color;
-				color: @module-background-color;
+				color: @white-color;
 				display: inline-block;
 			}
 
 			.register-btn{
 				text-align: center;
 				width: 100%;
-				border: 1rpx solid @disable-text-color;
-				padding: @page-padding;
+				border: 1rpx solid @gray-color;
+				padding: @md-padding;
 				box-sizing: border-box;
 				border-radius: @big-border-radius;
-				margin-top:  @page-padding;
+				margin-top:  @md-padding;
 				display: inline-block;
 				background-color: transparent;
 			}

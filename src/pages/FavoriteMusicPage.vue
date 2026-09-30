@@ -164,13 +164,13 @@
 		.page-body {
 			flex: 1;
 			overflow: hidden;
-			padding:0 @page-padding;
+			padding:0 @md-padding;
 			box-sizing: border-box;
 			.singer-list{
 				display: flex;
-				margin-top: @page-padding;
+				margin-top: @md-padding;
 				align-items: center;
-				gap:@page-padding;
+				gap:@md-padding;
 				.music-cover{
 					background-color: @page-background-color;
 					border-radius: 50%;
@@ -184,19 +184,19 @@
 					flex-direction: column;
 					flex: 1;
 					.total{
-						color: @disable-text-color;
+						color: @gray-color;
 					}
 				}
 
 			}
 			.line{
 				height: 1rpx;
-				margin-top: @page-padding;;
+				margin-top: @md-padding;;
 				background-color: @page-background-color;
 			}
             .footer {
 				width: 100%;
-				padding: @page-padding;
+				padding: @md-padding;
 				text-align: center;
 				display: inline-block;
 			}

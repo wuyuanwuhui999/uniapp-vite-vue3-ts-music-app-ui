@@ -404,8 +404,8 @@
 		position: relative;
 		.icon-back{
 			position: absolute;
-			left: @page-padding;
-			top: calc(@page-padding * 2);
+			left: @md-padding;
+			top: calc(@md-padding * 2);
 			opacity: 0.5;
 			z-index: 2;
 		}
@@ -432,7 +432,7 @@
 				font-size: @font-size-big;
 				font-weight: bolder;
 				color: #fff;
-				margin-top: @page-padding;
+				margin-top: @md-padding;
 			}
 
 			.circle-wrapper {
@@ -465,7 +465,7 @@
 				width: 100%;
 				display: flex;
 				flex-direction: column;
-				padding-top: @page-padding;
+				padding-top: @md-padding;
 				color: @white-background-color;
 				font-weight: bold;
 				height: 0;
@@ -496,7 +496,7 @@
 				.lyrice-text {
 					text-align: center;
 					opacity: 0.5;
-					padding-bottom: @page-padding;
+					padding-bottom: @md-padding;
 
 					&.lyrice-text-active {
 						opacity: 1;
@@ -513,18 +513,18 @@
 				width: 80%;
 				display: flex;
 				justify-content: space-between;
-				padding-top: @page-padding;
+				padding-top: @md-padding;
 
 				.icon-middle {
-					width: @middle-icon-size;
-					height: @middle-icon-size;
+					width: @md-icon-size;
+					height: @md-icon-size;
 				}
 			}
 
 			.play-progress-wrapper {
 				width: 100%;
-				padding: @page-padding;
-				margin-top: @page-padding;
+				padding: @md-padding;
+				margin-top: @md-padding;
 				box-sizing: border-box;
 				display: flex;
 
@@ -535,7 +535,7 @@
 
 				.slider-bar {
 					flex: 1;
-					margin: 0 @page-padding;
+					margin: 0 @md-padding;
 				}
 			}
 
@@ -543,14 +543,14 @@
 				display: flex;
 				width: 90%;
 				justify-content: space-around;
-				margin-bottom: @page-padding ;
+				margin-bottom: @md-padding ;
 				align-items: center;
 
 				.play-menu-item,
 				.icon-loop {
 					position: relative;
-					width: @middle-icon-size;
-					height: @middle-icon-size;
+					width: @md-icon-size;
+					height: @md-icon-size;
 
 					.loop-menu {
 						position: absolute;
@@ -562,17 +562,17 @@
 						flex-direction: column;
 						background: @black-background-color;
 						opacity: 0.8;
-						border-radius: @module-border-radius;
+						border-radius: @md-border-radius;
 						z-index: 2;
 
 						.loop-item {
 							flex: 1;
 							display: flex;
 							align-items: center;
-							padding-left: @page-padding;
+							padding-left: @md-padding;
 
 							.loop-name {
-								padding-left: @page-padding;
+								padding-left: @md-padding;
 								color: @white-background-color;
 							}
 						}

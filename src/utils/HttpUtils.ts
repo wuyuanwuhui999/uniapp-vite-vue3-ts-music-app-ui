@@ -69,7 +69,8 @@ class HttpRequest {
 	* ```
     */
     public setToken(token:string){
-        this.token = token;
+        // 统一存原始 JWT：去掉可能误传的 "Bearer " 前缀，避免请求头出现 "Bearer Bearer ..."
+        this.token = (token || '').replace(/^Bearer\s+/i, '');
     }
 
 	public getToken():string{
@@ -115,7 +116,7 @@ class HttpRequest {
 			// 默认header
 			const header = {
                 "content-type": "application/json",
-                "Authorization": this.token
+                "Authorization": this.token ? `Bearer ${this.token}` : this.token
 			}
 			uni.request({
 				method: requestConfig.method,

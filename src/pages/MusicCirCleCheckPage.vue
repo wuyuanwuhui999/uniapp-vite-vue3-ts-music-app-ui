@@ -97,7 +97,7 @@
 		.page-body{
 			flex: 1;
 			height: 0;
-			padding: 0 @page-padding @page-padding;
+			padding: 0 @md-padding @md-padding;
 			display: flex;
 			flex-direction: column;
 			.module-block{
@@ -107,7 +107,7 @@
 					display: flex;
 					align-items: center;
 					height: @input-height;
-					padding: 0 @page-padding;
+					padding: 0 @md-padding;
 					box-sizing: border-box;
 					background-color: @page-background-color;
 					border-radius: @big-border-radius;
@@ -126,15 +126,15 @@
 						.music-list{
 							display: flex;
 							flex-direction: column;
-							gap: @page-padding;
+							gap: @md-padding;
 							.music-item{
 								display: flex;
-								gap: @page-padding;
+								gap: @md-padding;
 								align-items: center;
 							}
 							.line{
 								height: 1rpx;
-								background-color: @disable-text-color;
+								background-color: @gray-color;
 							}
 						}
 						

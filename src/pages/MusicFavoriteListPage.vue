@@ -71,19 +71,19 @@
 		.page-body {
 			flex: 1;
 			overflow: hidden;
-			padding:0 @page-padding @page-padding;
+			padding:0 @md-padding @md-padding;
 			box-sizing: border-box;
 			.module-block{
 				align-items: center;
-				gap:  @page-padding;
+				gap:  @md-padding;
 
 				.favorite-name-wrapper{
 					display: flex;
 					flex-direction: column;
-					gap: @page-padding;
+					gap: @md-padding;
 					flex: 1;
 					.favorite-total{
-						color:@disable-text-color;
+						color:@gray-color;
 					}
 				}
 			}
@@ -91,10 +91,10 @@
 			.music-row{
 				width: 100%;
 				display: flex;
-				gap: @page-padding;
+				gap: @md-padding;
 				align-items: center;
-				padding-bottom: @page-padding;
-				border-bottom: 1rpx solid @disable-text-color;
+				padding-bottom: @md-padding;
+				border-bottom: 1rpx solid @gray-color;
 				&:last-child{
 					border-bottom:none;
 					padding-bottom:0;

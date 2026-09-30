@@ -86,29 +86,29 @@
 		display: flex;
 		flex-direction: column;
 		align-items: center;
-		gap:  @page-padding;
+		gap:  @md-padding;
 		.favorite-cover{
 			width: @big-avater;
 			height: @big-avater;
-			border-radius: @module-border-radius;
+			border-radius: @md-border-radius;
 		}
 
 		.favorite-name-wrapper{
 			display: flex;
 			flex-direction: column;
-			gap: @page-padding;
+			gap: @md-padding;
 			flex: 1;
 			.favorite-total{
-				color:@disable-text-color;
+				color:@gray-color;
 			}
 		}
 		.music-row{
 			width: 100%;
 			display: flex;
-			gap: @page-padding;
+			gap: @md-padding;
 			align-items: center;
-			padding-bottom: @page-padding;
-			border-bottom: 1rpx solid @disable-text-color;
+			padding-bottom: @md-padding;
+			border-bottom: 1rpx solid @gray-color;
 			&:last-child{
 				border-bottom:none;
 				padding-bottom:0;

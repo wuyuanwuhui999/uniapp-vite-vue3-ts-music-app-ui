@@ -103,8 +103,8 @@
 				justify-content: center;
 
 				.category-img {
-					width: calc(@big-icon-size * 1.5);
-					height: calc(@big-icon-size * 1.5);
+					width: calc(@lg-icon-size * 1.5);
+					height: calc(@lg-icon-size * 1.5);
 					margin-bottom: @small-margin;
 				}
 
@@ -113,7 +113,7 @@
 		}
 
 		.bottom {
-			padding: @page-padding 0;
+			padding: @md-padding 0;
 			display: flex;
 			justify-content: center;
 		}

@@ -217,7 +217,7 @@
 				width: @middle-avater;
 				height: @middle-avater;
 				border-radius: 50%;
-				margin-right: @page-padding;
+				margin-right: @md-padding;
 			}
 
 			.user-name {
@@ -229,7 +229,7 @@
 				display: flex;
 				flex: 1;
 				flex-direction: column;
-				gap: @page-padding;
+				gap: @md-padding;
 
 				.music-wrapper {
 					display: flex;
@@ -246,18 +246,18 @@
 
 					.music-info {
 						display: flex;
-						margin-left: @page-padding;
+						margin-left: @md-padding;
 						flex: 1;
 
 						.music-author {
-							color: @disable-text-color;
+							color: @gray-color;
 						}
 					}
 
 					.icon-music-play {
-						width: @small-icon-size;
-						height: @small-icon-size;
-						margin-right: @page-padding;
+						width: @sm-icon-size;
+						height: @sm-icon-size;
+						margin-right: @md-padding;
 					}
 				}
 
@@ -267,17 +267,17 @@
 
 					.create-time {
 						flex: 1;
-						color: @disable-text-color;
+						color: @gray-color;
 					}
 
 					.popup-wrapper {
-						width: @small-icon-size;
-						height: @small-icon-size;
+						width: @sm-icon-size;
+						height: @sm-icon-size;
 						position: relative;
 
 						.icon-menu {
-							width: @small-icon-size;
-							height: @small-icon-size;
+							width: @sm-icon-size;
+							height: @sm-icon-size;
 						}
 
 						.popup-menu {
@@ -289,7 +289,7 @@
 							left: @popup-menu-left;
 							height: @popup-menu-height;
 							top: @popup-menu-top;
-							border-radius: @module-border-radius;
+							border-radius: @md-border-radius;
 
 							.popup-menu-item {
 								display: flex;
@@ -300,8 +300,8 @@
 
 								.icon-popup-menu {
 									margin-right: @small-margin;
-									width: @small-icon-size;
-									height: @small-icon-size;
+									width: @sm-icon-size;
+									height: @sm-icon-size;
 								}
 							}
 						}
@@ -311,16 +311,16 @@
 
 				.social-wrapper {
 					background: @page-background-color;
-					border-radius: @module-border-radius;
-					padding-bottom:  @page-padding;
+					border-radius: @md-border-radius;
+					padding-bottom:  @md-padding;
 					.like-wrapper {
 						display: flex;
 						flex-wrap: wrap;
-						padding: @page-padding @page-padding 0;
+						padding: @md-padding @md-padding 0;
 						.icon-like {
-							width: @small-icon-size;
-							height: @small-icon-size;
-							margin-right: @page-padding;
+							width: @sm-icon-size;
+							height: @sm-icon-size;
+							margin-right: @md-padding;
 						}
 
 						.like-user {
@@ -333,7 +333,7 @@
 		}
 
 		.bottm {
-			padding: @page-padding;
+			padding: @md-padding;
 			display: inline-block;
 			width: 100%;
 			text-align: center;
@@ -343,7 +343,7 @@
 			width: @middle-avater;
 			height: @middle-avater;
 			position: fixed;
-			right: @page-padding;
+			right: @md-padding;
 			bottom: 15%;
 			opacity: 0.2;
 		}

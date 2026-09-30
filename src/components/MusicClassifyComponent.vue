@@ -81,6 +81,6 @@
 	@import '../theme/size.less';
 	@import '../theme/style.less';
 	.component-gap{
-		margin-top:@page-padding;;
+		margin-top:@md-padding;;
 	}
 </style>

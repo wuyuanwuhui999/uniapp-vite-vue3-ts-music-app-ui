@@ -84,11 +84,11 @@
 		.page-body {
 			flex: 1;
 			overflow: hidden;
-			padding:0 @page-padding;
+			padding:0 @md-padding;
 			box-sizing: border-box;
             .footer {
 				width: 100%;
-				padding: @page-padding;
+				padding: @md-padding;
 				text-align: center;
 				display: inline-block;
 			}

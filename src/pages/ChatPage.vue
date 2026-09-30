@@ -475,22 +475,22 @@
 	.page-wrapper{
 		position: relative;
 		.page-header {
-			padding: @page-padding;
+			padding: @md-padding;
 			display: flex;
 			justify-content: space-between;
-			background: @module-background-color;
+			background: @white-color;
 			align-items: center;
 			.icon-back{
-				width: @small-icon-size;
-				height: @small-icon-size;
+				width: @sm-icon-size;
+				height: @sm-icon-size;
 				opacity: 0.2;
 			}
 			.icon-record{
 				opacity: 0.5;
 			}
 			.menu-wrapper{
-				width: @small-icon-size;
-				height: @small-icon-size;
+				width: @sm-icon-size;
+				height: @sm-icon-size;
 				position: relative;
 				.menu-box{
 					position: absolute;
@@ -498,8 +498,8 @@
 					width: @popup-menu-width;
 					background-color: @pop-background-color;
 					right: -@arrow-size;
-					top: calc(@small-icon-size + @arrow-size);
-					border-radius: @module-border-radius;
+					top: calc(@sm-icon-size + @arrow-size);
+					border-radius: @md-border-radius;
 					.menu-arrow{
 						position: absolute;
 						width: 0;
@@ -514,11 +514,11 @@
 						top: calc(@arrow-size * -2);
 					}
 					.menu-list{
-						padding: @page-padding;
+						padding: @md-padding;
 						display: flex;
 						flex-direction: column;
 						color:@white-background-color;
-						gap:@page-padding;
+						gap:@md-padding;
 						.menu-line{
 							height: 1rpx;
 							background-color: @pop-line-color;
@@ -547,19 +547,19 @@
 				.chat-list{
 					display: flex;
 					flex-direction: column;
-					gap: @page-padding;
-					padding: @page-padding;
+					gap: @md-padding;
+					padding: @md-padding;
 					.chat-wrapper{
 						display: flex;
-						gap:@page-padding;	
+						gap:@md-padding;	
 						.chat-prompt-wrapper{
 							flex: 1;
 							display: flex;
 							justify-content: flex-end;
 							.chat-prompt{
 								max-width: 100%;
-								background-color: @module-background-color;
-								padding: @page-padding;
+								background-color: @white-color;
+								padding: @md-padding;
 								border-radius: @btn-border-radius;
 								position: relative;
 							}
@@ -569,8 +569,8 @@
 							display: flex;
 							.chat-text{
 								max-width: 100%;
-								background-color: @module-background-color;
-								padding: @page-padding;
+								background-color: @white-color;
+								padding: @md-padding;
 								border-radius: @btn-border-radius;
 								position: relative;
 								
@@ -589,11 +589,11 @@
 							border-bottom: 15rpx solid transparent; 
 							&.icon-angle-left{
 								left: -15rpx;
-								border-right: 15rpx solid @module-background-color;
+								border-right: 15rpx solid @white-color;
 							}
 							&.icon-angle-right{
 								right: -15rpx;
-								border-left: 15rpx solid @module-background-color;
+								border-left: 15rpx solid @white-color;
 							}
 						}
 					}
@@ -607,17 +607,17 @@
 				display: flex;
 				justify-content: flex-start;
 				background-color: @page-background-color;
-				padding: @page-padding 0;
-				gap: @page-padding;
+				padding: @md-padding 0;
+				gap: @md-padding;
 				flex-wrap: nowrap;
 				width: auto;
 				float: left;
 				.type-item{
-					padding: @small-margin @page-padding;
+					padding: @small-margin @md-padding;
 					color: @sub-title-color;
-					border: 1rpx solid @disable-text-color;
+					border: 1rpx solid @gray-color;
 					border-radius: @big-border-radius;
-					background-color: @module-background-color;
+					background-color: @white-color;
 					display: flex;
 					justify-content: center;
 					align-items: center;
@@ -635,10 +635,10 @@
 						color:  @selected-color;
 					}
 					&:first-child{
-						margin-left: @page-padding;
+						margin-left: @md-padding;
 					}
 					&:last-child{
-						margin-right: calc(@page-padding * 3);
+						margin-right: calc(@md-padding * 3);
 					}
 				}
 			}
@@ -646,16 +646,16 @@
 		
 		.input-wrapper{
 			display: flex;
-			gap:@page-padding;
-			padding: @page-padding;
-			background-color: @module-background-color;
+			gap:@md-padding;
+			padding: @md-padding;
+			background-color: @white-color;
 			align-items: center;
 			.chat-input{
 				background-color: @page-background-color;
 				flex: 1;
 				height: @middle-avater;
 				border-radius: @middle-avater;
-				padding-left: @page-padding;
+				padding-left: @md-padding;
 				box-sizing: border-box;
 			}
 			.icon-wrapper{
@@ -675,27 +675,27 @@
 			}
 		}
 		.pop-scroll-view{
-			background-color: @module-background-color;
+			background-color: @white-color;
 			&.side-scroll-view{
 				width: 80%;
 			}
 			height: 100vh;
-			padding: @page-padding;
+			padding: @md-padding;
 			box-sizing: border-box;
 			.line{
 				height: 1rpx;
-				background-color: @disable-text-color;
-				margin-bottom: @page-padding;
+				background-color: @gray-color;
+				margin-bottom: @md-padding;
 			}
 			.history-list{
-				padding: @page-padding;
+				padding: @md-padding;
 				display: flex;
 				flex-direction: column;
-				gap: calc(@page-padding * 2);
+				gap: calc(@md-padding * 2);
 				.chat-item{
 					display: flex;
 					flex-direction: column;
-					gap:  @page-padding;
+					gap:  @md-padding;
 					.chat-time{
 						color: @sub-title-color;
 					}

@@ -32,14 +32,14 @@
 	@import '../theme/size.less';
 
 	.page-header {
-		padding: @page-padding;
+		padding: @md-padding;
 		display: flex;
 		justify-content: space-between;
-		background: @module-background-color;
+		background: @white-color;
 
 		.icon-back{
-			width: @small-icon-size;
-			height: @small-icon-size;
+			width: @sm-icon-size;
+			height: @sm-icon-size;
 			opacity: 0.2;
 		}
 	}

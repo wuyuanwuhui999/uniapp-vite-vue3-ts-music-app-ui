@@ -74,7 +74,7 @@
 		background-color: @page-background-color;
 		.page-body{
 			flex: 1;
-			padding: 0 @page-padding @page-padding;
+			padding: 0 @md-padding @md-padding;
 			.module-block{
 				align-items: center;
 				.row{
@@ -100,12 +100,12 @@
 			.login-btn{
 				text-align: center;
 				width: 100%;
-				padding: @page-padding;
+				padding: @md-padding;
 				box-sizing: border-box;
 				border-radius: @big-border-radius;
-				margin-top:  @page-padding;
+				margin-top:  @md-padding;
 				background-color: @warn-color;
-				color: @module-background-color;
+				color: @white-color;
 				display: inline-block;
 			}
 		}

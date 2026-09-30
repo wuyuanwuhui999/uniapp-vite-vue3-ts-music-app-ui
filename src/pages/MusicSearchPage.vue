@@ -175,7 +175,7 @@
 		.page-body{
 			height: 0;
 			flex: 1;
-			padding: 0 @page-padding;
+			padding: 0 @md-padding;
 			display: flex;
 			flex-direction: column;
 			.module-block-row {
@@ -184,8 +184,8 @@
 					background-color: @page-background-color;
 					height: @input-height;
 					border-radius: @input-height;
-					padding-left: @page-padding;
-					padding-right: @page-padding;
+					padding-left: @md-padding;
+					padding-right: @md-padding;
 					display: flex;
 					flex-direction: row;
 					align-items: center;
@@ -195,8 +195,8 @@
 					}
 
 					.icon-clear {
-						width: @small-icon-size;
-						height: @small-icon-size;
+						width: @sm-icon-size;
+						height: @sm-icon-size;
 					}
 				}
 
@@ -204,12 +204,12 @@
 					display: inline-block;
 					background-color: @line-color;
 					height: @input-height;
-					color: @module-background-color;
+					color: @white-color;
 					display: flex;
 					justify-content: center;
 					align-items: center;
 					width: 20%;
-					margin-left: @page-padding;
+					margin-left: @md-padding;
 					border-radius: @input-height;
 				}
 			}
@@ -221,8 +221,8 @@
 				flex-wrap: wrap;
 
 				.record-item {
-					margin-top: @page-padding;
-					margin-right: @page-padding;
+					margin-top: @md-padding;
+					margin-right: @md-padding;
 					height: @input-height;
 					background-color: @page-background-color;
 					display: flex;
@@ -245,17 +245,17 @@
 				flex: 1;
 				box-sizing: border-box;
 				height: 0;
-				margin-top: @page-padding;
+				margin-top: @md-padding;
 				.footer {
 					width: 100%;
-					padding: @page-padding;
+					padding: @md-padding;
 					text-align: center;
 					display: inline-block;
 				}
 				.scroll-view-item {
 					display: flex;
-					margin-top: @page-padding;
-					padding-bottom: @page-padding;
+					margin-top: @md-padding;
+					padding-bottom: @md-padding;
 					border-bottom: 1rpx solid @search-input-color;
 					align-items: center;
 
@@ -268,7 +268,7 @@
 					}
 
 					.song-cover {
-						margin-right: @page-padding;
+						margin-right: @md-padding;
 					}
 
 					.name-wrapper {
@@ -290,9 +290,9 @@
 					}
 
 					.icon-play {
-						margin-left: @page-padding;
-						width: @small-icon-size;
-						height: @small-icon-size;
+						margin-left: @md-padding;
+						width: @sm-icon-size;
+						height: @sm-icon-size;
 					}
 				}
 			}

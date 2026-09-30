@@ -60,10 +60,10 @@
                 width: 80%;
                 left: 50%;
                 top: 50%;
-                border-radius: @module-border-radius;
+                border-radius: @md-border-radius;
                 background-color: @white-background-color;
                 .dialog-header{
-                    padding: @page-padding;
+                    padding: @md-padding;
                     display: flex;
                     align-items: center;
                     justify-content: center;
@@ -71,7 +71,7 @@
                     box-sizing: border-box;
                 }
                 .dialog-content{
-                    padding: calc(@page-padding * 2);
+                    padding: calc(@md-padding * 2);
                     display: flex;
                     box-sizing: border-box;
                     justify-content: center;

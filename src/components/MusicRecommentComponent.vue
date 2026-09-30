@@ -151,16 +151,16 @@
 			}
 		}
 		.music-list {
-			margin-bottom: @page-padding;
+			margin-bottom: @md-padding;
 
 			.music-item {
 				display: flex;
 				align-items: center;
-				margin-top: @page-padding;
-				gap: @page-padding;
+				margin-top: @md-padding;
+				gap: @md-padding;
 				.music-rank {
-					width: @small-icon-size;
-					height: @small-icon-size;
+					width: @sm-icon-size;
+					height: @sm-icon-size;
 					align-items: center;
 					justify-content: center;
 					display: flex;
@@ -169,19 +169,19 @@
 				.music-info {
 					display: flex;
 					flex-direction: column;
-					margin-left: @page-padding;
+					margin-left: @md-padding;
 					flex: 1;
 
 					.music-author {
-						color: @disable-text-color;
+						color: @gray-color;
 						padding-top: @small-margin;
 					}
 				}
 
 				.icon-operatation {
-					width: @small-icon-size;
-					height: @small-icon-size;
-					margin-left: @page-padding;
+					width: @sm-icon-size;
+					height: @sm-icon-size;
+					margin-left: @md-padding;
 					;
 				}
 			}
@@ -190,7 +190,7 @@
 		.bottom {
 			display: flex;
 			justify-content: center;
-			margin: @page-padding 0;
+			margin: @md-padding 0;
 		}
 	}
 </style>

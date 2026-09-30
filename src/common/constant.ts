@@ -1,5 +1,5 @@
 // export const HOST:string = 'http://254a2y1767.qicp.vip';
-export const HOST:string = 'http://localhost:3000';
+export const HOST:string = 'http://localhost:4000';
 
 export const MUSIC_SEARCH_STORAGE_KEY = 'MUSIC_SEARCH_STORAGE_KEY';
 

@@ -69,7 +69,7 @@
 
 	.author-list {
 		display: flex;
-		margin-top: @page-padding;
+		margin-top: @md-padding;
 
 		.author-item {
 			display: flex;

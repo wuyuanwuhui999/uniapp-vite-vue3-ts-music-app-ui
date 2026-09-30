@@ -187,7 +187,7 @@
 		.page-container {
 			flex: 1;
 			height: 0;
-			padding: 0 @page-padding;
+			padding: 0 @md-padding;
 			box-sizing: border-box;
 			overflow: auto;
 
@@ -200,7 +200,7 @@
 			z-index: 1;
 			position: relative;
 			display: flex;
-			background-color: @module-background-color;
+			background-color: @white-color;
 			border-top: @tab-border-buttom;
 			padding: @middle-margin 0;
 			position: relative;
@@ -225,8 +225,8 @@
 				align-items: center;
 
 				.music-img-default {
-					width: @big-icon-size;
-					height: @big-icon-size;
+					width: @lg-icon-size;
+					height: @lg-icon-size;
 				}
 
 				.music-img-cover {
@@ -248,13 +248,13 @@
 					height: @red-circle;
 					background-color: @warn-color;
 					border-radius: 50%;
-					right: calc(@page-padding *2);
+					right: calc(@md-padding *2);
 					top: 0;
 					z-index: 1;
 				}
 				.tab-icon {
-					width: @middle-icon-size;
-					height: @middle-icon-size;
+					width: @md-icon-size;
+					height: @md-icon-size;
 					margin-bottom: @small-margin;
 				}
 
@@ -263,7 +263,7 @@
 					font-size: @font-size-normal;
 
 					&.tab-text-active {
-						color: @tab-color-active;
+						color: @primary-color;
 					}
 				}
 			}

@@ -55,8 +55,8 @@
 		display: flex;
 
 		.icon-classify-arrow {
-			width: @small-icon-size;
-			height: @small-icon-size;
+			width: @sm-icon-size;
+			height: @sm-icon-size;
 			opacity: 0.2;
 			&.icon-classify-arrow-fold{
 				transform: rotate(90deg);
@@ -64,12 +64,12 @@
 		}
 
 		.classify-name {
-			padding-left: @page-padding;
+			padding-left: @md-padding;
 			flex: 1;
 		}
 		
 		.classify-more{
-			color: @disable-text-color;
+			color: @gray-color;
 			text-decoration: underline;
 		}
 	}

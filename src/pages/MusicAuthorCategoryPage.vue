@@ -148,13 +148,13 @@
 		.page-body {
 			flex: 1;
 			overflow: hidden;
-			padding:0 @page-padding;
+			padding:0 @md-padding;
 			box-sizing: border-box;
 			.module-block{
                 &.module-block-grid{
                     display: grid;
                     grid-template-columns: repeat(7, 1fr);
-                    gap: @page-padding;
+                    gap: @md-padding;
                     .category-btn{
                         text-align: center;
                         padding: @small-margin 0;
@@ -175,14 +175,14 @@
 				&.module-column{
                     display: flex;
                     flex-direction: column;
-                    margin-bottom: @page-padding;
+                    margin-bottom: @md-padding;
                     .author-item{
                         display: flex;
-                        gap: @page-padding;
+                        gap: @md-padding;
                         align-items: center;
-                        padding-bottom: @page-padding;
-                        border-bottom: 1rpx solid @disable-text-color;
-                        margin-top:  @page-padding;
+                        padding-bottom: @md-padding;
+                        border-bottom: 1rpx solid @gray-color;
+                        margin-top:  @md-padding;
                         &:first-child{
                             margin-top: 0;
                         }
@@ -201,15 +201,15 @@
                             color:@sub-title-color
                         }
                         .icon-play {
-                            width: @small-icon-size;
-                            height: @small-icon-size;
+                            width: @sm-icon-size;
+                            height: @sm-icon-size;
                         }
                     }
                 }
 			}
             .footer {
 				width: 100%;
-				padding: @page-padding;
+				padding: @md-padding;
 				text-align: center;
 				display: inline-block;
 			}

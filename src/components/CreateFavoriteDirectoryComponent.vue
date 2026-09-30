@@ -75,21 +75,21 @@
 		align-items: center;
 
 		&.favorite-cover-row {
-			margin-top: @page-padding;
+			margin-top: @md-padding;
 
 			.rectangle {
-				width: calc(@middle-icon-size * 4);
-				height: calc(@middle-icon-size * 4);
+				width: calc(@md-icon-size * 4);
+				height: calc(@md-icon-size * 4);
 				display: flex;
 				justify-content: center;
 				align-items: center;
 				background: @page-background-color;
 				border-radius: @btn-border-radius;
-				margin-left: @page-padding;
+				margin-left: @md-padding;
 
 				.icon-favorite-add {
-					width: @middle-icon-size;
-					height: @middle-icon-size;
+					width: @md-icon-size;
+					height: @md-icon-size;
 				}
 			}
 		}
@@ -105,8 +105,8 @@
 		.favorite-input {
 			flex: 1;
 			width: 0;
-			margin-left: @page-padding;
-			padding: @page-padding;
+			margin-left: @md-padding;
+			padding: @md-padding;
 			background: @page-background-color;
 			border-radius: @btn-border-radius;
 		}
@@ -115,7 +115,7 @@
 	.favorite-btn-row {
 		.favorite-btn {
 			width: 100%;
-			margin-top: @page-padding;
+			margin-top: @md-padding;
 			border-radius: @big-border-radius;
 
 			&.favorite-create {
@@ -139,10 +139,10 @@
 	.favorite-directory {
 		flex: 1;
 		height: 0;
-		margin-top: @page-padding;
+		margin-top: @md-padding;
 
 		.checkbox-item {
-			margin-bottom: @page-padding;
+			margin-bottom: @md-padding;
 			display: flex;
 			align-items: center;
 
@@ -153,7 +153,7 @@
 			.checkbox-name {
 				display: flex;
 				flex: 1;
-				margin-left: @page-padding;
+				margin-left: @md-padding;
 				flex-direction: column;
 
 				.favorite-total {

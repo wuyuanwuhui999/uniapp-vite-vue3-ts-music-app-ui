@@ -46,19 +46,19 @@
 	@import '../theme/style.less';
 	.search-wrapper{
 	    display: flex;
-		gap:@page-padding;
+		gap:@md-padding;
 		align-items: center;
 	    .search-input-wrapper{
 	        flex: 1;
-	        margin-left: @page-padding;
+	        margin-left: @md-padding;
 	        height: @middle-avater;
 	        background-color: @search-input-color;
 	        border-radius: @middle-avater;
 	        display: flex;
 	        align-items: center;
 	        .search-input-placehold{
-				padding-left: @page-padding;
-	            color: @search-input-placehold;
+				padding-left: @md-padding;
+	            color: @gray-color;
 	        }
 	    }
 	}

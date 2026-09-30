@@ -128,23 +128,23 @@
 		box-sizing: border-box;
 
 		.page-header {
-			padding: @page-padding;
+			padding: @md-padding;
 			display: flex;
 			justify-content: space-between;
-			background: @module-background-color;
+			background: @white-color;
 
 			.page-btn {
-				background-color: @module-background-color;
+				background-color: @white-color;
 				border-radius: @btn-border-radius;
-				border: 1rpx solid @disable-text-color;
+				border: 1rpx solid @gray-color;
 				margin: 0;
 				overflow: hidden;
-				padding: @page-padding @btn-padding;
+				padding: @md-padding @btn-padding;
 
 				&.btn-publish {
 					border: none;
 					background: @line-color;
-					color: @module-background-color;
+					color: @white-color;
 				}
 			}
 		}
@@ -152,20 +152,20 @@
 		.page-body {
 			flex: 1;
 			overflow: hidden;
-			padding: @page-padding;
+			padding: @md-padding;
 			.icon-middle{
 				opacity: 0.5;
 			}
 			.textarea {
-				background: @search-input-placehold;
+				background: @gray-color;
 				width: 100%;
-				padding: @page-padding;
-				border-radius: @module-border-radius;
+				padding: @md-padding;
+				border-radius: @md-border-radius;
 				box-sizing: border-box;
 			}
 
 			.module-block {
-				gap: @page-padding;
+				gap: @md-padding;
 				align-items: center;
 
 				.permission-text {
@@ -179,7 +179,7 @@
 					display: flex;
 					align-items: center;
 					width: 100%;
-					gap: @page-padding;
+					gap: @md-padding;
 					.check-tip{
 						flex:1;
 					}

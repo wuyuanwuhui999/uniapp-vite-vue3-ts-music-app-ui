@@ -185,7 +185,7 @@
     display: flex;
     flex-direction: column;
     flex: 1;
-    padding: 0 @page-padding;
+    padding: 0 @md-padding;
     /deep/.uni-scroll-view::-webkit-scrollbar {
         display: none;
     }
@@ -193,20 +193,20 @@
         flex: 1;
         .comment-item {
             display: flex;
-            margin-top: @page-padding;
+            margin-top: @md-padding;
 
             .comment-avater {
                 width: @middle-avater;
                 height: @middle-avater;
                 border-radius: 50%;
-                margin-right: @page-padding;
+                margin-right: @md-padding;
             }
 
             .comment-reply-avater {
                 width: @small-avater;
                 height: @small-avater;
                 border-radius: 50%;
-                margin-right: @page-padding;
+                margin-right: @md-padding;
             }
 
             .comment-content-wrapper {
@@ -235,7 +235,7 @@
         left: 0;
         display: flex;
         z-index: 2;
-        padding: @page-padding;
+        padding: @md-padding;
         box-sizing: border-box;
         background: @white-background-color;
         align-items: center;
@@ -246,8 +246,8 @@
             background: @page-background-color;
             height: @input-height;
             border-radius: @input-height;
-            margin-right: @page-padding;
-            padding-left: @page-padding;
+            margin-right: @md-padding;
+            padding-left: @md-padding;
         }
 
         .btn-send {
@@ -256,9 +256,9 @@
             height: @input-height;
             display: flex;
             align-items: center;
-            padding-left: calc(@page-padding * 2);
-            padding-right: calc(@page-padding * 2);
-            border-radius: @module-border-radius;
+            padding-left: calc(@md-padding * 2);
+            padding-right: calc(@md-padding * 2);
+            border-radius: @md-border-radius;
         }
     }
 }
