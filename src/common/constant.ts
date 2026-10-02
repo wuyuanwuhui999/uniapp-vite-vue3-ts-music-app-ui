@@ -22,3 +22,5 @@ export const EMAIL_REG:RegExp = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;// 邮箱正则表�
 export const CIRCLE_UPDATE_TIME = "CIRCLE_UPDATE_TIME";// 音乐圈更新时间
 
 export const COMPANY_ID:string = '99e1428abccb11f1a63efea5404fce1b';// 公司id（获取模型列表等接口使用）
+
+export const CHAT_MUSIC_CLASSIFY_NAME:string = '智能推荐';// 智能问答返回的歌曲列表，进入播放器时的播放分类名称

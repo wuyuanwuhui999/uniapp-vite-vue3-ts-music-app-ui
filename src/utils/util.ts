@@ -1,4 +1,5 @@
 import { HOST } from "../common/constant";
+import type { MusicType, ChatContentSegmentType } from "../types";
 export const zerofull=(value:number):string|number=>{
     return value < 9 ? "0"+value:value
 }
@@ -36,6 +37,82 @@ export const formatSecond=(value:number,showHour:boolean = false):string => {
 };
 
 export const getMusicCover = (cover:string) => /http[s]?:\/\//.test(cover) ? cover.replace('{size}', '480') : HOST + cover
+
+/**
+ * @description: 把 <music></music> 标签里的音乐列表字符串解析成音乐对象数组
+ * @param {string} content 大模型返回的音乐列表字符串（JSON 数组，兼容单引号等非标准写法）
+ * @return {Array<MusicType>} 音乐对象数组，解析失败时返回空数组
+ * @date: 2026-09-30 22:00
+ * @author wuwenqiang
+ */
+export const parseMusicList = (content:string):Array<MusicType> => {
+	let text:string = (content || '').trim();
+	// 去掉可能被 markdown 代码块包裹的标记
+	text = text.replace(/^```[a-zA-Z]*\s*/, '').replace(/\s*```$/, '').trim();
+	if(!text) return [];
+	// 兼容单引号、python 的 True/False/None、尾随逗号这些非标准 JSON 写法
+	const format = (value:string):string => value
+		.replace(/'/g, '"')
+		.replace(/\bTrue\b/g, 'true')
+		.replace(/\bFalse\b/g, 'false')
+		.replace(/\bNone\b/g, 'null')
+		.replace(/,\s*([\]}])/g, '$1');
+	let list:any = null;
+	try{
+		list = JSON.parse(text);
+	}catch(e){
+		try{
+			list = JSON.parse(format(text));
+		}catch(err){
+			console.warn('音乐列表解析失败:', content);
+			return [];
+		}
+	}
+	// 兼容外层包裹了一层对象的情况，例如 { musicList: [...] }
+	if(!Array.isArray(list) && list && typeof list === 'object'){
+		const target:any = list.musicList || list.data || list.list;
+		if(Array.isArray(target)) list = target;
+	}
+	if(!Array.isArray(list)) return [];
+	// 过滤掉没有歌曲id的数据，避免播放、收藏、点赞时取不到歌曲；同时把 isLike、isFavorite 统一成 0/1 数字
+	return list.filter((item:any) => item && item.id != null).map((item:any):MusicType => ({
+		...item,
+		isLike: item.isLike ? 1 : 0,
+		isFavorite: item.isFavorite ? 1 : 0
+	})) as Array<MusicType>;
+}
+
+/**
+ * @description: 拆分大模型输出的正文，把 <music></music> 标签解析成音乐列表卡片片段，其余内容作为富文本片段
+ * @param {string} content 大模型输出的正文
+ * @param {boolean} isCompleted 该条消息是否已经生成完成：生成中不渲染未闭合的 <music>，避免露出半截 JSON
+ * @return {Array<ChatContentSegmentType>} 拆分后的片段数组
+ * @date: 2026-09-30 22:00
+ * @author wuwenqiang
+ */
+export const parseChatContent = (content:string, isCompleted:boolean = true):Array<ChatContentSegmentType> => {
+	const segments:Array<ChatContentSegmentType> = [];
+	const text:string = content || '';
+	const reg:RegExp = /<music\s*>([\s\S]*?)<\/music\s*>/gi;
+	let lastIndex:number = 0;// 上一次匹配结束的位置
+	let match:RegExpExecArray | null = null;
+	while((match = reg.exec(text)) !== null){
+		const prevText:string = text.slice(lastIndex, match.index);// <music> 标签前面的内容
+		if(prevText.trim()) segments.push({ type:'text', content:prevText, musicList:[] });
+		const musicList:Array<MusicType> = parseMusicList(match[1]);// 标签里的音乐列表
+		if(musicList.length){
+			segments.push({ type:'music', content:'', musicList });
+		}else{
+			segments.push({ type:'text', content:match[0], musicList:[] });// 解析失败时把原文展示出来，避免内容丢失
+		}
+		lastIndex = reg.lastIndex;
+	}
+	let rest:string = text.slice(lastIndex);// 剩余内容
+	const unClosedIndex:number = rest.search(/<music\s*>/i);// 剩余内容里未闭合的 <music> 标签
+	if(unClosedIndex !== -1 && !isCompleted) rest = rest.slice(0, unClosedIndex);// 生成中，丢弃半截音乐列表
+	if(rest.trim()) segments.push({ type:'text', content:rest, musicList:[] });
+	return segments;
+}
 
 export const generateSecureID = () => {
     const array = new Uint8Array(16); // 16 字节（128 位）

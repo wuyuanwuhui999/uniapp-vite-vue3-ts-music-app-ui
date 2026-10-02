@@ -37,7 +37,11 @@
 										
 											<!-- 正式回答黑色区块 -->
 											 <view class="response-box">
-												<mp-html :content="marked.parse(item.responseContent)"></mp-html>
+												<!-- 正文按片段渲染：普通内容交给 mp-html，<music></music> 里的歌曲列表渲染成音乐列表卡片 -->
+												<template v-for="(segment, segmentIndex) in parseContent(item.responseContent)" :key="'segment' + segmentIndex">
+													<MusicListCardComponent v-if="segment.type === 'music'" :music-list="segment.musicList" />
+													<mp-html v-else :content="marked.parse(segment.content)"></mp-html>
+												</template>
 											 </view>
 
 									</view>
@@ -112,6 +116,7 @@
 	import icon_switch from '../../static/icon_switch.png';
 	import icon_edit from "../../static/icon_edit.png";
 	import AvaterComponent from '../components/AvaterComponent.vue';
+	import MusicListCardComponent from '../components/MusicListCardComponent.vue';
     import type {
       OptionType,
       ChatHistoryType,
@@ -121,9 +126,10 @@
       GroupedByChatIdType,
       FileType,
       PayloadInterface,
+      ChatContentSegmentType,
     } from '../types';
     import { PositionEnum } from '../enum';
-	import { formatTimeAgo, generateSecureID } from "../utils/util";
+	import { formatTimeAgo, generateSecureID, parseChatContent } from "../utils/util";
     import {HOST, PAGE_SIZE, COMPANY_ID} from '../common/constant';
 	import api from '@/api';
     import {
@@ -476,6 +482,15 @@
 	const onSwitchLang = ()=>{
 		language.value = language.value === LanguageEnum.zh ? LanguageEnum.en : LanguageEnum.zh
 	}
+
+	/**
+	 * @description: 拆分正文：把 <music></music> 里的歌曲列表拆成音乐列表卡片，其他内容还是富文本
+	 * @param {string} content 大模型返回的正文
+	 * @return {Array<ChatContentSegmentType>} 拆分后的片段数组
+	 * @date: 2026-09-30 22:00
+	 * @author wuwenqiang
+	 */
+	const parseContent = (content:string):Array<ChatContentSegmentType> => parseChatContent(content, isCompleted.value)
 </script>
 
 <style lang="less" scoped>
@@ -587,7 +602,12 @@
 								.think-text{
 									color:@sub-title-color;
 								}
+							.response-box{
+								display: flex;
+								flex-direction: column;
+								gap: @md-padding;// 富文本和音乐列表卡片之间的间距
 							}
+						}
 						}
 						
 						.icon-angle{

@@ -56,6 +56,7 @@ export type MusicType = {
 	label : string, // 标签
 	lyrics : string, // 歌词
 	isLike : number, // 是否喜欢
+	isFavorite?: number, // 是否收藏（大模型返回的歌曲列表里有该字段）
 	times : number, //  听过的次数，在获取播放记录的时候才有
 }
 
@@ -210,6 +211,13 @@ export type ChatModelType = {
   modelName:string,
   updateTime:string,
   createTime:string
+}
+
+// 聊天内容片段：大模型输出的正文里可能有 <music></music> 音乐列表，需要拆成富文本和音乐卡片两种片段渲染
+export type ChatContentSegmentType = {
+  type: 'text' | 'music', // 片段类型：text=富文本内容，music=音乐列表卡片
+  content: string, // 富文本内容，只有 type 为 text 时有值
+  musicList: Array<MusicType>, // 音乐列表，只有 type 为 music 时有值
 }
 
 // 聊天气泡
