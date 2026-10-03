@@ -72,6 +72,12 @@
 						title: '点赞成功'
 					})
 				}
+			}).catch((err) => {// 点赞失败，弹出接口返回的msg信息
+				uni.showToast({
+					duration: 2000,
+					position: 'center',
+					title: err.msg
+				})
 			}).finally(() => loading = false)
 		}
 	}
