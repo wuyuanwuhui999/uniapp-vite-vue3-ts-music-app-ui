@@ -24,7 +24,7 @@
 				<MusicSingerComponent :key="'singerId' + item.id" :classifyItem="item"
 					v-if="item.category === '推荐歌手'" />
 				<MusicClassifyComponent :showLoading="pageNum > 3" :class="index === allClassifies.length - 1 ? 'module-block-last': ''"
-					:key="'classifyId' + item.id" v-else :classifyItem="item" />
+					:key="'categoryId' + item.id" v-else :classifyItem="item" />
 			</template>
 
 			<view class="bottom"><text>{{pageNum === allClassifies.length - 1 ? "已经到底了" : "正在加载更多..."}}</text></view>
