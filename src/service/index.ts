@@ -101,8 +101,8 @@ export const getKeyWordMusicService = ():Promise<MyAwesomeData<types.MusicType>>
  * @date: 2024-03-02 22:44
  * @author wuwenqiang
  */
-export const getMusicClassifyService = ():Promise<MyAwesomeData<Array<types.MusicClassifyType>>> => {
-    return httpRequest.get<Array<types.MusicClassifyType>>(api.getMusicClassify);
+export const getMusicCategoryService = ():Promise<MyAwesomeData<Array<types.MusicCategoryType>>> => {
+    return httpRequest.get<Array<types.MusicCategoryType>>(api.getMusicCategory);
 }
 
 /**
@@ -110,8 +110,8 @@ export const getMusicClassifyService = ():Promise<MyAwesomeData<Array<types.Musi
  * @date: 2024-03-03 11:50
  * @author wuwenqiang
  */
-export const getMusicListByClassifyIdService = (classifyId:number,pageNum:number,pageSize:number):Promise<MyAwesomeData<Array<types.MusicType>>> => {
-    return httpRequest.get<Array<types.MusicType>>(`${api.getMusicListByClassifyId}?classifyId=${classifyId}&pageNum=${pageNum}&pageSize=${pageSize}`);
+export const getMusicListByCategoryIdService = (categoryId:number,pageNum:number,pageSize:number):Promise<MyAwesomeData<Array<types.MusicType>>> => {
+    return httpRequest.get<Array<types.MusicType>>(`${api.getMusicListByCategoryId}?categoryId=${categoryId}&pageNum=${pageNum}&pageSize=${pageSize}`);
 }
 
 /**

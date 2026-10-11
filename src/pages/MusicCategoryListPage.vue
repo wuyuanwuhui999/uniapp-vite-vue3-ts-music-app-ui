@@ -9,7 +9,7 @@
                         :class="{'category-btn-active':activeCategory?.id === item.id}"
                         class="category-btn" :key="'category-btn'+item.id" 
                         v-for="item in currentClassify"
-                    >{{ item.classifyName }}</text>
+                    >{{ item.category }}</text>
                 </view>
                 <view class="expand-more" @click="useExpand">
                     <text class="expand-text">{{ expand ? '收起': '展开更多' }}</text>
@@ -19,7 +19,7 @@
             <!-- 歌曲列表，默认加载第一个分类的歌曲 -->
             <view class="module-block">
                 <MusicClassifyListComponent class="component-gap" 
-                @onPlayMusic="usePlayMusic" :musicList = 'musicList' :classifyName = 'activeCategory.classifyName'/>
+                @onPlayMusic="usePlayMusic" :musicList = 'musicList' :classifyName = 'activeCategory.category'/>
             </view>
             <text class="footer">{{ total >= pageNum * PAGE_SIZE ? '正在加载更多' : '已经到底了'}}</text>
 		</scroll-view>
@@ -28,20 +28,20 @@
 
 <script setup lang="ts">
 	import { ref, reactive } from 'vue';
-	import type {MusicClassifyType, MusicType } from '../types';
-	import { getMusicClassifyService,getMusicListByClassifyIdService } from '../service';
+	import type {MusicCategoryType, MusicType } from '../types';
+	import { getMusicCategoryService,getMusicListByCategoryIdService } from '../service';
     import {PAGE_SIZE,MAX_FAVORITE_NUMBER} from '../common/constant';
 	import NavigatorTitleComponent from '../components/NavigatorTitleComponent.vue';
     import { useStore } from "../stores/useStore";
     import MusicClassifyListComponent from '../components/MusicClassifyListComponent.vue';
     import icon_arrow from "../../static/icon_arrow.png"
 
-    const allClassifies = reactive<Array<MusicClassifyType>>([]);// 所有分类模块
-    const currentClassify =  reactive<Array<MusicClassifyType>>([]);// 所有分类模块
+    const allClassifies = reactive<Array<MusicCategoryType>>([]);// 所有分类模块
+    const currentClassify =  reactive<Array<MusicCategoryType>>([]);// 所有分类模块
     const total = ref<number>(0);// 总数
 	const pageNum = ref<number>(1);
 	const musicList = reactive<Array<MusicType>>([]);
-    const activeCategory = ref<MusicClassifyType>({} as MusicClassifyType);
+    const activeCategory = ref<MusicCategoryType>({} as MusicCategoryType);
     const store = useStore();
     const expand = ref<boolean>(false);
     let loading:boolean = false;
@@ -52,11 +52,11 @@
 	 * @date: 2024-03-03 11:23
 	 * @author wuwenqiang
 	 */
-	getMusicClassifyService().then((res) => {// 获取所有分类
+	getMusicCategoryService().then((res) => {// 获取所有分类
 		allClassifies.push(...res.data);// 所有分类列表
-        activeCategory.value = allClassifies[0] as MusicClassifyType;// 默认选中第一个分类
+        activeCategory.value = allClassifies[0] as MusicCategoryType;// 默认选中第一个分类
         currentClassify.push(...allClassifies.slice(0,9));// 当前只显示9个分类，点击展开后显示全部fenlei
-        useMusicListByClassifyId();// 根据选中的分类加载歌曲列表
+        useMusicListByCategoryId();// 根据选中的分类加载歌曲列表
 	});
 
      /**
@@ -64,10 +64,10 @@
 	 * @date: 2024-09-09 22:47
 	 * @author wuwenqiang
 	 */
-     const useMusicListByClassifyId = () => {
+     const useMusicListByCategoryId = () => {
         loading = true;
         // 分页加载对应分类的歌曲
-        getMusicListByClassifyIdService(activeCategory.value.id,pageNum.value,PAGE_SIZE).then((res)=>{
+        getMusicListByCategoryIdService(activeCategory.value.id,pageNum.value,PAGE_SIZE).then((res)=>{
             musicList.push(...res.data);// 渲染当前分类的歌曲列表
             total.value = res.total;// 当前分类的歌曲总数，用作滚动加载
         }).finally(()=> loading = false);
@@ -95,7 +95,7 @@
         if (loading) return;
 		if (total.value > PAGE_SIZE * pageNum.value) {
 			pageNum.value++;
-			useMusicListByClassifyId();
+			useMusicListByCategoryId();
 		}
     }
 
@@ -104,12 +104,12 @@
 	 * @date: 2024-08-27 21:19
 	 * @author wuwenqiang
 	 */
-    const onTabItem = (item:MusicClassifyType)=>{
+    const onTabItem = (item:MusicCategoryType)=>{
         if(loading || item.id === activeCategory.value.id)return;
         pageNum.value = 1;
         activeCategory.value = item;
         musicList.length = 0;
-		useMusicListByClassifyId();
+		useMusicListByCategoryId();
     }
 
     /**
@@ -118,9 +118,9 @@
 	 * @author wuwenqiang
 	 */
      const usePlayMusic = (item : MusicType, index : number)=>{
-		if (store.classifyName != activeCategory.value.classifyName) {
-			getMusicListByClassifyIdService(activeCategory.value.id,1,MAX_FAVORITE_NUMBER).then((res)=>{
-				store.setClassifyMusic(res.data, item, index, activeCategory.value.classifyName);
+		if (store.classifyName != activeCategory.value.category) {
+			getMusicListByCategoryIdService(activeCategory.value.id,1,MAX_FAVORITE_NUMBER).then((res)=>{
+				store.setClassifyMusic(res.data, item, index, activeCategory.value.category);
         	});
 		}else{
 			store.setMusic(item, true);

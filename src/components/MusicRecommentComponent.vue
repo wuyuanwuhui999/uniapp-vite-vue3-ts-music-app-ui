@@ -22,7 +22,7 @@
 </template>
 
 <script setup lang="ts">
-	import { getMusicListByClassifyIdService, deleteMusicLikeService, insertMusicLikeService} from '../service';
+	import { getMusicListByCategoryIdService, deleteMusicLikeService, insertMusicLikeService} from '../service';
 	import { ref, reactive } from 'vue';
 	import type { MusicType } from '../types';
 	import { useStore } from "../stores/useStore";
@@ -66,7 +66,7 @@
 	const useMusicList = (isRefresh:boolean = false) => {
 		loadding = true;
 		uni.showLoading();
-		return getMusicListByClassifyIdService(1, pageNum.value, pageSize.value).then((res) => {
+		return getMusicListByCategoryIdService(1, pageNum.value, pageSize.value).then((res) => {
 			if (total.value === 0) total.value = res.total;
 			if(isRefresh) musicList.length = 0
 			musicList.push(...res.data);
@@ -95,7 +95,7 @@
 		if(store.musicItem?.id !== musicModel.id){
 			store.setMusic(musicModel);
 			if(store.classifyName !== "推荐歌曲"){
-				await getMusicListByClassifyIdService(1, 1, MAX_FAVORITE_NUMBER).then((res) => store.setMusicList(res.data));
+				await getMusicListByCategoryIdService(1, 1, MAX_FAVORITE_NUMBER).then((res) => store.setMusicList(res.data));
 			}
 		}
 		uni.navigateTo({url: `../pages/MusicPlayerPage`});

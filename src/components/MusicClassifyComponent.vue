@@ -1,14 +1,14 @@
 <template>
 	<view class="module-block">
 		<MusicTitleComponent @useMore="useMore" :classifyItem="classifyItem" :isFold="isFold" @on-fold="useFold"/>
-		<MusicClassifyListComponent class="component-gap" v-show="!isFold" @onPlayMusic="usePlayMusic" :musicList = 'classifyMusicList' :classifyName = 'classifyItem.classifyName'/>
+		<MusicClassifyListComponent class="component-gap" v-show="!isFold" @onPlayMusic="usePlayMusic" :musicList = 'classifyMusicList' :classifyName = 'classifyItem.category'/>
 	</view>
 </template>
 
 <script setup lang="ts">
 	import { defineProps, reactive, ref, type PropType } from 'vue';
-	import type { MusicClassifyType, MusicType } from "../types";
-	import { getMusicListByClassifyIdService } from '../service';
+	import type { MusicCategoryType, MusicType } from "../types";
+	import { getMusicListByCategoryIdService } from '../service';
 	import MusicTitleComponent from './MusicTitleComponent.vue';
 	import MusicClassifyListComponent from './MusicClassifyListComponent.vue';
 	import { useStore } from "../stores/useStore";
@@ -21,7 +21,7 @@
 
 	const { classifyItem,showLoading } = defineProps({
 		classifyItem: {
-			type: Object as PropType<MusicClassifyType>,
+			type: Object as PropType<MusicCategoryType>,
 			reqiure: true,
 			default: {}
 		},
@@ -49,8 +49,8 @@
 	const usePlayMusic =async (musicModel:MusicType) => {
 		if(store.musicItem?.id !== musicModel.id){
 			store.setMusic(musicModel,true);
-			if(store.classifyName !== classifyItem.classifyName){
-				await getMusicListByClassifyIdService(classifyItem.id,1,MAX_FAVORITE_NUMBER).then((res)=>store.setMusicList(res.data));
+			if(store.classifyName !== classifyItem.category){
+				await getMusicListByCategoryIdService(classifyItem.id,1,MAX_FAVORITE_NUMBER).then((res)=>store.setMusicList(res.data));
 			}
 		}
 		uni.navigateTo({url: `../pages/MusicPlayerPage`});
@@ -68,7 +68,7 @@
 	}
 
 	if(showLoading)uni.showLoading()
-	getMusicListByClassifyIdService(classifyItem.id, 1, 3).then((res) => {
+	getMusicListByCategoryIdService(classifyItem.id, 1, 3).then((res) => {
 		classifyMusicList.push(...res.data);
 	}).finally(()=>{
 		if(showLoading)uni.hideLoading()

@@ -22,7 +22,7 @@
 			</view>
 			<template v-for="item,index in allClassifies.slice(0,pageNum)">
 				<MusicSingerComponent :key="'singerId' + item.id" :classifyItem="item"
-					v-if="item.classifyName === '推荐歌手'" />
+					v-if="item.category === '推荐歌手'" />
 				<MusicClassifyComponent :showLoading="pageNum > 3" :class="index === allClassifies.length - 1 ? 'module-block-last': ''"
 					:key="'classifyId' + item.id" v-else :classifyItem="item" />
 			</template>
@@ -35,8 +35,8 @@
 <script setup lang="ts">
 	import { ref, reactive } from "vue";
 	import MusicSearchComponent from './MusicSearchComponent.vue';
-	import { getMusicClassifyService } from '../service';
-	import type { MusicClassifyType } from "../types";
+	import { getMusicCategoryService } from '../service';
+	import type { MusicCategoryType } from "../types";
 	import MusicSingerComponent from './MusicSingerComponent.vue';
 	import MusicClassifyComponent from './MusicClassifyComponent.vue';
 	import icon_music_singer from '../../static/icon_music_singer.png';
@@ -45,7 +45,7 @@
 	import icon_music_rank from "../../static/icon_music_rank.png"
 
 	const pageNum = ref<number>(3);// 初始化加载3个模块，其他模块按需加载
-	const allClassifies = reactive<Array<MusicClassifyType>>([]);// 所有分类模块
+	const allClassifies = reactive<Array<MusicCategoryType>>([]);// 所有分类模块
 	
 	// 跳转到歌手列表
 	const useMusicAuthorCategoryPage = ()=>{
@@ -62,7 +62,7 @@
 	 * @date: 2024-03-03 11:23
 	 * @author wuwenqiang
 	 */
-	getMusicClassifyService().then((res) => {
+	getMusicCategoryService().then((res) => {
 		allClassifies.push(...res.data);
 	});
 

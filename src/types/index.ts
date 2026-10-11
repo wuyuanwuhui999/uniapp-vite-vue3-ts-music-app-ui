@@ -60,18 +60,14 @@ export type MusicType = {
 	times : number, //  听过的次数，在获取播放记录的时候才有
 }
 
-// 歌曲分类字段
-export type MusicClassifyType = {
-	id : number,// 分类id
-	classifyName : string, // 分类时间
-	permission : number,// 权限
-	classifyRank : number, // 分类排名
-	cover : string,// 分类图标
-	disabled : number,// 是否禁用
-	createTime : string,// 创建时间
-	updateTime : string// 更新时间
-	pageNum: number,// 第几页
-	pageSize: number// 每页显示条数
+// 音乐分类字段（getMusicCategory 接口返回，data 为数组，每个元素字段如下）
+export type MusicCategoryType = {
+	id : number,// 分类id，作为 getMusicListByCategoryId 的 categoryId 参数
+	img : string,// 分类图标
+	category : string,// 分类名称
+	classify : string,// 分类归属（用于区分模块类型，例如推荐歌手模块）
+	create_time : string,// 创建时间
+	update_time : string// 更新时间
 }
 
 // 歌手字段

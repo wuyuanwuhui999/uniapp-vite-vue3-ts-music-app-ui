@@ -1,7 +1,7 @@
 <template>
 	<view class="classify-title-wrapper">
 		<image class="icon-classify-arrow" :class="props.isFold ? 'icon-classify-arrow-fold' : ''" @click="useFold" :src="icon_down" />
-		<text class="classify-name">{{props.classifyItem.classifyName}}</text>
+		<text class="classify-name">{{props.classifyItem.category}}</text>
 		<slot>
 			<text class="classify-more" v-if="props.showMore" @click="useMore">更多</text>
 		</slot>

@@ -1,10 +1,10 @@
 <template>
 	<view class="page-wrapper" >
-		<NavigatorTitleComponent :title="musicClassify?.classifyName"/>
+		<NavigatorTitleComponent :title="musicClassify?.category"/>
 		<scroll-view scroll-y show-scrollbar="false" @scrolltolower="onScrolltolower" class="page-body">
 			<view class="module-block">
 				<MusicClassifyListComponent @on-play-music="usePlayMusic" :music-list="musicList"
-				:classify-name="musicClassify.classifyName" />
+				:classify-name="musicClassify.category" />
 			</view>
 			<text class="footer">{{ total >= pageNum * PAGE_SIZE ? '正在加载更多' : '已经到底了'}}</text>
 		</scroll-view>
@@ -13,8 +13,8 @@
 
 <script setup lang="ts">
 	import { ref, reactive,type Ref } from 'vue';
-	import type { MusicType, MusicClassifyType } from '../types';
-	import { getMusicListByClassifyIdService } from '../service';
+	import type { MusicType, MusicCategoryType } from '../types';
+	import { getMusicListByCategoryIdService } from '../service';
 	import { MAX_FAVORITE_NUMBER, PAGE_SIZE } from '../common/constant';
 	import { useStore } from "../stores/useStore";
 	import MusicClassifyListComponent from '../components/MusicClassifyListComponent.vue';
@@ -25,11 +25,11 @@
 	let loadding : boolean = false;
 	const total:Ref<number> = ref<number>(0);
 	const pageNum:Ref<number> = ref<number>(1);
-	const musicClassify = ref<MusicClassifyType> ({} as MusicClassifyType); // 获取URL上的查询参数并反序列化
+	const musicClassify = ref<MusicCategoryType> ({} as MusicCategoryType); // 获取URL上的查询参数并反序列化
 	const musicList:Array<MusicType> = reactive<Array<MusicType>>([]);
 
 	onLoad((option)=>{
-		musicClassify.value =  JSON.parse(decodeURIComponent(option!.data as string)) as MusicClassifyType;
+		musicClassify.value =  JSON.parse(decodeURIComponent(option!.data as string)) as MusicCategoryType;
 		useMusicList();
 	})
 
@@ -39,7 +39,7 @@
 	 * @author wuwenqiang
 	 */
 	const useMusicList = () => {
-		return getMusicListByClassifyIdService(musicClassify.value.id, pageNum.value, PAGE_SIZE).then((res) => {
+		return getMusicListByCategoryIdService(musicClassify.value.id, pageNum.value, PAGE_SIZE).then((res) => {
 			total.value = res.total;
 			musicList.push(...res.data);
 		}).finally(() => loadding = false);
@@ -56,9 +56,9 @@
 	}
 
 	const usePlayMusic = async (item : MusicType, index : number) => {
-		if (store.classifyName != musicClassify.value.classifyName) {
-			await getMusicListByClassifyIdService(musicClassify.value.id, 1, MAX_FAVORITE_NUMBER).then((value) => {
-				store.setClassifyMusic(value.data, item, index, musicClassify.value.classifyName);
+		if (store.classifyName != musicClassify.value.category) {
+			await getMusicListByCategoryIdService(musicClassify.value.id, 1, MAX_FAVORITE_NUMBER).then((value) => {
+				store.setClassifyMusic(value.data, item, index, musicClassify.value.category);
 			});
 		} else {
 			store.setMusic(item, true);
