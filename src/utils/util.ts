@@ -36,7 +36,11 @@ export const formatSecond=(value:number,showHour:boolean = false):string => {
 	}
 };
 
-export const getMusicCover = (cover:string) => /http[s]?:\/\//.test(cover) ? cover.replace('{size}', '480') : HOST + cover
+export const getMusicCover = (cover:string) => {
+	const url = /http[s]?:\/\//.test(cover) ? cover.replace('{size}', '480') : HOST + cover;
+	// 路径中可能包含中文等特殊字符，统一做 URL 编码，避免图片加载失败
+	return encodeURI(url);
+}
 
 /**
  * @description: 把 <music></music> 标签里的音乐列表字符串解析成音乐对象数组

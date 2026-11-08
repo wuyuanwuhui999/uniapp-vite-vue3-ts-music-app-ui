@@ -47,7 +47,7 @@ export const useStore = defineStore("myStore", {
 		 */
 		setMusic(musicItem:MusicType,isPlaying:boolean = true){
 			this.musicItem = musicItem;
-			this.audio.src = HOST + musicItem.localPlayUrl;
+			this.audio.src = encodeURI(HOST + musicItem.localPlayUrl);
 			if(isPlaying){
 				this.audio.play();
 				this.isPlaying = true;
@@ -79,7 +79,7 @@ export const useStore = defineStore("myStore", {
 			uni.setStorage({key:MUSIC_STORAGE_KEY,data:JSON.stringify(musicItem)});
 			uni.setStorage({key:MUSIC_LIST_STORAGE_KEY,data:JSON.stringify(musicList)});
 			uni.setStorage({key:MUSIC_CLASSIFY_NAME_STORAGE_KEY,data:JSON.stringify(classifyName)});
-			this.audio.src = HOST + musicItem.localPlayUrl;
+			this.audio.src = encodeURI(HOST + musicItem.localPlayUrl);
 			this.audio.play();		
 			const musicRecord:MusicRecordType = {
 				musicId:musicItem.id,
