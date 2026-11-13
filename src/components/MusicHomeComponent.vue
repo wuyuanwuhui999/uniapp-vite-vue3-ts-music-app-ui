@@ -17,7 +17,7 @@
 				</view>
 				<view class="category-item" @click="useMusicRankListPage">
 					<image class="category-img" :src="icon_music_rank" />
-					<text class="category-name">热门榜单</text>
+					<text class="category-name">热门歌曲</text>
 				</view>
 			</view>
 			<template v-for="item,index in allClassifies.slice(0,pageNum)">
@@ -63,9 +63,9 @@
 		uni.navigateTo({url: `../pages/MusicClassifyListPage?data=${encodeURIComponent(JSON.stringify(classifyItem))}`});
 	}
 
-	// 跳转到热门榜单列表
+	// 跳转到热门歌曲列表
 	const useMusicRankListPage = ()=>{
-		const classifyItem = {id: 1, category: "热门榜单"};
+		const classifyItem = {id: 1, category: "热门歌曲"};
 		uni.navigateTo({url: `../pages/MusicClassifyListPage?data=${encodeURIComponent(JSON.stringify(classifyItem))}`});
 	}
 
