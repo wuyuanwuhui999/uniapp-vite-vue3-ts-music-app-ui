@@ -15,7 +15,7 @@
 					<image class="category-img" :src="icon_music_classics" />
 					<text class="category-name">经典老歌</text>
 				</view>
-				<view class="category-item">
+				<view class="category-item" @click="useMusicRankListPage">
 					<image class="category-img" :src="icon_music_rank" />
 					<text class="category-name">热门榜单</text>
 				</view>
@@ -60,6 +60,12 @@
 	// 跳转到经典老歌列表
 	const useMusicClassifyListPage = ()=>{
 		const classifyItem = {id: 2, category: "经典老歌"};
+		uni.navigateTo({url: `../pages/MusicClassifyListPage?data=${encodeURIComponent(JSON.stringify(classifyItem))}`});
+	}
+
+	// 跳转到热门榜单列表
+	const useMusicRankListPage = ()=>{
+		const classifyItem = {id: 2, category: "热门榜单"};
 		uni.navigateTo({url: `../pages/MusicClassifyListPage?data=${encodeURIComponent(JSON.stringify(classifyItem))}`});
 	}
 
