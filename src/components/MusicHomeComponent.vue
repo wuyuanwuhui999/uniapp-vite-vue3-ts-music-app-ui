@@ -65,7 +65,7 @@
 
 	// 跳转到热门榜单列表
 	const useMusicRankListPage = ()=>{
-		const classifyItem = {id: 2, category: "热门榜单"};
+		const classifyItem = {id: 1, category: "热门榜单"};
 		uni.navigateTo({url: `../pages/MusicClassifyListPage?data=${encodeURIComponent(JSON.stringify(classifyItem))}`});
 	}
 
