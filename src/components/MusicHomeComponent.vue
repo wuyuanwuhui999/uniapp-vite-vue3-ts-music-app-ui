@@ -19,6 +19,22 @@
 					<image class="category-img" :src="icon_music_rank" />
 					<text class="category-name">热门歌曲</text>
 				</view>
+				<view class="category-item" @click="useMusicClassifyList(3, '蝰蛇母带')">
+					<image class="category-img" :src="icon_kuisheyinxiao" />
+					<text class="category-name">蝰蛇母带</text>
+				</view>
+				<view class="category-item" @click="useMusicClassifyList(4, '专属好歌')">
+					<image class="category-img" :src="icon_zhuanshuhaoge" />
+					<text class="category-name">专属好歌</text>
+				</view>
+				<view class="category-item" @click="useMusicClassifyList(5, '音乐记忆')">
+					<image class="category-img" :src="icon_yinyuejiyi" />
+					<text class="category-name">音乐记忆</text>
+				</view>
+				<view class="category-item" @click="useMusicClassifyList(6, '流行热歌')">
+					<image class="category-img" :src="icon_liuxingrege" />
+					<text class="category-name">流行热歌</text>
+				</view>
 			</view>
 			<template v-for="item,index in allClassifies.slice(0,pageNum)">
 				<MusicSingerComponent :key="'singerId' + item.id" :classifyItem="item"
@@ -43,6 +59,10 @@
 	import icon_music_classify from "../../static/icon_music_classify.png";
 	import icon_music_classics from "../../static/icon_music_classics.png";
 	import icon_music_rank from "../../static/icon_music_rank.png"
+	import icon_kuisheyinxiao from "../../static/icon-kuisheyinxiao.png";
+	import icon_zhuanshuhaoge from "../../static/icon-zhuanshuhaoge.png";
+	import icon_yinyuejiyi from "../../static/icon-yinyuejiyi.png";
+	import icon_liuxingrege from "../../static/icon-liuxingrege.png";
 
 	const pageNum = ref<number>(3);// 初始化加载3个模块，其他模块按需加载
 	const allClassifies = reactive<Array<MusicCategoryType>>([]);// 所有分类模块
@@ -67,6 +87,11 @@
 	const useMusicRankListPage = ()=>{
 		const classifyItem = {id: 1, category: "热门歌曲"};
 		uni.navigateTo({url: `../pages/MusicClassifyListPage?data=${encodeURIComponent(JSON.stringify(classifyItem))}`});
+	}
+
+	// 跳转到分类歌曲列表
+	const useMusicClassifyList = (id: number, category: string) => {
+		uni.navigateTo({url: `../pages/MusicClassifyListPage?data=${encodeURIComponent(JSON.stringify({id, category}))}`});
 	}
 
 	/**
@@ -106,6 +131,7 @@
 
 		.category-wrapper {
 			display: flex;
+			flex-wrap: wrap;
 
 			.category-item {
 				width: 25%;
@@ -113,6 +139,7 @@
 				flex-direction: column;
 				align-items: center;
 				justify-content: center;
+				margin-bottom: @middle-margin;
 
 				.category-img {
 					width: calc(@lg-icon-size * 1.5);
