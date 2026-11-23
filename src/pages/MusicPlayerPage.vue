@@ -314,6 +314,7 @@
 		switch (store.loop) {
 			case LoopModeEnum.REPEAT:
 				store.audio.play()
+				store.insertMusicRecord()
 				break;
 			case LoopModeEnum.RANDOM:
 				useRandomTabMusic(TabEnum.NEXT);

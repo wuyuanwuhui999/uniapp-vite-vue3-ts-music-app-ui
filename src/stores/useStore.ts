@@ -63,6 +63,21 @@ export const useStore = defineStore("myStore", {
 			isPlaying && insertMusicRecordService(musicRecord);
 		},
 
+		/**
+		 * @description: 上报当前歌曲的播放记录
+		 * @date: 2026-11-20 22:00
+		 * @author wuwenqiang
+		 */
+		insertMusicRecord(){
+			const musicRecord:MusicRecordType = {
+				musicId:this.musicItem.id,
+				platform:this.platform,
+				version:this.version,
+				device:this.device
+			}
+			insertMusicRecordService(musicRecord);
+		},
+
 		
 		/**
 		 * @description: 
